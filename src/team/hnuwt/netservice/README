@@ -1,0 +1,2 @@
+If you'd like to connect the server by TCP, please access port 9090
+If you'd like to send Datagrams by UDP, please send to port 9091
