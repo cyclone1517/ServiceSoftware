@@ -1,12 +1,11 @@
 package team.hnuwt.netservice;
 
+import team.hnuwt.data.heartBeat.RedisHelper;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Iterator;
 
 /**
@@ -19,19 +18,29 @@ import java.util.Iterator;
 public class Reactor implements Runnable{
     public final Selector selector;
     public final ServerSocketChannel serverSocketChannel;
+    public final DatagramChannel datagramChannel;
+    private final RedisHelper heatBeatRedisHelper;
 
-    public Reactor(int port) throws IOException{
+    public Reactor(int tcpPort, int udpPort) throws IOException{
+        //init heatBeatRedisHelper with singleton
+        heatBeatRedisHelper = RedisHelper.getInstance();
         //init serverSocketChannel
         serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.socket().bind(new InetSocketAddress(port));
+        serverSocketChannel.socket().bind(new InetSocketAddress(tcpPort));
         serverSocketChannel.configureBlocking(false);
+        //init DatagramChannel
+        datagramChannel = DatagramChannel.open();
+        datagramChannel.socket().bind(new InetSocketAddress(udpPort));
+        datagramChannel.configureBlocking(false);
 
         //register this channel into selector
         selector = Selector.open();
-        SelectionKey selectionKey = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        datagramChannel.register(selector,SelectionKey.OP_READ);
 
+        //这里没有使用Acceptor
         //利用selectionKey的attach功能绑定Acceptor,如果有事情，触发Acceptor
-        selectionKey.attach(new Acceptor(this));
+        //selectionKey.attach(new Acceptor(this));
     }
 
     @Override
@@ -69,11 +78,13 @@ public class Reactor implements Runnable{
     public void dispatch(SelectionKey key) throws IOException {
         if (key.isAcceptable()) {
             handlerAccept(key);
+
+        //区别可读数据的来源是TCP还是UDP
         } else if (key.isReadable()) {
-            handlerReader(key);
+            if(key.channel() instanceof SocketChannel) handlerTCPReader(key);
+            if(key.channel() instanceof DatagramChannel) handlerUDPReader(key);
         }
 }
-
 
     public void handlerAccept(SelectionKey key) throws IOException {
         ServerSocketChannel sever = (ServerSocketChannel) key.channel();
@@ -84,20 +95,30 @@ public class Reactor implements Runnable{
         //没有使用SocketReadHandler类
     }
 
-    public void handlerReader(SelectionKey key) throws IOException {
+    public void handlerTCPReader(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         //不会阻塞
         int n = socketChannel.read(buffer);
-        System.out.println(n);
         if (n > 0) {
             byte[] data = buffer.array();
-            System.out.println("服务端收到信息:" + new String(data, 0, n));
+            String pkgCode = new String(data, 0, n);
+            //System.out.println("服务端收到TCP消息:" + pkgCode);
+            heatBeatRedisHelper.updateHeatBeat(pkgCode);
             buffer.flip();
             socketChannel.write(buffer);
         } else {
             System.out.println("clinet is close");
             key.cancel();
         }
+    }
+
+    public void handlerUDPReader(SelectionKey key) throws IOException {
+        DatagramChannel datagramChannel = (DatagramChannel) key.channel();
+        ByteBuffer buffer = ByteBuffer.allocate(48);
+        buffer.clear();
+        datagramChannel.receive(buffer);
+        byte[] data = buffer.array();
+        System.out.println("服务端收到UDP数据报" + new String(data, 0, data.length));
     }
 }
