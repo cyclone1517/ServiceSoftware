@@ -1,5 +1,6 @@
 package team.hnuwt.netservice;
 
+import com.alibaba.rocketmq.client.exception.MQClientException;
 import team.hnuwt.data.heartBeat.RedisHelper;
 
 import java.io.IOException;
@@ -65,16 +66,6 @@ public class Reactor implements Runnable{
         }
     }
 
-    /**
-     *  运行Acceptor或SocketReadHandler
-     */
-//    public void dispatch(SelectionKey key) throws IOException {
-//        Runnable r = (Runnable)(key.attachment());  //执行attach过的线程
-//        if (r != null){
-//            r.run();
-//        }
-//    }
-
     public void dispatch(SelectionKey key) throws IOException {
         if (key.isAcceptable()) {
             handlerAccept(key);
@@ -100,16 +91,35 @@ public class Reactor implements Runnable{
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         //不会阻塞
         int n = socketChannel.read(buffer);
-        if (n > 0) {
+
+        if (n > 20) {   //命令数据长度>20
+
+            byte[] data = buffer.array();
+            String pkgCode = new String(data, 0, n);
+            try {
+                ProduceTool producerTool = new ProduceTool("msgAcceptGroup",
+                        "115.157.192.49:9876", "producer1");
+                producerTool.addQueueMsg(pkgCode);
+            } catch (MQClientException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            buffer.flip();
+            socketChannel.write(buffer);
+
+        } else if (n>0){    //心跳数据长度[0,20]
+
             byte[] data = buffer.array();
             String pkgCode = new String(data, 0, n);
             //System.out.println("服务端收到TCP消息:" + pkgCode);
             heatBeatRedisHelper.updateHeatBeat(pkgCode);
             buffer.flip();
             socketChannel.write(buffer);
+
         } else {
+
             System.out.println("clinet is close");
             key.cancel();
+
         }
     }
 

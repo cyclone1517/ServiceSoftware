@@ -9,7 +9,12 @@ public class DeviceRegister {
 
     public static String randomOx(){
         int temp = random.nextInt(100000000);
-        return  temp + "";
+        String tempStr = temp + "";
+        int lackBit = 8-tempStr.length();
+        while(lackBit-->0){
+            tempStr = '0' + tempStr;
+        }
+        return tempStr;
     }
 
     public static void main(String[] args){
