@@ -6,6 +6,7 @@ import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
+import team.hnuwt.data.heartBeat.RedisHelper;
 
 import java.util.List;
 
@@ -14,7 +15,8 @@ import java.util.List;
  * 但实际Pushconsumer内部是使用长轮询Pull方式从服务器拉消息，然后回调用户Listener方法
  */
 public class ConsumeTool {
-    public static void main(String[] args) throws MQClientException {
+
+    public void start() throws MQClientException {
         /**
          * 一个应用创建一个Consumer，由应用来维护此对象，可以设置为全局对象或单例
          */
@@ -34,6 +36,10 @@ public class ConsumeTool {
 
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             /**
+             * 获取Redis工具
+             */
+            RedisHelper redisHelper = RedisHelper.getInstance();
+            /**
              * 默认msgs里只有一条消息，可以设置consumeMessageBatchMaxSize
              * @param msgs
              * @param consumeConcurrentlyContext
@@ -41,13 +47,14 @@ public class ConsumeTool {
              */
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
-                System.out.println(Thread.currentThread().getName()
-                        + " Receive New Messages: " + msgs.size());
                 MessageExt msg = msgs.get(0);
+                String msgBody = new String(msg.getBody());
                 if (msg.getTopic().equals("MeterData")){
-                    //执行TopicTest1的消费逻辑
+                    //执行MeterData主题的消费逻辑，放入Redis队列即可
                     if (msg.getTags()!=null && msg.getTags().equals("TagA")) {
-                        System.out.println(new String(msg.getBody()));
+                        System.out.println("Received: "+ new String(msgBody));
+                        redisHelper.pushUpdatedDataQueue(msgBody);
+                        System.out.println("the new msg has been put into redis UpdatedData");
                     }
                     //else if ...
                 }

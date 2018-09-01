@@ -6,20 +6,19 @@ import redis.clients.jedis.Transaction;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-//单例模式
-public class RedisHelper {
-    private Jedis jedis;
-    private static volatile RedisHelper instance = null;
+public class RedisHelper2 {
+    private static Jedis jedis;
+    private static volatile RedisHelper2 instance = null;
 
-    private RedisHelper(){
-        init();
-    }   //初始化的时候就建立连接
-    private void init() {
+    public void openConnection() {
         jedis = new Jedis("localhost");
         System.out.println("连接成功");
         System.out.println("服务器正在运行" + jedis.ping());
     }
 
+    public void close(){
+        jedis.close();
+    }
     /**
      * 应用场景：更新UpdatedDevices中的心跳包时间
      * 具体操作：更新每台设备的心跳包最新接收时间，格式为Map<"设备号","系统秒数">
@@ -65,8 +64,7 @@ public class RedisHelper {
      */
     public void pushUpdatedDataQueue(String data){
         System.out.println("[RedisHelper]111");
-        //jedis.rpush("UpdatedData", data);
-        jedis.sadd("random", (new Random().nextInt(1000))+"");
+        jedis.rpush("UpdatedData", data);
     }
 
     /**
@@ -102,11 +100,11 @@ public class RedisHelper {
         return ( hour * 3600 + minute * 60 + second ) + "";
     }
 
-    public static RedisHelper getInstance(){
+    public static RedisHelper2 getInstance(){
         if(instance == null){
-            synchronized (RedisHelper.class) {
+            synchronized (RedisHelper2.class) {
                 if (instance == null){
-                    instance = new RedisHelper();
+                    instance = new RedisHelper2();
                 }
             }
         }
@@ -115,7 +113,7 @@ public class RedisHelper {
 
     public static void main(String[] args){
         for(int i=0; i<10; i++){
-            RedisHelper.getInstance().pushUpdatedDataQueue("111");
+            RedisHelper2.getInstance().pushUpdatedDataQueue("111");
         }
 
     }
