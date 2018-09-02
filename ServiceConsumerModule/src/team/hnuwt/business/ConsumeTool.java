@@ -7,6 +7,7 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import team.hnuwt.data.heartBeat.RedisHelper;
+import team.hnuwt.data.heartBeat.RedisHelper2;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ConsumeTool {
             /**
              * 获取Redis工具
              */
-            RedisHelper redisHelper = RedisHelper.getInstance();
+            //RedisHelper redisHelper = RedisHelper.getInstance();
             /**
              * 默认msgs里只有一条消息，可以设置consumeMessageBatchMaxSize
              * @param msgs
@@ -53,7 +54,7 @@ public class ConsumeTool {
                     //执行MeterData主题的消费逻辑，放入Redis队列即可
                     if (msg.getTags()!=null && msg.getTags().equals("TagA")) {
                         System.out.println("Received: "+ new String(msgBody));
-                        redisHelper.pushUpdatedDataQueue(msgBody);
+                        RedisHelper2.getJedis().rpush("UpdatedData", msgBody);
                         System.out.println("the new msg has been put into redis UpdatedData");
                     }
                     //else if ...

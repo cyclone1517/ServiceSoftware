@@ -21,7 +21,7 @@ public class ConsumeDemo {
          * 运行数据工人管理器
          * 把Redis队列中的消息搬运到Mysql中
          */
-//        Thread t = new Thread(new DataWorkerManager());
-//        t.start();
+        Thread t = new Thread(new DataWorkerManager());
+        t.start();
     }
 }

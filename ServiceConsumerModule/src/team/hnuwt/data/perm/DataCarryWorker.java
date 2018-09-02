@@ -1,6 +1,7 @@
 package team.hnuwt.data.perm;
 
 import team.hnuwt.data.heartBeat.RedisHelper;
+import team.hnuwt.data.heartBeat.RedisHelper2;
 import team.hnuwt.data.perm.bean.CollectorinfoBean;
 import team.hnuwt.data.perm.dao.CollectorinfoDao;
 import team.hnuwt.data.perm.impl.CollectorinfoImpl;
@@ -20,8 +21,8 @@ public class DataCarryWorker implements Runnable {
 
     @Override
     public void run() {
-        List<String> list = redisHelper.popUpdatedDataQueueList(10);
-        System.out.println(list.size());
+        List<String> list = RedisHelper2.getJedis().blpop(0, "UpdatedData");
+        System.out.println("[DataCarryWorker]UpdatedDataNum: "+list.size());
 
         PackageTranslateTool ptt = new PackageTranslateTool(pkgData);
 

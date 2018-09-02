@@ -6,6 +6,7 @@ package team.hnuwt.tool;
 public class PackageTranslateTool {
 
     //以下数据段根据数据库存储数据设计
+    private static final int PROPNUM = 20;
     private String[] strlist;
 
     private String head;
@@ -54,11 +55,13 @@ public class PackageTranslateTool {
     };
 
     public PackageTranslateTool (String pkgData) {
-        strlist = new String[20];
+        strlist = new String[PROPNUM];
         int cursor = 0;
 
-        for(int i=0; i<strlist.length; i++){
-            strlist[i] = pkgData.substring(cursor,cursor+=filedLenth[i]*2);
+        System.out.println("[PackageTranslateTool]"+pkgData);
+        for(int i=0; i<PROPNUM; i++){
+            strlist[i] = pkgData.substring(cursor,cursor+filedLenth[i]*2);
+            cursor+=filedLenth[i]*2;
         }
 
         int cnt = 0;

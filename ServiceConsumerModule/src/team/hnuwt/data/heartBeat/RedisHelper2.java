@@ -1,24 +1,28 @@
 package team.hnuwt.data.heartBeat;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Transaction;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+//单例模式
 public class RedisHelper2 {
-    private static Jedis jedis;
+    private Jedis jedis;
+    private static JedisPool jedisPool;
     private static volatile RedisHelper2 instance = null;
 
-    public void openConnection() {
+    private RedisHelper2(){
+        init();
+    }   //初始化的时候就建立连接
+    private void init() {
         jedis = new Jedis("localhost");
         System.out.println("连接成功");
         System.out.println("服务器正在运行" + jedis.ping());
     }
 
-    public void close(){
-        jedis.close();
-    }
     /**
      * 应用场景：更新UpdatedDevices中的心跳包时间
      * 具体操作：更新每台设备的心跳包最新接收时间，格式为Map<"设备号","系统秒数">
@@ -64,7 +68,12 @@ public class RedisHelper2 {
      */
     public void pushUpdatedDataQueue(String data){
         System.out.println("[RedisHelper]111");
-        jedis.rpush("UpdatedData", data);
+        try{
+            jedis.rpush("UpdatedData", data);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        //jedis.sadd("random", (new Random().nextInt(1000))+"");
     }
 
     /**
@@ -109,6 +118,22 @@ public class RedisHelper2 {
             }
         }
         return instance;
+    }
+
+    public static synchronized Jedis getJedis(){
+        if (jedisPool==null){
+            JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+            //指定连接池中最大空闲连接数
+            jedisPoolConfig.setMaxIdle(10);
+            //指定池中创建的最大连接数
+            jedisPoolConfig.setMaxTotal(100);
+            //设置创建连接的超时时间
+            jedisPoolConfig.setMaxWaitMillis(1000);
+            //连接池在创建连接的时候先测试一下连接是否可用，这样可以保证池中连接都是可用的
+            jedisPoolConfig.setTestOnBorrow(true);
+            jedisPool = new JedisPool(jedisPoolConfig,"localhost", 6379);
+        }
+        return jedisPool.getResource();
     }
 
     public static void main(String[] args){

@@ -65,8 +65,12 @@ public class RedisHelper {
      */
     public void pushUpdatedDataQueue(String data){
         System.out.println("[RedisHelper]111");
-        //jedis.rpush("UpdatedData", data);
-        jedis.sadd("random", (new Random().nextInt(1000))+"");
+        try{
+            jedis.rpush("UpdatedData", data);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        //jedis.sadd("random", (new Random().nextInt(1000))+"");
     }
 
     /**
