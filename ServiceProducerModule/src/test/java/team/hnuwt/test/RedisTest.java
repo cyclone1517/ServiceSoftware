@@ -1,0 +1,30 @@
+package team.hnuwt.test;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import redis.clients.jedis.Jedis;
+import team.hnuwt.util.RedisUtil;
+
+public class RedisTest {
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
+
+    @Test
+    public void test() {
+        RedisUtil.updateHeatBeat("123");
+    }
+
+}
