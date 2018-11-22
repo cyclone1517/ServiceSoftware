@@ -34,9 +34,9 @@ public class DataCarryWorker implements Runnable {
         List<Meter> datas = new ArrayList<>();
         for (String s : list)
         {
-        	Packet p = new Packet();
-        	ProtocolUtil pu = new ProtocolUtil(FIELD_NAME, LENGTH, LIST_IMFORMATION);
-        	pu.translate(s, p);
+            Packet p = new Packet();
+            ProtocolUtil pu = new ProtocolUtil(FIELD_NAME, LENGTH, LIST_IMFORMATION);
+            pu.translate(s, p);
             datas.addAll(p.getMeter());
         }
         new DataDao().insertBatch(datas);

@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 
 import org.junit.After;
 import org.junit.Before;

@@ -64,7 +64,7 @@ public class ProtocolUtil {
                     map.put(listImformation[j].getFieldName(), list);
                     i = listImformation[j].getEnd() - 1;
                 } catch (Exception e) {
-                	logger.error("", e);
+                    logger.error("", e);
                 }
             }
         }

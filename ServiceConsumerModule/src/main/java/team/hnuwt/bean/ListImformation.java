@@ -32,11 +32,9 @@ public class ListImformation {
     public void setClassName(String className) {
         this.className = className;
     }
-
     public String getFieldName() {
         return fieldName;
     }
-
     public void setFieldName(String filedName) {
         this.fieldName = filedName;
     }

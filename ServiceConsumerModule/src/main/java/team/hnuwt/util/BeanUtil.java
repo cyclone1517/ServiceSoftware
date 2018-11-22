@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BeanUtil {
-	
-	private static Logger logger = LoggerFactory.getLogger(BeanUtil.class);
+    
+    private static Logger logger = LoggerFactory.getLogger(BeanUtil.class);
     
     public static void setFieldValue(Object model, Map<String, Object> valueMap)
     {
@@ -41,7 +41,7 @@ public class BeanUtil {
                     fieldSetMethod.invoke(model, value);
                 }
             } catch (Exception e) {
-            	logger.error("", e);
+                logger.error("", e);
                 continue;
             }
         }

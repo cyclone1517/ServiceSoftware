@@ -42,11 +42,11 @@ public class ProtocolTest {
         int length[] = new int[]{1, 2, 2, 1, 1, 5, 1, 1, 4, 2, 2, 4, 1, 1, 1};
         ListImformation listImformation[] = new ListImformation[]{new ListImformation(9, 13, "team.hnuwt.bean.Meter", "meter")};
         String pkg = "6823002300688803130100008C6900000107"
-        		+ "0300" 
-        		+ "01000080040000"
-        		+ "02000000000000"
-        		+ "03000009670000"
-        		+ "F716";
+                + "0300" 
+                + "01000080040000"
+                + "02000000000000"
+                + "03000009670000"
+                + "F716";
         ProtocolUtil pu = new ProtocolUtil(fieldName, length, listImformation);
         Packet p = new Packet();
         pu.translate(pkg, p);

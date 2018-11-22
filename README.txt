@@ -1,4 +1,4 @@
-版本记录：
+﻿版本记录：
 V1.0 可以监听高并发客户端
 V1.1 可以注册设备RegisteredDevices<"设备名">，和保存心跳包数据UpdatedDevices<"设备名","系统时间秒数">
 V1.2 部署RocketMQ，完成生产者+消息队列+消费者的业务消息处理模式
@@ -14,5 +14,3 @@ V1.3 整个数据可以流通
         -> RocketMQ
         -> ServiceConsumerModule：消费者取出数据放入Redis队列，线程池的工作线程从Redis队列获取存入MySql
            (部署时可以把（Redis）和（工作线程+Mysql）部署在不同的机器上)
-问题：
-1. 现在有人断开连接就会退出，服务端没有做处理
