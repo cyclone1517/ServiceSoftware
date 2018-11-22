@@ -1,0 +1,11 @@
+If you'd like to connect the server by TCP, please access port 9090
+If you'd like to send Datagrams by UDP, please send to port 9091
+----------------------------------------------------------------
+1. 设备心跳包报文示例FEFE68850000201705200002AA，将发送给集中器
+    FEFE    报文头
+    68      协议编号
+    85      水表类型
+    00      心跳包报文
+    0020-AA 水表编号
+2. 集中器心跳包是服务软件的直接采集对象
+    问题：心跳包的解析不明确， 先以明文做传输
