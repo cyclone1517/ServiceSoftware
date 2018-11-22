@@ -25,7 +25,7 @@ public class DataDao {
         } catch (IOException e) {
             logger.error("", e);
         } finally {
-            if (sqlSession!=null) sqlSession.close(); 
+            if (sqlSession != null) sqlSession.close(); 
         }
     }
     
@@ -40,7 +40,7 @@ public class DataDao {
         } catch (IOException e) {
             logger.error("", e);
         } finally {
-            if (sqlSession!=null) sqlSession.close(); 
+            if (sqlSession != null) sqlSession.close(); 
         }
     }
 }

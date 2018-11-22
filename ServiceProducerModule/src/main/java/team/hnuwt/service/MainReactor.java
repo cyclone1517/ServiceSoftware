@@ -51,7 +51,7 @@ public class MainReactor implements Runnable {
     @Override
     public void run() {
         try {
-            while (selector.select()>0)
+            while (selector.select() > 0)
             {
                 Iterator<SelectionKey> it = selector.selectedKeys().iterator();
                 while (it.hasNext())

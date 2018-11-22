@@ -58,7 +58,7 @@ public class App {
         StringBuilder result = new StringBuilder();
         for (int i = sb.length() - 1; i > 0; i -= 2)
         {
-            result.append(sb.substring(i-1, i+1));
+            result.append(sb.substring(i - 1, i + 1));
         }
         return result.toString();
     }

@@ -43,7 +43,7 @@ public class SubReactor implements Runnable {
                         continue;
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("", e);
                 }
                 Iterator<SelectionKey>  it = selector.selectedKeys().iterator();
                 while (it.hasNext()) 

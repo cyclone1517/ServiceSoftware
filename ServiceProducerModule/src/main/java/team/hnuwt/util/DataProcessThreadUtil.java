@@ -9,6 +9,9 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 线程池管理类
+ */
 public class DataProcessThreadUtil {
     private static volatile ThreadPoolExecutor executor;
     

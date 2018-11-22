@@ -38,7 +38,7 @@ public class DataTest {
         {
             Meter meter = new Meter();
             meter.setId(i);
-            meter.setData(100+i);
+            meter.setData(100 + i);
             meter.setValveState(0);
             list.add(meter);
         } 

@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import team.hnuwt.bean.ListImformation;
 
+/**
+ * 协议解析工具类
+ */
 public class ProtocolUtil {
     private String filedName[];
     private int length[];
@@ -58,7 +61,7 @@ public class ProtocolUtil {
                     for (int k = 0; k < number; k++)
                     {
                         Object o = clazz.newInstance();
-                        translate(listImformation[j].getStart()+1, listImformation[j].getEnd(), pkg, o);
+                        translate(listImformation[j].getStart() + 1, listImformation[j].getEnd(), pkg, o);
                         list.add(o);
                     }
                     map.put(listImformation[j].getFieldName(), list);

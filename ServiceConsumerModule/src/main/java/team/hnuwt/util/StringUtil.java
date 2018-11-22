@@ -6,9 +6,9 @@ public class StringUtil {
     {
         int len = s.length();
         StringBuilder result = new StringBuilder();
-        for (int i = len; i>0; i-=2)
+        for (int i = len; i > 0; i -= 2)
         {
-            result.append(s.substring(i-2, i));
+            result.append(s.substring(i - 2, i));
         }
         return Integer.parseInt(result.toString(), 16);
     }

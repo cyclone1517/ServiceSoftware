@@ -7,6 +7,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 利用反射将数据存入到实体类中
+ */
 public class BeanUtil {
     
     private static Logger logger = LoggerFactory.getLogger(BeanUtil.class);
