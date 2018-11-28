@@ -1,12 +1,14 @@
 package team.hnuwt;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.channels.Selector;
 import java.util.Properties;
 import java.util.Scanner;
 
-import team.hnuwt.service.Send;
+import team.hnuwt.service.Client;
+import team.hnuwt.service.ReadHandler;
+import team.hnuwt.service.SendHandler;
 
 public class App {
 
@@ -17,51 +19,43 @@ public class App {
     public static void main(String[] args) throws UnknownHostException, IOException {
         init();
         Scanner in = new Scanner(System.in);
-        System.out.println("Please enter the number of thread and the number of data would send in a thread.");
+        System.out.println("Please enter the number of concentrator and the number of meter in a concentrator.");
         int num = in.nextInt();
         int meterNum = in.nextInt();
         
-        String pkg = "68";
-        pkg += reverse(String.format("%04x", meterNum * 7 + 14)).toUpperCase();
-        pkg += reverse(String.format("%04x", meterNum * 7 + 14)).toUpperCase();
-        pkg += "688803130100008C6900000107";
-        pkg += reverse(String.format("%04x", meterNum)).toUpperCase();
-        for (int i = 0; i < meterNum; i++)
-        {
-            pkg += reverse(String.format("%04x", i)).toUpperCase();
-            pkg += reverse(String.format("%08x", i)).toUpperCase();
-            pkg += reverse(String.format("%02x", i%2)).toUpperCase();
-        }
-        pkg += "F716";
+        Selector selector = Selector.open();
+        Client c[] = new Client[num];
+        for (int i = 0; i < num; i++) c[i] = new Client(i, selector);
         
-        Socket socket[] = new Socket[num];
-        for (int i = 0; i < num; i++)
-        {
-            socket[i] = new Socket(props.getProperty("socket.ip"), Integer.parseInt(props.getProperty("socket.port")));
-        }
+        Thread readThread = new Thread(new ReadHandler(selector));
+        readThread.start();
         
-        System.out.println("Please enter 'y' to start sending.");
+        System.out.println("Please enter 'h' to start sending heartbeat, or 'd' to start sending data, or 'c' to close.");
         String s = in.nextLine();
         s = in.nextLine();
-        if ("y".equals(s) || "Y".equals(s))
+        while (!("c".equals(s) && !"C".equals(s)))
         {
-            for (int i = 0; i < num; i++)
+            if ("h".equals(s) || "H".equals(s)) 
             {
-                new Thread(new Send(pkg, socket[i])).start();
+                for (int i = 0; i < num; i++) 
+                {
+                    SendHandler sh = new SendHandler((long)i, meterNum, c[i].sc, 1);
+                    sh.run();
+                }
+            } else if ("d".equals(s) || "D".equals(s)) 
+            {
+                Thread t[] = new Thread[num];
+                for (int i = 0; i < num; i++) t[i] = new Thread(new SendHandler((long)i, meterNum, c[i].sc, 0));
+                for (int i = 0; i < num; i++) t[i].start();
             }
+            System.out.println("Please enter 'h' to start sending heartbeat, or 'd' to start sending data, or 'c' to close.");
+            s = in.nextLine();
         }
+        
+        readThread.interrupt();
+        for (int i = 0; i < num; i++) c[i].close();
     }
     
-    private static String reverse(String s)
-    {
-        StringBuilder sb = new StringBuilder(s);
-        StringBuilder result = new StringBuilder();
-        for (int i = sb.length() - 1; i > 0; i -= 2)
-        {
-            result.append(sb.substring(i - 1, i + 1));
-        }
-        return result.toString();
-    }
     
     private static void init()
     {
