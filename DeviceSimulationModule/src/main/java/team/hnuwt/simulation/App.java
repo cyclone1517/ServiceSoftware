@@ -1,4 +1,4 @@
-package team.hnuwt;
+package team.hnuwt.simulation;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -6,9 +6,9 @@ import java.nio.channels.Selector;
 import java.util.Properties;
 import java.util.Scanner;
 
-import team.hnuwt.service.Client;
-import team.hnuwt.service.ReadHandler;
-import team.hnuwt.service.SendHandler;
+import team.hnuwt.simulation.service.Client;
+import team.hnuwt.simulation.service.ReadHandler;
+import team.hnuwt.simulation.service.SendHandler;
 
 public class App {
 

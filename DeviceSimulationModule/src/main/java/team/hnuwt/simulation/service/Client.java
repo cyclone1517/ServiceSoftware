@@ -1,4 +1,4 @@
-package team.hnuwt.service;
+package team.hnuwt.simulation.service;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -8,7 +8,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Properties;
 
-import team.hnuwt.App;
+import team.hnuwt.simulation.App;
 
 public class Client {
     private final static String APPLICATION_FILE = "application.properties";

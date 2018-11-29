@@ -1,4 +1,4 @@
-package team.hnuwt.util;
+package team.hnuwt.simulation.util;
 
 import java.util.Arrays;
 
