@@ -1,4 +1,4 @@
-package team.hnuwt.message;
+package team.hnuwt.server.message;
 
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.util.ByteBuilder;
+import team.hnuwt.server.util.ByteBuilder;
 
 public class MessageHandler {
 

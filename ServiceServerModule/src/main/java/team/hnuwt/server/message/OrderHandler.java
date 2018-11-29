@@ -1,6 +1,6 @@
-package team.hnuwt.message;
+package team.hnuwt.server.message;
 
-import team.hnuwt.util.ProduceUtil;
+import team.hnuwt.server.util.ProduceUtil;
 
 public class OrderHandler implements Runnable {
     private String order;

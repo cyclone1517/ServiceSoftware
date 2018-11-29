@@ -1,4 +1,4 @@
-package team.hnuwt.message;
+package team.hnuwt.server.message;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -7,8 +7,8 @@ import java.nio.channels.SocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.util.ByteBuilder;
-import team.hnuwt.util.ConcentratorUtil;
+import team.hnuwt.server.util.ByteBuilder;
+import team.hnuwt.server.util.ConcentratorUtil;
 
 public class SendHandler implements Runnable {
     private String pkg;

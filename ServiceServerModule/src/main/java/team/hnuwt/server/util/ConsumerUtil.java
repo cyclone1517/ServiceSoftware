@@ -1,4 +1,4 @@
-package team.hnuwt.util;
+package team.hnuwt.server.util;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,7 +14,7 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 
-import team.hnuwt.message.SendHandler;
+import team.hnuwt.server.message.SendHandler;
 
 public class ConsumerUtil implements Runnable {
     private DefaultMQPushConsumer consumer;

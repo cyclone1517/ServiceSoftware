@@ -1,4 +1,4 @@
-package team.hnuwt.util;
+package team.hnuwt.server.util;
 
 import java.io.IOException;
 import java.util.Properties;

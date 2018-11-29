@@ -1,4 +1,4 @@
-package team.hnuwt.test;
+package team.hnuwt.server.test;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import team.hnuwt.util.ByteBuilder;
+import team.hnuwt.server.util.ByteBuilder;
 
 public class ByteBuilderTest {
 

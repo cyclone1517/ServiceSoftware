@@ -1,12 +1,12 @@
-package team.hnuwt.message;
+package team.hnuwt.server.message;
 
 import java.nio.channels.SocketChannel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.util.ByteBuilder;
-import team.hnuwt.util.DataProcessThreadUtil;
+import team.hnuwt.server.util.ByteBuilder;
+import team.hnuwt.server.util.DataProcessThreadUtil;
 
 public class Protocol {
     private static Logger logger = LoggerFactory.getLogger(Protocol.class);

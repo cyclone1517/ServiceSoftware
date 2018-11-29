@@ -1,6 +1,6 @@
-package team.hnuwt.message;
+package team.hnuwt.server.message;
 
-import team.hnuwt.util.ByteBuilder;
+import team.hnuwt.server.util.ByteBuilder;
 
 /**
  * 用来记录粘包情况下当前报文的状态以及字符串
