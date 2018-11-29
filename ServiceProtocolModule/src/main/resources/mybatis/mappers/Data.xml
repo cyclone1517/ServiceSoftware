@@ -5,7 +5,7 @@
 
 <mapper namespace="Data">
 
-    <insert id="add" parameterType="team.hnuwt.bean.Meter">
+    <insert id="add" parameterType="team.hnuwt.protocol.model.Meter">
         insert into tb_data(id,data,valveState)
         values(#{id},#{data},#{valveState})
     </insert>

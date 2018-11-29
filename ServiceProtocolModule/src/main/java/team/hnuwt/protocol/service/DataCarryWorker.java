@@ -22,7 +22,7 @@ public class DataCarryWorker implements Runnable {
             "endChar" };
     private static final int LENGTH[] = new int[] { 1, 2, 2, 1, 1, 5, 1, 1, 4, 2, 2, 4, 1, 1, 1 };
     private static final ListImformation LIST_IMFORMATION[] = new ListImformation[] {
-            new ListImformation(9, 13, "team.hnuwt.bean.Meter", "meter") };
+            new ListImformation(9, 13, "team.hnuwt.protocol.model.Meter", "meter") };
 
     public DataCarryWorker(List<String> list)
     {
