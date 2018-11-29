@@ -1,4 +1,4 @@
-package team.hnuwt.test;
+package team.hnuwt.protocol.test;
 
 import static org.junit.Assert.*;
 
@@ -6,9 +6,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import team.hnuwt.bean.ListImformation;
-import team.hnuwt.bean.Packet;
-import team.hnuwt.util.ProtocolUtil;
+import team.hnuwt.protocol.model.ListImformation;
+import team.hnuwt.protocol.model.Packet;
+import team.hnuwt.protocol.util.ProtocolUtil;
 
 public class ProtocolTest {
 

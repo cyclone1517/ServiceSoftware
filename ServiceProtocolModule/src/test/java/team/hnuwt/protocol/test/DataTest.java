@@ -1,4 +1,4 @@
-package team.hnuwt.test;
+package team.hnuwt.protocol.test;
 
 import static org.junit.Assert.*;
 
@@ -9,8 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import team.hnuwt.bean.Meter;
-import team.hnuwt.dao.DataDao;
+import team.hnuwt.protocol.dao.DataDao;
+import team.hnuwt.protocol.model.Meter;
 
 public class DataTest {
 

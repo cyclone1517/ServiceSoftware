@@ -1,4 +1,4 @@
-package team.hnuwt.service;
+package team.hnuwt.protocol.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,11 +6,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.bean.ListImformation;
-import team.hnuwt.bean.Meter;
-import team.hnuwt.bean.Packet;
-import team.hnuwt.dao.DataDao;
-import team.hnuwt.util.ProtocolUtil;
+import team.hnuwt.protocol.dao.DataDao;
+import team.hnuwt.protocol.model.ListImformation;
+import team.hnuwt.protocol.model.Meter;
+import team.hnuwt.protocol.model.Packet;
+import team.hnuwt.protocol.util.ProtocolUtil;
 
 public class DataCarryWorker implements Runnable {
     private List<String> list;

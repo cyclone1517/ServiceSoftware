@@ -1,4 +1,4 @@
-package team.hnuwt.bean;
+package team.hnuwt.protocol.model;
 
 public class ListImformation {
     private int start;

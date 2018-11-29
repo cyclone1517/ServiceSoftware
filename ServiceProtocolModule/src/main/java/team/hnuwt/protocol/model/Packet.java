@@ -1,4 +1,4 @@
-package team.hnuwt.bean;
+package team.hnuwt.protocol.model;
 
 import java.util.List;
 

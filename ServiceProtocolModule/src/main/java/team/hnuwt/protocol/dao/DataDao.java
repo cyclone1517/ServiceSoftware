@@ -1,4 +1,4 @@
-package team.hnuwt.dao;
+package team.hnuwt.protocol.dao;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,8 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.bean.Meter;
-import team.hnuwt.util.DBUtil;
+import team.hnuwt.protocol.model.Meter;
+import team.hnuwt.protocol.util.DBUtil;
 
 public class DataDao {
 

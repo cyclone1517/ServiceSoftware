@@ -1,4 +1,4 @@
-package team.hnuwt.service;
+package team.hnuwt.protocol.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,8 +8,8 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.util.DataProcessThreadUtil;
-import team.hnuwt.util.RedisUtil;
+import team.hnuwt.protocol.util.DataProcessThreadUtil;
+import team.hnuwt.protocol.util.RedisUtil;
 
 public class DataCarryManager implements Runnable {
     private static Logger logger = LoggerFactory.getLogger(DataCarryManager.class);

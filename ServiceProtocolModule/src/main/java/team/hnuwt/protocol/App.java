@@ -1,7 +1,7 @@
-package team.hnuwt;
+package team.hnuwt.protocol;
 
-import team.hnuwt.service.DataCarryManager;
-import team.hnuwt.util.ConsumerUtil;
+import team.hnuwt.protocol.service.DataCarryManager;
+import team.hnuwt.protocol.util.ConsumerUtil;
 
 public class App {
 

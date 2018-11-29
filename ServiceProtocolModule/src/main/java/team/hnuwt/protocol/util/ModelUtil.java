@@ -1,4 +1,4 @@
-package team.hnuwt.util;
+package team.hnuwt.protocol.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 /**
  * 利用反射将数据存入到实体类中
  */
-public class BeanUtil {
+public class ModelUtil {
 
-    private static Logger logger = LoggerFactory.getLogger(BeanUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(ModelUtil.class);
 
     public static void setFieldValue(Object model, Map<String, Object> valueMap)
     {

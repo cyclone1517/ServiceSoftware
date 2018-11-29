@@ -1,4 +1,4 @@
-package team.hnuwt.test;
+package team.hnuwt.protocol.test;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import team.hnuwt.util.RedisUtil;
+import team.hnuwt.protocol.util.RedisUtil;
 
 public class RedisTest {
 

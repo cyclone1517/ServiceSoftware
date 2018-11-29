@@ -1,4 +1,4 @@
-package team.hnuwt.util;
+package team.hnuwt.protocol.util;
 
 public class StringUtil {
 
