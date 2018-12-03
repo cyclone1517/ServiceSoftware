@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class MainReactor implements Runnable {
     private final static String APPLICATION_FILE = "application.properties";
 
-    private Logger logger = LoggerFactory.getLogger(MainReactor.class);
+    private static Logger logger = LoggerFactory.getLogger(MainReactor.class);
 
     private final int NUM;
     private Selector selector = null;

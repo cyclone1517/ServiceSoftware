@@ -17,12 +17,11 @@ public class DataProcessThreadUtil {
 
     private final static String APPLICATION_FILE = "application.properties";
 
-    private Properties props;
+    private static Properties props;
 
-    private Logger logger = LoggerFactory.getLogger(DataProcessThreadUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(DataProcessThreadUtil.class);
 
-    public DataProcessThreadUtil()
-    {
+    static {
         try {
             props = new Properties();
             props.load(DataProcessThreadUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
@@ -35,7 +34,7 @@ public class DataProcessThreadUtil {
                 new ArrayBlockingQueue<>(10000));
     }
 
-    public ThreadPoolExecutor getExecutor()
+    public static ThreadPoolExecutor getExecutor()
     {
         return executor;
     }

@@ -14,6 +14,8 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 
+import team.hnuwt.protocol.service.ProtocolService;
+
 public class ConsumerUtil implements Runnable {
     private DefaultMQPushConsumer consumer;
 
@@ -23,7 +25,7 @@ public class ConsumerUtil implements Runnable {
     private final static String UPSTREAM = "Upstream";
     private final static String TAG = "Tag";
 
-    private Logger logger = LoggerFactory.getLogger(ConsumerUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(ConsumerUtil.class);
 
     public ConsumerUtil()
     {
@@ -43,12 +45,11 @@ public class ConsumerUtil implements Runnable {
 
                 @Override
                 public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
-                        ConsumeConcurrentlyContext consumeConcurrentlyContext)
-                {
+                        ConsumeConcurrentlyContext consumeConcurrentlyContext) {
                     for (MessageExt msg : msgs)
                     {
                         String msgBody = new String(msg.getBody());
-                        RedisUtil.pushQueue(msgBody);
+                        DataProcessThreadUtil.getExecutor().execute(new ProtocolService(msgBody));
                     }
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
@@ -59,8 +60,7 @@ public class ConsumerUtil implements Runnable {
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         try {
             consumer.start();
         } catch (MQClientException e) {

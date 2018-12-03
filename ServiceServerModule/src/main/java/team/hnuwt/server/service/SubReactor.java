@@ -18,7 +18,7 @@ public class SubReactor implements Runnable {
     private int id;
     private boolean restart = false;
 
-    private Logger logger = LoggerFactory.getLogger(SubReactor.class);
+    private static Logger logger = LoggerFactory.getLogger(SubReactor.class);
 
     public SubReactor(Selector selector, int id)
     {

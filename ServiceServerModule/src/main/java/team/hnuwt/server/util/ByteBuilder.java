@@ -126,6 +126,15 @@ public class ByteBuilder {
         return result;
     }
 
+    public byte[] getBytes(int begin, int end)
+    {
+        byte[] result = new byte[end - begin];
+        int cnt = 0;
+        for (int i = begin; i < end; i++)
+            result[cnt++] = value[i];
+        return result;
+    }
+
     public long toLong()
     {
         return toLong(0, this.count);

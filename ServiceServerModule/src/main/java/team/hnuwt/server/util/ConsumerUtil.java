@@ -25,7 +25,7 @@ public class ConsumerUtil implements Runnable {
     private final static String DOWNSTREAM = "Downstream";
     private final static String TAG = "Tag";
 
-    private Logger logger = LoggerFactory.getLogger(ConsumerUtil.class);
+    private static Logger logger = LoggerFactory.getLogger(ConsumerUtil.class);
 
     public ConsumerUtil()
     {
