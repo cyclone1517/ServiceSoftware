@@ -3,10 +3,8 @@ package team.hnuwt.meter.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.alibaba.fastjson.JSON;
 
-import team.hnuwt.meter.dao.DataDao;
 import team.hnuwt.meter.model.Data;
 import team.hnuwt.meter.model.ListImformation;
 import team.hnuwt.meter.model.Meter;
@@ -14,15 +12,16 @@ import team.hnuwt.meter.model.Packet;
 import team.hnuwt.meter.util.ProtocolUtil;
 import team.hnuwt.plugin.service.PluginService;
 import team.hnuwt.plugin.util.ByteBuilder;
+import team.hnuwt.plugin.util.RedisUtil;
 
 public class PluginServiceImpl implements PluginService {
-    private static Logger logger = LoggerFactory.getLogger(PluginServiceImpl.class);
-
     private static final String FIELD_NAME[] = new String[] { "control", "address", "afn", "seq", "dataId", "number",
             "id", "data", "valveState" };
     private static final int LENGTH[] = new int[] { 1, 5, 1, 1, 4, 2, 2, 4, 1 };
     private static final ListImformation LIST_IMFORMATION[] = new ListImformation[] {
             new ListImformation(5, 9, "team.hnuwt.meter.model.Meter", "meter") };
+
+    private static final String DATA = "Data";
 
     @Override
     public void translate(long collectId, ByteBuilder pkg)
@@ -33,9 +32,9 @@ public class PluginServiceImpl implements PluginService {
         List<Data> datas = new ArrayList<>();
         for (Meter meter : p.getMeter())
         {
-            datas.add(new Data(collectId, meter.getId(), meter.getData(), meter.getValveState()));
+            Data data = new Data(collectId, meter.getId(), meter.getData(), meter.getValveState());
+            datas.add(data);
         }
-        new DataDao().insertBatch(datas);
-        logger.info("the number of data : " + datas.size());
+        RedisUtil.pushQueue(DATA, JSON.toJSONString(datas));
     }
 }

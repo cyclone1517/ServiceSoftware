@@ -35,6 +35,7 @@ public class ConsumerUtil implements Runnable {
         } catch (IOException e) {
             logger.error("", e);
         }
+        DataProcessThreadUtil dptu = new DataProcessThreadUtil();
         try {
             consumer = new DefaultMQPushConsumer(props.getProperty("rocketmq.consumer.consumerGroup"));
             consumer.setNamesrvAddr(props.getProperty("rocketmq.consumer.address"));
@@ -49,7 +50,7 @@ public class ConsumerUtil implements Runnable {
                     for (MessageExt msg : msgs)
                     {
                         String msgBody = new String(msg.getBody());
-                        DataProcessThreadUtil.getExecutor().execute(new ProtocolService(msgBody));
+                        dptu.getExecutor().execute(new ProtocolService(msgBody));
                     }
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
@@ -60,7 +61,8 @@ public class ConsumerUtil implements Runnable {
     }
 
     @Override
-    public void run() {
+    public void run()
+    {
         try {
             consumer.start();
         } catch (MQClientException e) {

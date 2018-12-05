@@ -1,4 +1,4 @@
-package team.hnuwt.meter.util;
+package team.hnuwt.plugin.util;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,7 +14,6 @@ import redis.clients.jedis.Pipeline;
 
 public class RedisUtil {
     private final static String APPLICATION_FILE = "application.properties";
-    private final static String METER_DATA = "MeterData";
 
     private static JedisPool jedisPool = null;
 
@@ -53,29 +52,30 @@ public class RedisUtil {
     }
 
     /**
-     * 将数据包放入到redis数据库中
+     * 将数据放入到redis数据库中
      * 
      * @param packageCode
      */
-    public static void pushQueue(String packageCode)
+    public static void pushQueue(String key, String data)
     {
         Jedis jedis = getJedis();
-        jedis.rpush(METER_DATA, packageCode);
+        jedis.rpush(key, data);
         returnJedis(jedis);
     }
 
     /**
-     * 将数据包批量放入到redis数据库中
+     * 将数据批量放入到redis数据库中
      * 
-     * @param packageCodes
+     * @param key
+     * @param list
      */
-    public static void pushQueue(List<String> packageCodes)
+    public static void pushQueue(String key, List<String> list)
     {
         Jedis jedis = getJedis();
         Pipeline pipe = jedis.pipelined();
-        for (String packageCode : packageCodes)
+        for (String s : list)
         {
-            pipe.rpush(METER_DATA, packageCode);
+            pipe.rpush(key, s);
         }
         pipe.sync();
         returnJedis(jedis);
@@ -84,12 +84,21 @@ public class RedisUtil {
     /**
      * 从redis中获取数据
      * 
+     * @param key
      * @return
      */
-    public static List<String> getData()
+    public static String getData(String key)
     {
+        String data = null;
         Jedis jedis = getJedis();
-        List<String> data = jedis.brpop(1, METER_DATA);
+        List<String> datas = jedis.brpop(1, key);
+        if (datas != null)
+        {
+            for (int i = 1, len = datas.size(); i < len; i += 2)
+            {
+                data = datas.get(i);
+            }
+        }
         returnJedis(jedis);
         return data;
     }

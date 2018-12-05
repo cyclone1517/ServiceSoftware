@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>team.hnuwt.protocol</groupId>
   <artifactId>ServiceProtocolModule</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -33,6 +33,21 @@
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.17</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>3.4.6</version>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.46</version>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.47</version>
     </dependency>
     <dependency>
       <groupId>team.hnuwt.plugin</groupId>  

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * 线程池管理类
  */
 public class DataProcessThreadUtil {
-    private static volatile ThreadPoolExecutor executor;
+    private volatile ThreadPoolExecutor executor;
 
     private final static String APPLICATION_FILE = "application.properties";
 
@@ -21,7 +21,8 @@ public class DataProcessThreadUtil {
 
     private static Logger logger = LoggerFactory.getLogger(DataProcessThreadUtil.class);
 
-    static {
+    public DataProcessThreadUtil()
+    {
         try {
             props = new Properties();
             props.load(DataProcessThreadUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
@@ -34,7 +35,7 @@ public class DataProcessThreadUtil {
                 new ArrayBlockingQueue<>(10000));
     }
 
-    public static ThreadPoolExecutor getExecutor()
+    public ThreadPoolExecutor getExecutor()
     {
         return executor;
     }

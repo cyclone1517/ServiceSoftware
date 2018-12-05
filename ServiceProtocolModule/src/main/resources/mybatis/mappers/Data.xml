@@ -5,7 +5,7 @@
 
 <mapper namespace="Data">
 
-    <insert id="add" parameterType="team.hnuwt.meter.model.Data">
+    <insert id="add" parameterType="team.hnuwt.protocol.model.Data">
         insert into tb_data(collectorId,meterId,data,valveState)
         values(#{collectorId},#{meterId},#{data},#{valveState})
     </insert>

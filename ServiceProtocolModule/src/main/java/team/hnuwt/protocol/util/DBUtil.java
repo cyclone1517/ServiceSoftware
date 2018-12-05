@@ -1,4 +1,4 @@
-package team.hnuwt.meter.util;
+package team.hnuwt.protocol.util;
 
 import java.io.IOException;
 import java.io.Reader;
