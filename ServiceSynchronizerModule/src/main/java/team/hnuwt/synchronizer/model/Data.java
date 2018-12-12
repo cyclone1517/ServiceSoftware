@@ -1,4 +1,4 @@
-package team.hnuwt.protocol.model;
+package team.hnuwt.synchronizer.model;
 
 public class Data {
     private long collectorId; // ¼¯ÖÐÆ÷Id

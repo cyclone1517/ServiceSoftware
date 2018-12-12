@@ -1,4 +1,4 @@
-package team.hnuwt.protocol.util;
+package team.hnuwt.synchronizer.util;
 
 import java.io.IOException;
 import java.io.Reader;

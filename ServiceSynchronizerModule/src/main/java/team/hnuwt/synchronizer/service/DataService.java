@@ -1,12 +1,12 @@
-package team.hnuwt.protocol.service;
+package team.hnuwt.synchronizer.service;
 
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.protocol.dao.DataDao;
-import team.hnuwt.protocol.model.Data;
+import team.hnuwt.synchronizer.dao.DataDao;
+import team.hnuwt.synchronizer.model.Data;
 
 public class DataService implements Runnable {
     

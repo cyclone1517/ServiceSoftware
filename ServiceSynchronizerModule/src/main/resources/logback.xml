@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="true" packagingData="true">
-    <contextName>ServiceProtocolModule</contextName>
+    <contextName>ServiceSynchronizerModule</contextName>
     
     <!--  
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
