@@ -1,4 +1,4 @@
-﻿## ServiceSoftware
+## ServiceSoftware
 
 A communicative service software to collect watermeter data with a big quantity.
 
@@ -10,5 +10,40 @@ A communicative service software to collect watermeter data with a big quantity.
 |:----------:|-------------|
 | `DeviceSimulationModule` | 客户设备模拟模块。 |
 | `ServiceServerModule` | 服务器接受信息模块。接收客户端发上来的数据，如果是心跳包，则存入Redis数据库中，非心跳包则存入Rocketmq消息队列中，并从Rocketmq消息队列消费要发送给客户端的消息并发送。 |
-| `ServiceProtocolModule` | 协议栈模块。从Rocketmq消息队列中消费消息，判断消息是否异常，并将消息分配到相应的插件进行解析。另外从Redis中获取缓存数据并异步存入到Mysql数据库中。 |
+| `ServiceProtocolModule` | 协议栈模块。从Rocketmq消息队列中消费消息，判断消息是否异常，并将消息分配到相应的插件进行解析。 |
+| `ServiceSynchronizerModule` | 同步模块。从Redis中获取缓存数据并存入到Mysql数据库中。 |
 | `ServiceMeterPluginDemo` | 插件模块。将消息进行解析，解析后的数据提供给其他模块进行操作，或者存入Redis数据库中缓存。 |
+
+## 运行
+
+### 运行服务器接受信息模块
+
+先修改配置文件ServiceServerModule/src/main/resources/application.properties中RocketMq的ip地址rocketmq.produce.address和rocketmq.consumer.address，然后编译运行服务器接受信息模块。
+
+    cd ServiceServerModule
+    make clean package -Dmaven.test.skip=true
+    cd target
+    java -jar ServiceServerModule-1.0.0.jar
+
+### 运行协议栈模块
+
+先编译需要用到的插件模块ServiceMeterPluginDemo。
+
+    cd ServiceMeterPluginDemo
+    make clean package -Dmaven.test.skip=true
+
+然后将target目录下生成的jar包放到特定的位置，此位置应与ServiceProtocolModule/plugin.xml中相应的jar的位置对应。再修改配置文件ServiceProtocolModule/src/main/resources/application.properties中RocketMq的ip地址rocketmq.consumer.address，修改plugin.xmlPath为plugin.xml存放的目录，最后编译运行协议栈模块。
+
+    cd ServiceProtocolModule
+    make clean package -Dmaven.test.skip=true
+    cd target
+    java -jar ServiceProtocolModule-1.0.0.jar
+
+### 运行同步模块
+
+先修改配置文件ServiceSynchronizerModule/src/main/resources/mybatis/config.xml中mysql数据库的相应信息，然后编译运行同步模块。
+
+    cd ServiceSynchronizerModule
+    make clean package -Dmaven.test.skip=true
+    cd target
+    java -jar ServiceSynchronizerModule-1.0.0.jar
