@@ -12,7 +12,8 @@ A communicative service software to collect watermeter data with a big quantity.
 | `ServiceServerModule` | 服务器接受信息模块。接收客户端发上来的数据，如果是心跳包，则存入Redis数据库中，非心跳包则存入Rocketmq消息队列中，并从Rocketmq消息队列消费要发送给客户端的消息并发送。 |
 | `ServiceProtocolModule` | 协议栈模块。从Rocketmq消息队列中消费消息，判断消息是否异常，并将消息分配到相应的插件进行解析。 |
 | `ServiceSynchronizerModule` | 同步模块。从Redis中获取缓存数据并存入到Mysql数据库中。 |
-| `ServiceMeterPluginDemo` | 插件模块。将消息进行解析，解析后的数据提供给其他模块进行操作，或者存入Redis数据库中缓存。 |
+| `AutoUploadDemo` | 插件模块。处理自动上报的数据。将消息进行解析，解析后的数据存入Redis数据库中缓存。 |
+| `ServicePluginModule` | 编写插件是需要引用的模块，所有插件都需要实现该模块team.hnuwt.servicesoftware.plugin.service.PluginService这一接口。 |
 
 ## 运行
 
@@ -29,7 +30,7 @@ A communicative service software to collect watermeter data with a big quantity.
 
 先编译需要用到的插件模块ServiceMeterPluginDemo。
 
-    cd ServiceMeterPluginDemo
+    cd PluginDemo/AutoUploadDemo
     make clean package -Dmaven.test.skip=true
 
 然后将target目录下生成的jar包放到特定的位置，此位置应与ServiceProtocolModule/plugin.xml中相应的jar的位置对应。再修改配置文件ServiceProtocolModule/src/main/resources/application.properties中RocketMq的ip地址rocketmq.consumer.address，修改plugin.xmlPath为plugin.xml存放的目录，最后编译运行协议栈模块。
