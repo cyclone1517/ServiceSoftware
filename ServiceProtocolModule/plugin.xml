@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugins>
     <plugin>
-        <id>136</id>
-        <jar>/home/zgh/project/ServiceProtocolModule/ServiceMeterPluginDemo-1.0.0.jar</jar>
-        <class>team.hnuwt.meter.service.PluginServiceImpl</class>
+        <id>30081548684</id>
+        <jar>/home/zgh/project/ServiceProtocolModule/PluginDemo/AutoUploadDemo-1.0.0.jar</jar>
+        <class>team.hnuwt.servicesoftware.autoupload.service.PluginServiceImpl</class>
     </plugin>
 </plugins>

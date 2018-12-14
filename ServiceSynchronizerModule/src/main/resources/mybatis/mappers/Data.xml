@@ -5,16 +5,16 @@
 
 <mapper namespace="Data">
 
-    <insert id="add" parameterType="team.hnuwt.synchronizer.model.Data">
-        insert into tb_data(collectorId,meterId,data,valveState)
-        values(#{collectorId},#{meterId},#{data},#{valveState})
+    <insert id="add" parameterType="team.hnuwt.servicesoftware.synchronizer.model.Data">
+        insert into tb_data(collectorId,meterId,data,state)
+        values(#{collectorId},#{meterId},#{data},#{state})
     </insert>
     
     <insert id="addBatch">
-        insert into tb_data(collectorId,meterId,data,valveState)
+        insert into tb_data(collectorId,meterId,data,state)
         values
         <foreach collection="list" item="data" separator=",">
-            (#{data.collectorId},#{data.meterId},#{data.data},#{data.valveState})
+            (#{data.collectorId},#{data.meterId},#{data.data},#{data.state})
         </foreach>
     </insert>
     

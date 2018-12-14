@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>team.hnuwt.servicesoftware</groupId>
-  <artifactId>ServiceProtocolModule</artifactId>
+  <artifactId>AutoUploadDemo</artifactId>
   <version>1.0.0</version>
   <dependencies>
     <dependency>
@@ -20,19 +20,19 @@
       <version>1.1.6</version>
     </dependency>
     <dependency>
-      <groupId>com.alibaba.rocketmq</groupId>
-      <artifactId>rocketmq-client</artifactId>
-      <version>3.5.8</version>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>2.9.0</version>
     </dependency>
     <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>1.6.1</version>
+    <groupId>org.apache.commons</groupId>
+      <artifactId>commons-pool2</artifactId>
+      <version>2.3</version>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.47</version>
     </dependency>
     <dependency>
       <groupId>team.hnuwt.servicesoftware</groupId>  
@@ -57,7 +57,6 @@
             <configuration>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>team.hnuwt.servicesoftware.protocol.App</mainClass>
                 </transformer>
               </transformers>
             </configuration>
