@@ -9,7 +9,7 @@ A communicative service software to collect watermeter data with a big quantity.
 | 模块名 | 模块描述 |
 |:----------:|-------------|
 | `DeviceSimulationModule` | 客户设备模拟模块。 |
-| `ServiceServerModule` | 服务器接受信息模块。接收客户端发上来的数据，如果是心跳包，则存入Redis数据库中，非心跳包则存入Rocketmq消息队列中，并从Rocketmq消息队列消费要发送给客户端的消息并发送。 |
+| `ServiceServerModule` | 服务器接受信息模块。接收客户端发上来的数据，存入Rocketmq消息队列中，另外从Rocketmq消息队列消费要发送给客户端的消息并发送。 |
 | `ServiceProtocolModule` | 协议栈模块。从Rocketmq消息队列中消费消息，判断消息是否异常，并将消息分配到相应的插件进行解析。 |
 | `ServiceSynchronizerModule` | 同步模块。从Redis中获取缓存数据并存入到Mysql数据库中。 |
 | `AutoUploadDemo` | 插件模块。处理自动上报的数据。将消息进行解析，解析后的数据存入Redis数据库中缓存。 |
