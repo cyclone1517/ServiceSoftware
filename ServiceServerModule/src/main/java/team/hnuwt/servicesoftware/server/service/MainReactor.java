@@ -67,6 +67,11 @@ public class MainReactor implements Runnable {
         }
     }
 
+    /**
+     * 连接操作处理，分配给SubReactor进行读操作
+     * 
+     * @param sk
+     */
     private void connect(SelectionKey sk)
     {
         try {

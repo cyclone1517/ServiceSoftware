@@ -21,6 +21,9 @@ import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.plugin.service.PluginService;
 import team.hnuwt.servicesoftware.protocol.model.Plugin;
 
+/**
+ * 插件工具类
+ */
 public class PluginUtil {
     private static Map<Long, String> map;
 
@@ -45,6 +48,9 @@ public class PluginUtil {
         getPlugin();
     }
 
+    /**
+     * 从XML配置文件中加载插件
+     */
     public static void getPlugin()
     {
         map = new HashMap<>();
@@ -83,6 +89,12 @@ public class PluginUtil {
         }
     }
 
+    /**
+     * 根据插件id找到相应的协议解析类
+     * 
+     * @param id
+     * @return
+     */
     public static PluginService getInstance(long id)
     {
         PluginService instance = null;

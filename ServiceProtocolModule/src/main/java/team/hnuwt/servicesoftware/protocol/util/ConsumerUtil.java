@@ -16,6 +16,9 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 
 import team.hnuwt.servicesoftware.protocol.service.ProtocolService;
 
+/**
+ * RocketMq消费者工具类
+ */
 public class ConsumerUtil implements Runnable {
     private DefaultMQPushConsumer consumer;
 

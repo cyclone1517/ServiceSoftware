@@ -1,9 +1,9 @@
 package team.hnuwt.servicesoftware.protocol.model;
 
 public class Plugin {
-    private long id;
-    private String jar;
-    private String className;
+    private long id; //插件id
+    private String jar; //插件jar包所在位置
+    private String className; //插件解析类名
 
     public long getId()
     {

@@ -12,6 +12,9 @@ import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
 
+/**
+ * RocketMq生产者工具类
+ */
 public class ProduceUtil {
     private static DefaultMQProducer producer;
 

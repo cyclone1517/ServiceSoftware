@@ -17,6 +17,9 @@ public class ProtocolService implements Runnable {
         this.pkg = new ByteBuilder(pkg);
     }
 
+    /**
+     * 找到相应的插件进行解析
+     */
     @Override
     public void run()
     {
@@ -29,6 +32,11 @@ public class ProtocolService implements Runnable {
         ps.translate(pkg);
     }
 
+    /**
+     * 计算校验和判断是否异常
+     * 
+     * @return
+     */
     private boolean check()
     {
         byte sum = 0;

@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
 
+/**
+ * 登录包处理类
+ */
 public class LoginHandler implements Runnable {
     private ByteBuilder message;
 

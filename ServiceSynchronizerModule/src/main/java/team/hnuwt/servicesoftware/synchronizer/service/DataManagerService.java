@@ -24,6 +24,9 @@ public class DataManagerService implements Runnable {
 
     private final static String DATA = "Data";
 
+    /**
+     * 从Redis数据库中获取数据
+     */
     @Override
     public void run()
     {

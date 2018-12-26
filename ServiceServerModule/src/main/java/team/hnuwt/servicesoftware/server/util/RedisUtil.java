@@ -13,6 +13,9 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Transaction;
 
+/**
+ * Redis操作工具类
+ */
 public class RedisUtil {
     private final static String APPLICATION_FILE = "application.properties";
 

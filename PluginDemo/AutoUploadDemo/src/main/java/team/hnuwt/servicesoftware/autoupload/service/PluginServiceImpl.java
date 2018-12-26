@@ -18,6 +18,9 @@ import team.hnuwt.servicesoftware.autoupload.model.Meter;
 import team.hnuwt.servicesoftware.autoupload.model.Packet;
 import team.hnuwt.servicesoftware.autoupload.util.ProtocolUtil;
 
+/**
+ * 协议解析类
+ */
 public class PluginServiceImpl implements PluginService {
     private Logger logger = LoggerFactory.getLogger(PluginServiceImpl.class);
 

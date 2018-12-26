@@ -9,8 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
-import team.hnuwt.servicesoftware.server.util.RedisUtil;
+import team.hnuwt.servicesoftware.server.util.ProduceUtil;
 
+/**
+ * 心跳包处理类
+ */
 public class HeartBeatHandler implements Runnable {
     private ByteBuilder heartBeat;
 
@@ -27,8 +30,7 @@ public class HeartBeatHandler implements Runnable {
     @Override
     public void run()
     {
-        long id = heartBeat.BINToLong(7, 12);
-        RedisUtil.updateHeatBeat(String.valueOf(id));
+        ProduceUtil.addQueue(heartBeat.toString());
 
         Calendar cas = Calendar.getInstance();
         int year = cas.get(Calendar.YEAR);

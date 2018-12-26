@@ -12,6 +12,9 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Pipeline;
 
+/**
+ * Redis操作工具类
+ */
 public class RedisUtil {
     private final static String APPLICATION_FILE = "application.properties";
 
@@ -54,7 +57,8 @@ public class RedisUtil {
     /**
      * 将数据放入到redis数据库中
      * 
-     * @param packageCode
+     * @param key
+     * @param data
      */
     public static void pushQueue(String key, String data)
     {

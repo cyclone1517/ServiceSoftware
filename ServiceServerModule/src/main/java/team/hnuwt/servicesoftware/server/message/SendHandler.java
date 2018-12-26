@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
 
+/**
+ * 消息发送类
+ */
 public class SendHandler implements Runnable {
     private String pkg;
 

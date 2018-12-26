@@ -19,6 +19,9 @@ public class DataService implements Runnable {
         this.list = list;
     }
 
+    /**
+     * 将数据插入到Mysql数据库中
+     */
     @Override
     public void run()
     {

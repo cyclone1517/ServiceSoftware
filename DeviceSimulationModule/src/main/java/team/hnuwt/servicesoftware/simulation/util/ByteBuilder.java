@@ -2,6 +2,9 @@ package team.hnuwt.servicesoftware.simulation.util;
 
 import java.util.Arrays;
 
+/**
+ * 字节处理工具类
+ */
 public class ByteBuilder {
     private byte[] value;
     private int count;
