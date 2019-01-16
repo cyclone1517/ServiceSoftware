@@ -22,7 +22,7 @@ A communicative service software to collect watermeter data with a big quantity.
 先修改配置文件ServiceServerModule/src/main/resources/application.properties中RocketMq的ip地址rocketmq.produce.address和rocketmq.consumer.address，然后编译运行服务器接受信息模块。
 
     cd ServiceServerModule
-    make clean package -Dmaven.test.skip=true
+    mvn clean package -Dmaven.test.skip=true
     cd target
     java -jar servicesoftware-server-1.0.0.jar
 
@@ -31,12 +31,12 @@ A communicative service software to collect watermeter data with a big quantity.
 先编译需要用到的插件模块ServiceMeterPluginDemo。
 
     cd PluginDemo/AutoUploadDemo
-    make clean package -Dmaven.test.skip=true
+    mvn clean package -Dmaven.test.skip=true
 
 然后将target目录下生成的jar包放到特定的位置，此位置应与ServiceProtocolModule/plugin.xml中相应的jar的位置对应。再修改配置文件ServiceProtocolModule/src/main/resources/application.properties中RocketMq的ip地址rocketmq.consumer.address，修改plugin.xmlPath为plugin.xml存放的目录，最后编译运行协议栈模块。
 
     cd ServiceProtocolModule
-    make clean package -Dmaven.test.skip=true
+    mvn clean package -Dmaven.test.skip=true
     cd target
     java -jar servicesoftware-protocol-1.0.0.jar
 
@@ -45,6 +45,6 @@ A communicative service software to collect watermeter data with a big quantity.
 先修改配置文件ServiceSynchronizerModule/src/main/resources/mybatis/config.xml中mysql数据库的相应信息，然后编译运行同步模块。
 
     cd ServiceSynchronizerModule
-    make clean package -Dmaven.test.skip=true
+    mvn clean package -Dmaven.test.skip=true
     cd target
     java -jar servicesoftware-synchronizer-1.0.0.jar
