@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ´æ´¢¼¯ÖĞÆ÷idÓëSocketChannelµÄ¶ÔÓ¦¹ØÏµ
+ * å­˜å‚¨é›†ä¸­å™¨idä¸SocketChannelçš„å¯¹åº”å…³ç³»
  */
 public class ConcentratorUtil {
     private static Map<Long, SocketChannel> map = new HashMap<>();

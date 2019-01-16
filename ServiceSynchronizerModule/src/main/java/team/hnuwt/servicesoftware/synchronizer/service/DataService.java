@@ -20,7 +20,7 @@ public class DataService implements Runnable {
     }
 
     /**
-     * 将数据插入到Mysql数据库中
+     * 灏嗘暟鎹彃鍏ュ埌Mysql鏁版嵁搴撲腑
      */
     @Override
     public void run()

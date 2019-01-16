@@ -1,9 +1,9 @@
 package team.hnuwt.servicesoftware.protocol.model;
 
 public class Plugin {
-    private long id; //²å¼şid
-    private String jar; //²å¼şjar°üËùÔÚÎ»ÖÃ
-    private String className; //²å¼ş½âÎöÀàÃû
+    private long id; //æ’ä»¶id
+    private String jar; //æ’ä»¶jaråŒ…æ‰€åœ¨ä½ç½®
+    private String className; //æ’ä»¶è§£æç±»å
 
     public long getId()
     {

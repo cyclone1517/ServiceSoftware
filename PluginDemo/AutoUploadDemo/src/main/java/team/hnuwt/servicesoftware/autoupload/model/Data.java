@@ -1,10 +1,10 @@
 package team.hnuwt.servicesoftware.autoupload.model;
 
 public class Data {
-    private long collectorId; // ¼¯ÖĞÆ÷Id
-    private int meterId; // ±íĞòºÅ
-    private long data; // ±í¶ÁÊı
-    private int state; // ±í×´Ì¬
+    private long collectorId; // é›†ä¸­å™¨Id
+    private int meterId; // è¡¨åºå·
+    private long data; // è¡¨è¯»æ•°
+    private int state; // è¡¨çŠ¶æ€
 
     public Data()
     {

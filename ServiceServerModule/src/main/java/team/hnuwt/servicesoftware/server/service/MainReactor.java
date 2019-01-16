@@ -68,8 +68,7 @@ public class MainReactor implements Runnable {
     }
 
     /**
-     * Á¬½Ó²Ù×÷´¦Àí£¬·ÖÅä¸øSubReactor½øĞĞ¶Á²Ù×÷
-     * 
+     * è¿æ¥æ“ä½œå¤„ç†ï¼Œåˆ†é…ç»™SubReactorè¿›è¡Œè¯»æ“ä½œ
      * @param sk
      */
     private void connect(SelectionKey sk)

@@ -1,9 +1,9 @@
 package team.hnuwt.servicesoftware.autoupload.model;
 
 public class Meter {
-    private int id; // ±íĞòºÅ
-    private long data; // ±í¶ÁÊı
-    private int state; // ·§ÃÅ×´Ì¬
+    private int id; // è¡¨åºå·
+    private long data; // è¡¨è¯»æ•°
+    private int state; // é˜€é—¨çŠ¶æ€
 
     public int getId()
     {

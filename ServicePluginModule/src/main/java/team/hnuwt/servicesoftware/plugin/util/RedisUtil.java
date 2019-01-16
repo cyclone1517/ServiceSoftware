@@ -13,7 +13,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Pipeline;
 
 /**
- * Redis²Ù×÷¹¤¾ßÀà
+ * Redisæ“ä½œå·¥å…·ç±»
  */
 public class RedisUtil {
     private final static String APPLICATION_FILE = "application.properties";
@@ -48,15 +48,13 @@ public class RedisUtil {
 
     private static void returnJedis(Jedis jedis)
     {
-        if (jedis != null)
-        {
+        if (jedis != null) {
             jedisPool.returnResource(jedis);
         }
     }
 
     /**
-     * ½«Êı¾İ·ÅÈëµ½redisÊı¾İ¿âÖĞ
-     * 
+     * å°†æ•°æ®æ”¾å…¥åˆ°redisæ•°æ®åº“ä¸­
      * @param key
      * @param data
      */
@@ -68,8 +66,7 @@ public class RedisUtil {
     }
 
     /**
-     * ½«Êı¾İÅúÁ¿·ÅÈëµ½redisÊı¾İ¿âÖĞ
-     * 
+     * å°†æ•°æ®æ‰¹é‡æ”¾å…¥åˆ°redisæ•°æ®åº“ä¸­
      * @param key
      * @param list
      */
@@ -86,8 +83,7 @@ public class RedisUtil {
     }
 
     /**
-     * ´ÓredisÖĞ»ñÈ¡Êı¾İ
-     * 
+     * ä»redisä¸­è·å–æ•°æ®
      * @param key
      * @return
      */

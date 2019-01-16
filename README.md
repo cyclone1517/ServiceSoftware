@@ -24,7 +24,7 @@ A communicative service software to collect watermeter data with a big quantity.
     cd ServiceServerModule
     make clean package -Dmaven.test.skip=true
     cd target
-    java -jar ServiceServerModule-1.0.0.jar
+    java -jar servicesoftware-server-1.0.0.jar
 
 ### 运行协议栈模块
 
@@ -38,7 +38,7 @@ A communicative service software to collect watermeter data with a big quantity.
     cd ServiceProtocolModule
     make clean package -Dmaven.test.skip=true
     cd target
-    java -jar ServiceProtocolModule-1.0.0.jar
+    java -jar servicesoftware-protocol-1.0.0.jar
 
 ### 运行同步模块
 
@@ -47,4 +47,4 @@ A communicative service software to collect watermeter data with a big quantity.
     cd ServiceSynchronizerModule
     make clean package -Dmaven.test.skip=true
     cd target
-    java -jar ServiceSynchronizerModule-1.0.0.jar
+    java -jar servicesoftware-synchronizer-1.0.0.jar

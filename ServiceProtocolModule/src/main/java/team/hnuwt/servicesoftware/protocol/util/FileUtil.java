@@ -3,7 +3,7 @@ package team.hnuwt.servicesoftware.protocol.util;
 import org.apache.log4j.helpers.FileWatchdog;
 
 /**
- * ÎÄ¼şĞŞ¸Ä¼àÊÓÀà
+ * æ–‡ä»¶ä¿®æ”¹ç›‘è§†ç±»
  */
 public class FileUtil extends FileWatchdog {
 

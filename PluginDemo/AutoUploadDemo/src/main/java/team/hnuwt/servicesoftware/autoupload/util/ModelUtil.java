@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 利用反射将数据存入到实体类中
+ * 鍒╃敤鍙嶅皠灏嗘暟鎹瓨鍏ュ埌瀹炰綋绫讳腑
  */
 public class ModelUtil {
 

@@ -22,7 +22,7 @@ import team.hnuwt.servicesoftware.plugin.service.PluginService;
 import team.hnuwt.servicesoftware.protocol.model.Plugin;
 
 /**
- * ²å¼ş¹¤¾ßÀà
+ * æ’ä»¶å·¥å…·ç±»
  */
 public class PluginUtil {
     private static Map<Long, String> map;
@@ -49,7 +49,7 @@ public class PluginUtil {
     }
 
     /**
-     * ´ÓXMLÅäÖÃÎÄ¼şÖĞ¼ÓÔØ²å¼ş
+     * ä»XMLé…ç½®æ–‡ä»¶ä¸­åŠ è½½æ’ä»¶
      */
     public static void getPlugin()
     {
@@ -90,8 +90,7 @@ public class PluginUtil {
     }
 
     /**
-     * ¸ù¾İ²å¼şidÕÒµ½ÏàÓ¦µÄĞ­Òé½âÎöÀà
-     * 
+     * æ ¹æ®æ’ä»¶idæ‰¾åˆ°ç›¸åº”çš„åè®®è§£æç±»
      * @param id
      * @return
      */

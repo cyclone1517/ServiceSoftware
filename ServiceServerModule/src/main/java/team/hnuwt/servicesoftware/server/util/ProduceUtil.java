@@ -13,7 +13,7 @@ import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
 
 /**
- * RocketMq生产者工具类
+ * RocketMq鐢熶骇鑰呭伐鍏风被
  */
 public class ProduceUtil {
     private static DefaultMQProducer producer;

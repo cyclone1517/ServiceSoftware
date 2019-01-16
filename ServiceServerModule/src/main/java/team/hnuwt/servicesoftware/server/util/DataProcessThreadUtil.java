@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 线程池管理类
+ * 绾跨▼姹犵鐞嗙被
  */
 public class DataProcessThreadUtil {
     private static volatile ThreadPoolExecutor executor;

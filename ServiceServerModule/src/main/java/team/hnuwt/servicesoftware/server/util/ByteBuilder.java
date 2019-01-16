@@ -3,7 +3,7 @@ package team.hnuwt.servicesoftware.server.util;
 import java.util.Arrays;
 
 /**
- * ×Ö½Ú´¦Àí¹¤¾ßÀà
+ * å­—èŠ‚å¤„ç†å·¥å…·ç±»
  */
 public class ByteBuilder {
     private byte[] value;

@@ -18,7 +18,7 @@ public class ProtocolService implements Runnable {
     }
 
     /**
-     * ÕÒµ½ÏàÓ¦µÄ²å¼ş½øĞĞ½âÎö
+     * æ‰¾åˆ°ç›¸åº”çš„æ’ä»¶è¿›è¡Œè§£æ
      */
     @Override
     public void run()
@@ -33,8 +33,7 @@ public class ProtocolService implements Runnable {
     }
 
     /**
-     * ¼ÆËãĞ£ÑéºÍÅĞ¶ÏÊÇ·ñÒì³£
-     * 
+     * è®¡ç®—æ ¡éªŒå’Œåˆ¤æ–­æ˜¯å¦å¼‚å¸¸
      * @return
      */
     private boolean check()

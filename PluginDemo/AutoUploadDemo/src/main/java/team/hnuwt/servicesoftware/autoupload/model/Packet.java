@@ -3,19 +3,19 @@ package team.hnuwt.servicesoftware.autoupload.model;
 import java.util.List;
 
 public class Packet {
-    private int firstStartChar; // ÆğÊ¼×Ö·û
-    private int firstLength; // ³¤¶È
-    private int secondLength; // ³¤¶È
-    private int secondStartChar; // ÆğÊ¼×Ö·û
-    private int control; // ¿ØÖÆÓò
-    private long address; // µØÖ·Óò
+    private int firstStartChar; // èµ·å§‹å­—ç¬¦
+    private int firstLength; // é•¿åº¦
+    private int secondLength; // é•¿åº¦
+    private int secondStartChar; // èµ·å§‹å­—ç¬¦
+    private int control; // æ§åˆ¶åŸŸ
+    private long address; // åœ°å€åŸŸ
     private int afn;
     private int seq;
-    private long dataId; // Êı¾İµ¥Ôª±êÊ¶
-    private int number; // ±íÊıÁ¿
+    private long dataId; // æ•°æ®å•å…ƒæ ‡è¯†
+    private int number; // è¡¨æ•°é‡
     List<Meter> meter;
     private int cs;
-    private int endChar; // ½áÊø×Ö·û
+    private int endChar; // ç»“æŸå­—ç¬¦
 
     public int getFirstStartChar()
     {

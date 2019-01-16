@@ -14,7 +14,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Transaction;
 
 /**
- * Redis²Ù×÷¹¤¾ßÀà
+ * Redisæ“ä½œå·¥å…·ç±»
  */
 public class RedisUtil {
     private final static String APPLICATION_FILE = "application.properties";
@@ -56,8 +56,7 @@ public class RedisUtil {
     }
 
     /**
-     * ¸üĞÂĞÄÌø°ü
-     * 
+     * æ›´æ–°å¿ƒè·³åŒ…
      * @param device
      */
     public static void updateHeatBeat(String device)
@@ -68,8 +67,7 @@ public class RedisUtil {
     }
 
     /**
-     * ×¢²á¶à¸öÉè±¸
-     * 
+     * æ³¨å†Œå¤šä¸ªè®¾å¤‡
      * @param devices
      */
     public static void registDevice(List<String> devices)
@@ -91,8 +89,7 @@ public class RedisUtil {
     }
 
     /**
-     * »ñÈ¡µ±Ç°ÒÑ¾­×¢²áµÄÉè±¸
-     * 
+     * è·å–å½“å‰å·²ç»æ³¨å†Œçš„è®¾å¤‡
      * @return
      */
     public static Set<String> getRegisteredDevices()

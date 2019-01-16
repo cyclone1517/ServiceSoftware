@@ -19,21 +19,21 @@ import team.hnuwt.servicesoftware.autoupload.model.Packet;
 import team.hnuwt.servicesoftware.autoupload.util.ProtocolUtil;
 
 /**
- * –≠“ÈΩ‚Œˆ¿‡
+ * ÂçèËÆÆËß£ÊûêÁ±ª
  */
 public class PluginServiceImpl implements PluginService {
     private Logger logger = LoggerFactory.getLogger(PluginServiceImpl.class);
 
-    private static final String FIELD_NAME[] = new String[] { "firstStartChar", "firstLength", "secondLength",
+    private static final String FIELD_NAME[] = new String[]{"firstStartChar", "firstLength", "secondLength",
             "secondStartChar", "control", "address", "afn", "seq", "dataId", "number", "id", "data", "state", "cs",
-            "endChar" };
-    private static final int LENGTH[] = new int[] { 1, 2, 2, 1, 1, 5, 1, 1, 4, 2, 2, 4, 2, 1, 1 };
-    private static final ListImformation LIST_IMFORMATION[] = new ListImformation[] {
-            new ListImformation(9, 13, "team.hnuwt.servicesoftware.autoupload.model.Meter", "meter") };
-    private static final EncodeFormat ENCODEFORMAT[] = new EncodeFormat[] { EncodeFormat.BIN, EncodeFormat.BIN,
+            "endChar"};
+    private static final int LENGTH[] = new int[]{1, 2, 2, 1, 1, 5, 1, 1, 4, 2, 2, 4, 2, 1, 1};
+    private static final ListImformation LIST_IMFORMATION[] = new ListImformation[]{
+            new ListImformation(9, 13, "team.hnuwt.servicesoftware.autoupload.model.Meter", "meter")};
+    private static final EncodeFormat ENCODEFORMAT[] = new EncodeFormat[]{EncodeFormat.BIN, EncodeFormat.BIN,
             EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BIN,
             EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BCD, EncodeFormat.BIN, EncodeFormat.BIN,
-            EncodeFormat.BIN };
+            EncodeFormat.BIN};
 
     private static final String DATA = "Data";
 

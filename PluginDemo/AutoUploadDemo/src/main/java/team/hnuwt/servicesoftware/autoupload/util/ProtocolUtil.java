@@ -13,7 +13,7 @@ import team.hnuwt.servicesoftware.autoupload.model.EncodeFormat;
 import team.hnuwt.servicesoftware.autoupload.model.ListImformation;
 
 /**
- * –≠“ÈΩ‚Œˆπ§æﬂ¿‡
+ * ÂçèËÆÆËß£ÊûêÂ∑•ÂÖ∑Á±ª
  */
 public class ProtocolUtil {
     private String filedName[];
@@ -34,7 +34,7 @@ public class ProtocolUtil {
     }
 
     public ProtocolUtil(String filedName[], int length[], EncodeFormat encodeFormat[],
-            ListImformation listImformation[])
+                        ListImformation listImformation[])
     {
         this.filedName = filedName;
         this.length = length;

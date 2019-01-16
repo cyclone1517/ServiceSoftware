@@ -17,7 +17,7 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import team.hnuwt.servicesoftware.server.message.SendHandler;
 
 /**
- * RocketMq消费者工具类
+ * RocketMq娑堣垂鑰呭伐鍏风被
  */
 public class ConsumerUtil implements Runnable {
     private DefaultMQPushConsumer consumer;
@@ -44,12 +44,12 @@ public class ConsumerUtil implements Runnable {
             consumer.setInstanceName(props.getProperty("rocketmq.consumer.consumerName"));
             consumer.setVipChannelEnabled(false);
             consumer.subscribe(DOWNSTREAM, TAG);
-            consumer.registerMessageListener(new MessageListenerConcurrently() {
+            consumer.registerMessageListener(new MessageListenerConcurrently()
+            {
 
                 @Override
                 public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
-                        ConsumeConcurrentlyContext consumeConcurrentlyContext)
-                {
+                                                                ConsumeConcurrentlyContext consumeConcurrentlyContext) {
                     for (MessageExt msg : msgs)
                     {
                         String msgBody = new String(msg.getBody());
