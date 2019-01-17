@@ -9,10 +9,10 @@ import java.util.Iterator;
 
 import team.hnuwt.servicesoftware.simulation.util.ByteBuilder;
 
-public class ReadHandler implements Runnable {
+public class TCPReadHandler implements Runnable {
     private Selector selector;
 
-    public ReadHandler(Selector selector)
+    public TCPReadHandler(Selector selector)
     {
         this.selector = selector;
     }

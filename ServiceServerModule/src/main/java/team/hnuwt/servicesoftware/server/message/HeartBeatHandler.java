@@ -75,7 +75,11 @@ public class HeartBeatHandler implements Runnable {
             b[cnt - 1] += b[i];
         b[cnt++] = (byte) 0x16;
         try {
-            sc.write(ByteBuffer.wrap(b));
+            ByteBuffer bb = ByteBuffer.wrap(b);
+            while (bb.hasRemaining())
+            {
+                sc.write(bb);
+            }
         } catch (IOException e) {
             logger.error("", e);
         }

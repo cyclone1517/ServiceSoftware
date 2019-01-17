@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class SendHandler implements Runnable {
+public class TCPSendHandler implements Runnable {
     private SocketChannel sc;
 
     private byte[] b;
 
-    public SendHandler(long id, int num, SocketChannel sc, int flag)
+    public TCPSendHandler(long id, int num, SocketChannel sc, int flag)
     {
         this.sc = sc;
         if (flag == 1)

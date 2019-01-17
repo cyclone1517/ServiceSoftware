@@ -10,7 +10,7 @@ import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.servicesoftware.server.message.MessageHandler;
+import team.hnuwt.servicesoftware.server.message.TCPMessageHandler;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 
 public class SubReactor implements Runnable {
@@ -72,7 +72,7 @@ public class SubReactor implements Runnable {
                 num = sc.read(buffer);
             }
             logger.info("Read: " + sk.channel());
-            MessageHandler.handler(sc, result);
+            TCPMessageHandler.handler(sc, result);
             if (num == -1)
             {
                 logger.info("Close: " + sk.channel());

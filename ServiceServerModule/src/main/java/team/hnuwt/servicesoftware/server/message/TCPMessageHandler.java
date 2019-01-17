@@ -13,11 +13,11 @@ import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;
 
 /**
- * 消息处理工具类
+ * TCP消息处理工具类
  */
-public class MessageHandler {
+public class TCPMessageHandler {
 
-    private static Logger logger = LoggerFactory.getLogger(MessageHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(TCPMessageHandler.class);
 
     private static Map<SocketAddress, Remainder> map = new ConcurrentHashMap<>();
 
@@ -115,7 +115,7 @@ public class MessageHandler {
             {
                 if (c == 0x16)
                 {
-                    logger.info(result.toString());
+                    logger.info("TCP receive : " + result.toString());
                     if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == 262160)
                     {
                         DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(sc, result));

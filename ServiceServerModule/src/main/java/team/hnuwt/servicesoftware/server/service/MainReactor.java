@@ -35,7 +35,7 @@ public class MainReactor implements Runnable {
 
         selector = Selector.open();
         server = ServerSocketChannel.open();
-        server.socket().bind(new InetSocketAddress(Integer.parseInt(props.getProperty("socket.port"))));
+        server.socket().bind(new InetSocketAddress(Integer.parseInt(props.getProperty("socket.tcp.port"))));
         server.configureBlocking(false);
         server.register(selector, SelectionKey.OP_ACCEPT);
         logger.info("MainReactor has been set up");
