@@ -18,7 +18,7 @@ public class ProtocolService implements Runnable {
     }
 
     /**
-     * 找到相应的插件进行解析
+     * 找到相应的插件进行解析，目前已经做好粘包，还需要判断协议类型并选择插件
      */
     @Override
     public void run()
