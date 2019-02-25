@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.autoupload.model;
+package team.hnuwt.servicesoftware.model;
 
 public class Meter {
     private int id; // 表序号

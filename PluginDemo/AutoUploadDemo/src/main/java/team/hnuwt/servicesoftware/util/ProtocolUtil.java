@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.autoupload.util;
+package team.hnuwt.servicesoftware.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,22 +9,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import team.hnuwt.servicesoftware.plugin.util.ByteBuilder;
-import team.hnuwt.servicesoftware.autoupload.model.EncodeFormat;
-import team.hnuwt.servicesoftware.autoupload.model.ListImformation;
+import team.hnuwt.servicesoftware.model.EncodeFormat;
+import team.hnuwt.servicesoftware.model.ListImformation;
 
 /**
  * 协议解析工具类
  */
 public class ProtocolUtil {
     private String filedName[];
-    private int length[];
+    private Integer length[];
     private ListImformation listImformation[];
     private int locate, listImformationSize;
     private EncodeFormat encodeFormat[];
 
     private Logger logger = LoggerFactory.getLogger(ProtocolUtil.class);
 
-    public ProtocolUtil(String filedName[], int length[], EncodeFormat encodeFormat[])
+    public ProtocolUtil(String filedName[], Integer length[], EncodeFormat encodeFormat[])
     {
         this.filedName = filedName;
         this.length = length;
@@ -33,7 +33,7 @@ public class ProtocolUtil {
         this.listImformationSize = 0;
     }
 
-    public ProtocolUtil(String filedName[], int length[], EncodeFormat encodeFormat[],
+    public ProtocolUtil(String filedName[], Integer length[], EncodeFormat encodeFormat[],
                         ListImformation listImformation[])
     {
         this.filedName = filedName;

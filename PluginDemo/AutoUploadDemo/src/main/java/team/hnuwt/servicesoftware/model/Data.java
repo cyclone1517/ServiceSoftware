@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.autoupload.model;
+package team.hnuwt.servicesoftware.model;
 
 public class Data {
     private long collectorId; // 集中器Id

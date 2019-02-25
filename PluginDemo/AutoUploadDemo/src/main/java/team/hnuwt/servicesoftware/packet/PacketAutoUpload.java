@@ -1,8 +1,10 @@
-package team.hnuwt.servicesoftware.autoupload.model;
+package team.hnuwt.servicesoftware.packet;
+
+import team.hnuwt.servicesoftware.model.Meter;
 
 import java.util.List;
 
-public class Packet {
+public class PacketAutoUpload implements Packet{
     private int firstStartChar; // 起始字符
     private int firstLength; // 长度
     private int secondLength; // 长度
@@ -150,7 +152,7 @@ public class Packet {
     @Override
     public String toString()
     {
-        return "Packet [firstStartChar=" + firstStartChar + ", firstLength=" + firstLength + ", secondLength="
+        return "PacketAutoUpload [firstStartChar=" + firstStartChar + ", firstLength=" + firstLength + ", secondLength="
                 + secondLength + ", secondStartChar=" + secondStartChar + ", control=" + control + ", address="
                 + address + ", afn=" + afn + ", seq=" + seq + ", dataId=" + dataId + ", number=" + number + ", meter="
                 + meter + ", cs=" + cs + ", endChar=" + endChar + "]";

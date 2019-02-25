@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.autoupload.util;
+package team.hnuwt.servicesoftware.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
