@@ -29,12 +29,15 @@
             </fieldNames>
             <fldlen>224211</fldlen>
             <encode>001000</encode>
-            <info>
-                <start>9</start>
-                <end>13</end>
-                <className>Meter</className>
-                <classFld>meter</classFld>
-            </info>
+            <RptField>
+                <rpf>
+                    <start>9</start>
+                    <end>13</end>
+                    <className>Meter</className>
+                    <classFld>meter</classFld>
+                </rpf>
+            </RptField>
+            <isBulk>true</isBulk>
         </prop>
         <prop>
             <id>67112962</id>
@@ -46,6 +49,7 @@
             </fieldNames>
             <fldlen>111</fldlen>
             <encode>100</encode>
+            <isBulk>false</isBulk>
         </prop>
     </userProp>
 </PackageInfos>

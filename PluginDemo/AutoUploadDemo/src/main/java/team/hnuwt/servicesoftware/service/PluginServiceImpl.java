@@ -31,8 +31,8 @@ public class PluginServiceImpl implements PluginService {
 //            "secondStartChar", "control", "address", "afn", "seq", "dataId", "number", "id", "data", "state", "cs",
 //            "endChar"};
 //    private static final int LENGTH[] = new int[]{1, 2, 2, 1, 1, 5, 1, 1, 4, 2, 2, 4, 2, 1, 1};
-    private static final ListImformation LIST_IMFORMATION[] = new ListImformation[]{
-            new ListImformation(9, 13, "Meter", "meter")};
+//    private static final ListImformation LIST_IMFORMATION[] = new ListImformation[]{
+//            new ListImformation(9, 13, "Meter", "meter")};
 //    private static final EncodeFormat ENCODEFORMAT[] = new EncodeFormat[]{EncodeFormat.BIN, EncodeFormat.BIN,
 //            EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BIN,
 //            EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BIN, EncodeFormat.BCD, EncodeFormat.BIN, EncodeFormat.BIN,
@@ -48,19 +48,13 @@ public class PluginServiceImpl implements PluginService {
         String[] FIELD_NAME = PkgExpUtil.getFiledName(id);
         Integer[] LENGTH = PkgExpUtil.getFiledLen(id);
         EncodeFormat[] ENCODEFORMAT = PkgExpUtil.getFiledCode(id);
+        ListImformation[] LIST_IMFORMATION = PkgExpUtil.getReptedListInfo(id);
 
         //PacketAutoUpload p = new PacketAutoUpload();
         Packet p = PkgExpUtil.getPacketModel(id);       /* 通过反射获取Packet对象模板 */
-        ProtocolUtil pu = new ProtocolUtil(FIELD_NAME, LENGTH, ENCODEFORMAT, LIST_IMFORMATION);
-        pu.translate(pkg, p);
-//        List<Data> datas = new ArrayList<>();
-//        for (Meter meter : p.getMeter())
-//        {
-//            Data data = new Data(p.getAddress(), meter.getId(), meter.getData(), meter.getState());
-//            datas.add(data);
-//        }
-//        RedisUtil.pushQueue(DATA, JSON.toJSONString(datas));
-//        logger.info("the number of data : " + datas.size());
+        ProtocolUtil pu = new ProtocolUtil(FIELD_NAME, LENGTH, ENCODEFORMAT, LIST_IMFORMATION);     /* LIST_IMFORMATION可以为空 */
+        pu.translate(pkg, p, PkgExpUtil.isBulk(id));
+
         DataUtil.putDataToRedis(p);     /* 把数据包装好放入中转Redis库 */
     }
 }

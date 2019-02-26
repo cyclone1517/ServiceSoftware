@@ -44,35 +44,61 @@ public class ProtocolUtil {
         this.listImformationSize = listImformation.length;
     }
 
-    public void translate(ByteBuilder pkg, Object model)
+    public void translate(ByteBuilder pkg, Object model, boolean isBulk)
     {
-        translate(0, filedName.length, pkg, model);
+        if (isBulk) {
+            if (listImformation == null) logger.error("No listImformation object injected here!");
+            translateBulk(0, filedName.length, pkg, model);
+        }
+        else {
+            translateSingle(0, filedName.length, pkg, model);
+        }
     }
 
-    private void translate(int begin, int end, ByteBuilder pkg, Object model)
+    private void translateSingle(int begin, int end, ByteBuilder pkg, Object model)
+    {
+        Map<String, Object> map = new HashMap<>();
+        for (int i = begin; i < end; i++)
+        {
+            long l = (encodeFormat[i] == EncodeFormat.BIN) ? pkg.BINToLong(locate, locate + length[i])
+                    : pkg.BCDToLong(locate, locate + length[i]);    //把报文数据转换为long
+            locate += length[i];
+            map.put(filedName[i], l);
+        }
+        ModelUtil.setFieldValue(model, map);
+    }
+
+    /**
+     * 批量解析函数（数据包含有批量数据）
+     * @param begin 用户数据起始下标（字段数为单位）
+     * @param end 用户数据终止下标（字段数为单位）
+     * @param pkg 报文
+     * @param model 数据包实体模型对象
+     */
+    private void translateBulk(int begin, int end, ByteBuilder pkg, Object model)
     {
         Map<String, Object> map = new HashMap<>();
         for (int i = begin, j = 0; i < end; i++)
         {
             long l = (encodeFormat[i] == EncodeFormat.BIN) ? pkg.BINToLong(locate, locate + length[i])
-                    : pkg.BCDToLong(locate, locate + length[i]);
+                    : pkg.BCDToLong(locate, locate + length[i]);    //把报文数据转换为long
             locate += length[i];
             map.put(filedName[i], l);
-            while (j < listImformationSize && listImformation[j].getStart() < i)
+            while (j < listImformationSize && listImformation[j].getStart() < i /* 有多种重复实体则遍历，如Meter表 */)
                 j++;
-            if (j < listImformationSize && listImformation[j].getStart() == i)
+            if (j < listImformationSize && listImformation[j].getStart() == i /* i从用户数据初始位置才会解析 */)
             {
-                int number = (int) l;
+                int number = (int) l;   /* 从start位置获取批量数据个数 */
                 try {
-                    Class clazz = Class.forName(listImformation[j].getClassName());
+                    Class clazz = Class.forName(listImformation[j].getClassName());     /* 获取批量读取字段的数据实体，如批量读取meterId/ */
                     List<Object> list = new ArrayList<>();
-                    for (int k = 0; k < number; k++)
+                    for (int k = 0; k < number; k++)    /* 顺序读取多个数据 */
                     {
                         Object o = clazz.newInstance();
-                        translate(listImformation[j].getStart() + 1, listImformation[j].getEnd(), pkg, o);
+                        translateBulk(listImformation[j].getStart() + 1, listImformation[j].getEnd(), pkg, o);
                         list.add(o);
                     }
-                    map.put(listImformation[j].getFieldName(), list);
+                    map.put(listImformation[j].getFieldName(), list);   /* 把获取的批量消息存入相关字段 */
                     i = listImformation[j].getEnd() - 1;
                 } catch (Exception e) {
                     logger.error("", e);

@@ -8,6 +8,7 @@ import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.model.EncodeFormat;
+import team.hnuwt.servicesoftware.model.ListImformation;
 import team.hnuwt.servicesoftware.packet.Packet;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
+ * @author yuanlong Chen
  * 从配置文件加载数据包结构的常量信息
  */
 public class PkgExpUtil {
@@ -26,6 +28,8 @@ public class PkgExpUtil {
     private static HashMap<Long, List<Integer>> totalFieldLen;    /* 每个字段长 */
     private static HashMap<Long, List<EncodeFormat>> totalFieldCode;  /* 每个字段编码 */
     private static HashMap<Long, String> busiName;        /* 业务编号对应实体名称 */
+    private static HashMap<Long, Boolean> isBulkMap;        /* 批量数据包标识位 */
+    private static HashMap<Long, List<ListImformation>> rptFieldMap; /* 批量读取字段信息 */
 
     private static Logger logger = LoggerFactory.getLogger(PkgExpUtil.class);
 
@@ -54,6 +58,8 @@ public class PkgExpUtil {
         totalFieldName = new HashMap<>();
         totalFieldLen = new HashMap<>();
         busiName = new HashMap<>();
+        isBulkMap = new HashMap<>();
+        rptFieldMap = new HashMap<>();
     }
 
     /**
@@ -101,11 +107,21 @@ public class PkgExpUtil {
             fieldLenStr += prop.path("fldlen").asText();
             fieldCodeStr += prop.path("encode").asText();
 
+            String isBulkStr = prop.path("isBulk").asText();   /* 读取批量数据标识位 */
+            Boolean isBulk = Boolean.valueOf(isBulkStr);
+
+            if (isBulk) {
+                JsonNode rptField = prop.path("RptField").get("rpf");      /* 读取重复字段信息区 */
+                List<ListImformation> listImformations = PkgExpHelper.geneListImformations(rptField);
+                rptFieldMap.put(id, listImformations);
+            }
+
             //存入数据
             busiName.put(id, function);
             totalFieldName.put(id, fieldNameList);
             totalFieldLen.put(id, fldLenToArray(fieldLenStr));
             totalFieldCode.put(id, encodeToArray(fieldCodeStr));
+            isBulkMap.put(id, isBulk);
         }
     }
 
@@ -136,27 +152,32 @@ public class PkgExpUtil {
         List<String> result = totalFieldName.get(id);
         if (null != result) {   /* 涉及强制转型，做非空判断 */
             return result.toArray(new String[0]);
-        } else {
-            return null;
         }
+        return null;
     }
 
     public static Integer[] getFiledLen(long id){
         List<Integer> result = totalFieldLen.get(id);
         if (null != result) {
             return result.toArray(new Integer[0]);
-        } else {
-            return null;
         }
+        return null;
     }
 
     public static EncodeFormat[] getFiledCode(long id){
         List<EncodeFormat> result = totalFieldCode.get(id);
         if (null != result) {
             return result.toArray(new EncodeFormat[0]);
-        } else {
-            return null;
         }
+        return null;
+    }
+
+    public static ListImformation[] getReptedListInfo(long id){
+        List<ListImformation> result = rptFieldMap.get(id);
+        if (null != result){
+            return result.toArray(new ListImformation[0]);
+        }
+        return null;
     }
 
     public static Packet getPacketModel(long id){
@@ -173,4 +194,9 @@ public class PkgExpUtil {
         }
         return null;
     }
+
+    public static boolean isBulk(long id){
+        return isBulkMap.get(id);
+    }
+
 }
