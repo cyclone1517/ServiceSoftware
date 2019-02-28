@@ -3,7 +3,7 @@
 A communicative service software to collect watermeter data with a big quantity.
 
 ## 架构图
-![image](https://github.com/cyclone1517/ServiceSoftware/raw/trunk/img/framework.png)
+![image](https://github.com/cyclone1517/ServiceSoftware/raw/trunk/img/framework2.png)
 
 ## 模块
 | 模块名 | 模块描述 |
