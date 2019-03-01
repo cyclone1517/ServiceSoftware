@@ -39,6 +39,8 @@ public class ConsumerUtil implements Runnable {
             logger.error("", e);
         }
         DataProcessThreadUtil dptu = new DataProcessThreadUtil();
+
+        //在构造函数加载消费者信息
         try {
             consumer = new DefaultMQPushConsumer(props.getProperty("rocketmq.consumer.consumerGroup"));
             consumer.setNamesrvAddr(props.getProperty("rocketmq.consumer.address"));

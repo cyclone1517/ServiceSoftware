@@ -8,9 +8,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import team.hnuwt.servicesoftware.model.ListInformation;
 import team.hnuwt.servicesoftware.plugin.util.ByteBuilder;
 import team.hnuwt.servicesoftware.model.EncodeFormat;
-import team.hnuwt.servicesoftware.model.ListImformation;
 
 /**
  * 协议解析工具类
@@ -18,7 +18,7 @@ import team.hnuwt.servicesoftware.model.ListImformation;
 public class ProtocolUtil {
     private String filedName[];
     private Integer length[];
-    private ListImformation listImformation[];
+    private ListInformation listInformation[];
     private int locate, listImformationSize;
     private EncodeFormat encodeFormat[];
 
@@ -34,20 +34,20 @@ public class ProtocolUtil {
     }
 
     public ProtocolUtil(String filedName[], Integer length[], EncodeFormat encodeFormat[],
-                        ListImformation listImformation[])
+                        ListInformation listInformation[])
     {
         this.filedName = filedName;
         this.length = length;
         this.encodeFormat = encodeFormat;
-        this.listImformation = listImformation;
+        this.listInformation = listInformation;
         this.locate = 0;
-        this.listImformationSize = listImformation.length;
+        this.listImformationSize = listInformation.length;
     }
 
     public void translate(ByteBuilder pkg, Object model, boolean isBulk)
     {
         if (isBulk) {
-            if (listImformation == null) logger.error("No listImformation object injected here!");
+            if (listInformation == null) logger.error("No listInformation object injected here!");
             translateBulk(0, filedName.length, pkg, model);
         }
         else {
@@ -61,7 +61,7 @@ public class ProtocolUtil {
         for (int i = begin; i < end; i++)
         {
             long l = (encodeFormat[i] == EncodeFormat.BIN) ? pkg.BINToLong(locate, locate + length[i])
-                    : pkg.BCDToLong(locate, locate + length[i]);    //把报文数据转换为long
+                    : pkg.BCDToLong(locate, locate + length[i]);    //分解报文的数字，并转换为十进制
             locate += length[i];
             map.put(filedName[i], l);
         }
@@ -84,22 +84,22 @@ public class ProtocolUtil {
                     : pkg.BCDToLong(locate, locate + length[i]);    //把报文数据转换为long
             locate += length[i];
             map.put(filedName[i], l);
-            while (j < listImformationSize && listImformation[j].getStart() < i /* 有多种重复实体则遍历，如Meter表 */)
+            while (j < listImformationSize && listInformation[j].getStart() < i /* 有多种重复实体则遍历，如Meter表 */)
                 j++;
-            if (j < listImformationSize && listImformation[j].getStart() == i /* i从用户数据初始位置才会解析 */)
+            if (j < listImformationSize && listInformation[j].getStart() == i /* i从用户数据初始位置才会解析 */)
             {
                 int number = (int) l;   /* 从start位置获取批量数据个数 */
                 try {
-                    Class clazz = Class.forName(listImformation[j].getClassName());     /* 获取批量读取字段的数据实体，如批量读取meterId/ */
+                    Class clazz = Class.forName(listInformation[j].getClassName());     /* 获取批量读取字段的数据实体，如批量读取meterId/ */
                     List<Object> list = new ArrayList<>();
                     for (int k = 0; k < number; k++)    /* 顺序读取多个数据 */
                     {
                         Object o = clazz.newInstance();
-                        translateBulk(listImformation[j].getStart() + 1, listImformation[j].getEnd(), pkg, o);
+                        translateBulk(listInformation[j].getStart() + 1, listInformation[j].getEnd(), pkg, o);
                         list.add(o);
                     }
-                    map.put(listImformation[j].getFieldName(), list);   /* 把获取的批量消息存入相关字段 */
-                    i = listImformation[j].getEnd() - 1;
+                    map.put(listInformation[j].getFieldName(), list);   /* 把获取的批量消息存入相关字段 */
+                    i = listInformation[j].getEnd() - 1;
                 } catch (Exception e) {
                     logger.error("", e);
                 }

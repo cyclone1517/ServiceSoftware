@@ -2,7 +2,7 @@ package team.hnuwt.servicesoftware.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import team.hnuwt.servicesoftware.model.ListImformation;
+import team.hnuwt.servicesoftware.model.ListInformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class PkgExpHelper {
 
-    public static List<ListImformation> geneListImformations(JsonNode rptField){
-        List<ListImformation> result = new ArrayList<>();
+    public static List<ListInformation> geneListImformations(JsonNode rptField){
+        List<ListInformation> result = new ArrayList<>();
         if (rptField instanceof ArrayNode){
             for (JsonNode rpf: rptField){
                 result.add(geneListInformation(rpf));
@@ -25,11 +25,11 @@ public class PkgExpHelper {
         return result;
     }
 
-    private static ListImformation geneListInformation(JsonNode rpf){
+    private static ListInformation geneListInformation(JsonNode rpf){
         int start = rpf.get("start").asInt();
         int end = rpf.get("end").asInt();
         String className = rpf.get("className").asText();
         String field = rpf.get("classFld").asText();
-        return  new ListImformation(start, end, className, field);
+        return  new ListInformation(start, end, className, field);
     }
 }

@@ -28,6 +28,7 @@ public class ProduceUtil {
     private static Logger logger = LoggerFactory.getLogger(ProduceUtil.class);
 
     static {
+        // 加载消息队列生产
         try {
             props = new Properties();
             props.load(ProduceUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));

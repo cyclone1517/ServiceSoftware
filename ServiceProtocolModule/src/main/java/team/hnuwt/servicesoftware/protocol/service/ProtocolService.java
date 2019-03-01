@@ -25,6 +25,7 @@ public class ProtocolService implements Runnable {
     {
         if (!check())
         {
+            logger.warn("package is illegal, checksum error!");
             return;
         }
         long pluginId = pkg.BINToLong(12, 13) + (pkg.BINToLong(14, 18) << 8);

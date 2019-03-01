@@ -45,7 +45,7 @@ public class MainReactor implements Runnable {
         for (int i = 0; i < NUM; i++)
         {
             selectors[i] = Selector.open();
-            subReactors[i] = new SubReactor(selectors[i], i);
+            subReactors[i] = new SubReactor(selectors[i], i);   //SubReactor管理selectors，selectors管理读事件
             new Thread(subReactors[i]).start();
         }
     }
@@ -54,18 +54,18 @@ public class MainReactor implements Runnable {
     public void run()
     {
         try {
-            while (selector.select() > 0)
+            while (selector.select() > 0)   /* 查找连接请求 */
             {
                 Iterator<SelectionKey> it = selector.selectedKeys().iterator();
-                while (it.hasNext())
+                while (it.hasNext())    /* 遍历准备好的连接事件 */
                 {
                     SelectionKey sk = it.next();
-                    connect(sk);
+                    connect(sk);    /* 将连接事件信息传给connect() */
                     it.remove();
                 }
             }
         } catch (IOException e) {
-            logger.error("", e);
+            logger.error("MainReactor Runtime Exception", e);
         }
     }
 
@@ -82,7 +82,7 @@ public class MainReactor implements Runnable {
 
             subReactors[selIndex].setRestart(true);
             selectors[selIndex].wakeup();
-            sc.register(selectors[selIndex], SelectionKey.OP_READ);
+            sc.register(selectors[selIndex], SelectionKey.OP_READ); /* 把套接字读事件注册到SubReactor */
             selectors[selIndex].wakeup();
             subReactors[selIndex].setRestart(false);
 

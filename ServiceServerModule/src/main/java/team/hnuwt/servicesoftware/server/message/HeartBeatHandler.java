@@ -32,6 +32,7 @@ public class HeartBeatHandler implements Runnable {
     {
         ProduceUtil.addQueue(heartBeat.toString());
 
+        // 收到报文，发确认帧到集中器
         Calendar cas = Calendar.getInstance();
         int year = cas.get(Calendar.YEAR);
         int month = cas.get(Calendar.MONTH) + 1;

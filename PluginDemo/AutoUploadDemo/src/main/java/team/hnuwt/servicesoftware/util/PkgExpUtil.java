@@ -8,7 +8,7 @@ import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.model.EncodeFormat;
-import team.hnuwt.servicesoftware.model.ListImformation;
+import team.hnuwt.servicesoftware.model.ListInformation;
 import team.hnuwt.servicesoftware.packet.Packet;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class PkgExpUtil {
     private static HashMap<Long, List<EncodeFormat>> totalFieldCode;  /* 每个字段编码 */
     private static HashMap<Long, String> busiName;        /* 业务编号对应实体名称 */
     private static HashMap<Long, Boolean> isBulkMap;        /* 批量数据包标识位 */
-    private static HashMap<Long, List<ListImformation>> rptFieldMap; /* 批量读取字段信息 */
+    private static HashMap<Long, List<ListInformation>> rptFieldMap; /* 批量读取字段信息 */
 
     private static Logger logger = LoggerFactory.getLogger(PkgExpUtil.class);
 
@@ -112,8 +112,8 @@ public class PkgExpUtil {
 
             if (isBulk) {
                 JsonNode rptField = prop.path("RptField").get("rpf");      /* 读取重复字段信息区 */
-                List<ListImformation> listImformations = PkgExpHelper.geneListImformations(rptField);
-                rptFieldMap.put(id, listImformations);
+                List<ListInformation> listInformations = PkgExpHelper.geneListImformations(rptField);
+                rptFieldMap.put(id, listInformations);
             }
 
             //存入数据
@@ -172,10 +172,10 @@ public class PkgExpUtil {
         return null;
     }
 
-    public static ListImformation[] getReptedListInfo(long id){
-        List<ListImformation> result = rptFieldMap.get(id);
+    public static ListInformation[] getReptedListInfo(long id){
+        List<ListInformation> result = rptFieldMap.get(id);
         if (null != result){
-            return result.toArray(new ListImformation[0]);
+            return result.toArray(new ListInformation[0]);
         }
         return null;
     }

@@ -1,5 +1,8 @@
 package team.hnuwt.servicesoftware.model;
 
+/**
+ * 表数据实体
+ */
 public class Meter {
     private int id; // 表序号
     private long data; // 表读数

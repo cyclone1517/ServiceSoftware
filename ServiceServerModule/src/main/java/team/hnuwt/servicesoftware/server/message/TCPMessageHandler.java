@@ -116,13 +116,14 @@ public class TCPMessageHandler {
                 if (c == 0x16)
                 {
                     logger.info("TCP receive : " + result.toString());
-                    if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == 262160)
+                    /* 获取功能码和数字单元标识 */
+                    if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == 262160)    /* 心跳 */
                     {
                         DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(sc, result));
-                    } else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == 65552)
+                    } else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == 65552)      /* 登录 */
                     {
                         DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));
-                    } else
+                    } else      /* 其余数据包 */
                     {
                         DataProcessThreadUtil.getExecutor().execute(new OrderHandler(result.toString()));
                     }

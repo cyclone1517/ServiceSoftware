@@ -1,12 +1,15 @@
 package team.hnuwt.servicesoftware.model;
 
-public class ListImformation {
+/**
+ * 多数据实体的对应关系，比如多抄表
+ */
+public class ListInformation {
     private int start;
     private int end;
     private String className;
     private String fieldName;
 
-    public ListImformation(int start, int end, String className, String fieldName)
+    public ListInformation(int start, int end, String className, String fieldName)
     {
         this.start = start;
         this.end = end;
