@@ -28,14 +28,16 @@ public class MainReactor implements Runnable {
     {
         Properties props = new Properties();
         props.load(MainReactor.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
-
+       //监听读事件  Reactor 数量
         NUM = Integer.parseInt(props.getProperty("subReactorThread"));
         subReactors = new SubReactor[NUM];
         selectors = new Selector[NUM];
-
+        //选择器打开
         selector = Selector.open();
+        //非阻塞ServerSocket 打开
         server = ServerSocketChannel.open();
         server.socket().bind(new InetSocketAddress(Integer.parseInt(props.getProperty("socket.tcp.port"))));
+        //注册Channel为非阻塞
         server.configureBlocking(false);
         server.register(selector, SelectionKey.OP_ACCEPT);
         logger.info("MainReactor has been set up");
