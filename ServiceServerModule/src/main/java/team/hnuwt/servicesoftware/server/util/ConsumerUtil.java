@@ -14,7 +14,7 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 
-import team.hnuwt.servicesoftware.server.message.SendHandler;
+import team.hnuwt.servicesoftware.server.constant.TAG;
 
 /**
  * RocketMq消费者工具类
@@ -26,7 +26,7 @@ public class ConsumerUtil implements Runnable {
     private static Properties props;
 
     private final static String DOWNSTREAM = "Downstream";
-    private final static String TAG = "Tag";
+    //private final static String TAG = "Tag";
 
     private static Logger logger = LoggerFactory.getLogger(ConsumerUtil.class);
 
@@ -43,7 +43,7 @@ public class ConsumerUtil implements Runnable {
             consumer.setNamesrvAddr(props.getProperty("rocketmq.consumer.address"));
             consumer.setInstanceName(props.getProperty("rocketmq.consumer.consumerName"));
             consumer.setVipChannelEnabled(false);
-            consumer.subscribe(DOWNSTREAM, TAG);
+            consumer.subscribe(DOWNSTREAM, TAG.DIRECT.getName()+"||"+TAG.PLAIN.getName());
             consumer.registerMessageListener(new MessageListenerConcurrently()
             {
 
@@ -52,8 +52,16 @@ public class ConsumerUtil implements Runnable {
                                                                 ConsumeConcurrentlyContext consumeConcurrentlyContext) {
                     for (MessageExt msg : msgs)
                     {
+//                        String msgBody = new String(msg.getBody());
+//                        DataProcessThreadUtil.getExecutor().execute(new SendHandler(msgBody));
                         String msgBody = new String(msg.getBody());
-                        DataProcessThreadUtil.getExecutor().execute(new SendHandler(msgBody));
+                        String msgTag = msg.getTags();
+                        if (msgTag != null){
+                            DistributeUtil.distributeMessage(TAG.getTAG(msgTag), msgBody);
+                        } else {
+                            logger.error("no msgTag error in this msg!!!");
+                        }
+
                     }
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }

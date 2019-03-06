@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import team.hnuwt.servicesoftware.server.constant.FUN;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;
 
@@ -117,10 +118,10 @@ public class TCPMessageHandler {
                 {
                     logger.info("TCP receive : " + result.toString());
                     /* 获取功能码和数字单元标识 */
-                    if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == 262160)    /* 心跳 */
+                    if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUN.HEARTBEAR)    /* 心跳 */
                     {
                         DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(sc, result));
-                    } else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == 65552)      /* 登录 */
+                    } else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUN.LOGIN)      /* 登录 */
                     {
                         DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));
                     } else      /* 其余数据包 */
