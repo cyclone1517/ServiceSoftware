@@ -1,7 +1,10 @@
-package team.hnuwt.servicesoftware.server.constant;
+package team.hnuwt.servicesoftware.server.constant.down;
 
 import java.util.HashMap;
 
+/**
+ * 消费者工具中所有的标签类型
+ */
 public enum TAG {
 
     DIRECT("DIRECT",0),

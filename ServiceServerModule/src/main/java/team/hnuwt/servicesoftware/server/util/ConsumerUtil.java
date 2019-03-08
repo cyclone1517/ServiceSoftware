@@ -14,10 +14,11 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 
-import team.hnuwt.servicesoftware.server.constant.TAG;
+import team.hnuwt.servicesoftware.server.constant.down.TAG;
 
 /**
  * RocketMq消费者工具类
+ * 用于转发来自中间服务的下行命令
  */
 public class ConsumerUtil implements Runnable {
     private DefaultMQPushConsumer consumer;
@@ -25,7 +26,7 @@ public class ConsumerUtil implements Runnable {
     private final static String APPLICATION_FILE = "application.properties";
     private static Properties props;
 
-    private final static String DOWNSTREAM = "Downstream";
+    private final static String DOWNSTREAM = "DOWNSTREAM";
     //private final static String TAG = "Tag";
 
     private static Logger logger = LoggerFactory.getLogger(ConsumerUtil.class);
