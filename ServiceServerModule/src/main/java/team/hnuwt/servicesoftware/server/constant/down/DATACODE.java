@@ -37,7 +37,7 @@ public class DATACODE {
         afnCode.put("READ_METER", "8C");
 
         //抄读方式
-        readMtd.put("READ_METEER", "00");
+        readMtd.put("READ_METER", "00");
         readMtd.put("READ_TIME", "03");
         readMtd.put("READ_VERSION", "03");
 

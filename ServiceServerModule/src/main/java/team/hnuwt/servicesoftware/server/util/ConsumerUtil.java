@@ -15,6 +15,7 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 
 import team.hnuwt.servicesoftware.server.constant.down.TAG;
+import team.hnuwt.servicesoftware.server.constant.down.TOPIC;
 
 /**
  * RocketMq消费者工具类
@@ -44,7 +45,7 @@ public class ConsumerUtil implements Runnable {
             consumer.setNamesrvAddr(props.getProperty("rocketmq.consumer.address"));
             consumer.setInstanceName(props.getProperty("rocketmq.consumer.consumerName"));
             consumer.setVipChannelEnabled(false);
-            consumer.subscribe(DOWNSTREAM, TAG.DIRECT.getName()+"||"+TAG.PLAIN.getName());
+            consumer.subscribe(DOWNSTREAM, "*");
             consumer.registerMessageListener(new MessageListenerConcurrently()
             {
 
@@ -53,14 +54,22 @@ public class ConsumerUtil implements Runnable {
                                                                 ConsumeConcurrentlyContext consumeConcurrentlyContext) {
                     for (MessageExt msg : msgs)
                     {
-//                        String msgBody = new String(msg.getBody());
-//                        DataProcessThreadUtil.getExecutor().execute(new SendHandler(msgBody));
                         String msgBody = new String(msg.getBody());
-                        String msgTag = msg.getTags();
-                        if (msgTag != null){
-                            DistributeUtil.distributeMessage(TAG.getTAG(msgTag), msgBody);
-                        } else {
-                            logger.error("no msgTag error in this msg!!!");
+                        TAG tag = TAG.getTAG(msg.getTags());
+                        TOPIC topic = TOPIC.getTopic(msg.getTopic());
+                        if (topic == TOPIC.DIRECT){
+                            DistributeUtil.directDistribute(msgBody);   /* 透明转发 */
+                        }
+                        else if (topic == TOPIC.DOWNSTREAM){
+                            try {
+                                DistributeUtil.plainDistribute(msgBody, tag);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else {
+                            logger.error("UNKNOWN TOPIC:" + topic);
+
                         }
 
                     }

@@ -7,44 +7,31 @@ import java.util.HashMap;
  */
 public enum TAG {
 
-    DIRECT("DIRECT",0),
-	PLAIN("PLAIN",1),
-	PLAINRE("PLAINRE",2),
-	DIRECTRE("DIRECTRE",3);
-	
-	private String    name;
-	private int       index;
-	private static HashMap<String, TAG> tagSet;
-	
-	private TAG(String  name, int  index){
-		
-		this.name=name;
-		this.index=index;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getIndex() {
-		return index;
-	}
-	public void setIndex(int index) {
-		this.index = index;
+	READ_METER("READ_METER"),
+	CTRL_TIME("CTRL_TIME"),
+	CTRL_ONOFF("CTRL_ONOFF");
+
+	private String str;
+
+	TAG(String str){
+		this.str = str;
 	}
 
+	public String getStr(){
+		return str;
+	}
+
+	private static HashMap<String, TAG> tags;
+
 	public static TAG getTAG(String TAG){
-		return tagSet.get(TAG);
+		return tags.get(TAG.toUpperCase());
 	}
 
 	static {
-		tagSet = new HashMap<>();
-		tagSet.put("DIRECT", DIRECT);
-		tagSet.put("PLAIN", PLAIN);
-		tagSet.put("PLAINRE", PLAINRE);
-		tagSet.put("DIRECTRE", DIRECTRE);
+		tags = new HashMap<>();
+		tags.put("READ_METER", READ_METER);
+		tags.put("CTRL_TIME", CTRL_TIME);
+		tags.put("CTRL_ONOFF", CTRL_ONOFF);
 	}
 	
 }

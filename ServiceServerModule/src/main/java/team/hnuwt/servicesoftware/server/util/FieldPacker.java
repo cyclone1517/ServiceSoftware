@@ -29,16 +29,15 @@ public class FieldPacker {
     /**
      * 计算包长度
      * @param originLen 固定初始长度(从0到数据单元标识长18字节，CS+末位长2字节)
-     * @param extraLen  额外数据单元长(如水表数量占2字节)
      * @param num       数据单元个数
      * @param unitLen   每个单元长度
      * @return
      */
-    public static String getPkgLen(int originLen, int extraLen, int num, int unitLen){
+    public static String getPkgLen(int originLen, int num, int unitLen){
         String result;
         int len = originLen;
-        len += extraLen;
         len += num * unitLen;
+        len = (len<<2) + 1;
         if (len > 1400){
             logger.warn("cannot pack such a long package");
         }
@@ -61,14 +60,14 @@ public class FieldPacker {
 
     public static String calcuCs(StringBuilder sb){
         String csStr = sb.toString().substring(12);
-        char[] csArr = csStr.toCharArray();
 
-        byte sum = 0;
-        for (char cs: csArr){
-            sum += cs;
+        int sum = 0;
+        for (int i = 0; i < csStr.length(); i += 2)
+        {
+            sum += Integer.parseInt(csStr.substring(i, i + 2), 16);
         }
 
-        return sum+"";
+        return Integer.toHexString(sum % 256);
     }
 
     public static List<String> getMeterIds(JsonNode ids){
@@ -76,11 +75,29 @@ public class FieldPacker {
 
         if (ids instanceof ArrayNode){
             for (JsonNode id: ids){
-                result.add(id.asText());
+                result.add(reverseEnd(id.asText()));
             }
         } else {
-            result.add(ids.asText());
+            result.add(reverseEnd(ids.asText()));
         }
         return result;
+    }
+
+    public static String getNBitHexNum(int num, int bit){
+        StringBuilder result = new StringBuilder();
+        result.append(Integer.toHexString(num));
+        while (result.length() < bit) result.insert(0, "0");
+        return reverseEnd(result.toString());
+    }
+
+    private static String reverseEnd(String code){
+        StringBuilder result = new StringBuilder();
+
+        int len = code.length();
+        for (int i=len-2; i>=0; i-=2){
+            result.append(code, i, i+2);
+        }
+
+        return result.toString();
     }
 }

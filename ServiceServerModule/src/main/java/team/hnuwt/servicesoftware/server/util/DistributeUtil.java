@@ -18,47 +18,36 @@ public class DistributeUtil {
 
     private static Logger logger = LoggerFactory.getLogger(DistributeUtil.class);
 
-    public static void distributeMessage(TAG tag, String msg){
-        if (tag == TAG.DIRECT){     /* 透明转发 */
-            directDistribute(msg);
-        }
-        if (tag == TAG.PLAIN){      /* 明文转发 */
-            try {
-                plainDistribute(msg);
-            } catch (IOException e) {
-                logger.error("plain transfer pkg cannot be packed!!!");
-            }
-        }
-    }
-
     /**
      * 透明转发
      * @param msg 原始消息包
      */
-    private static void directDistribute(String msg){
+    public static void directDistribute(String msg){
         //不做任何处理
         runTask(msg);
     }
 
     /**
      * 明文转发
-     * @param msg
+     * @param msg 消息
+     * @TAG 业务类型
      */
-    private static void plainDistribute(String msg) throws IOException {
+    public static void plainDistribute(String msg, TAG tag) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(msg);
-        JsonNode afn = root.get("afn"); /* 先按业务类型区分 */
-        if (null != afn){
-            String fun = afn.asText();
-            String fn = root.path("fn").asText();
-            FUNTYPE funtype = FUNTYPE.getFUN(fun);
-            if (funtype == FUNTYPE.QUERY){
-                runTask(PkgPackUtil.getQueryPkg(root, fn));
-            }
-            if (funtype == FUNTYPE.CONTROL){
-                runTask(PkgPackUtil.getCtrlPkg(root, fn));
-            }
+        if (tag == TAG.READ_METER){
+            runTask(PkgPackUtil.geneReadMeterPkg(root, TAG.READ_METER.getStr()));
         }
+        else if (tag == TAG.CTRL_TIME){
+
+        }
+        else if (tag == TAG.CTRL_ONOFF){
+
+        }
+        else {
+            throw new Exception("UNKNOWN TAG:" + tag);
+        }
+
     }
 
     private static void runTask(String msgBody){

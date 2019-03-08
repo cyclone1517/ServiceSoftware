@@ -5,6 +5,7 @@ import java.util.HashMap;
 /**
  * 下发报文的所有业务类型
  */
+@Deprecated
 public enum FUNTYPE {
 
     QUERY("query"),
