@@ -9,6 +9,7 @@ import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.message.SendHandler;
 
 import java.io.IOException;
+import java.nio.channels.SocketChannel;
 
 /**
  * @author yuanlong chen
@@ -38,11 +39,11 @@ public class DistributeUtil {
         if (tag == TAG.READ_METER){
             runTask(PkgPackUtil.geneReadMeterPkg(root, TAG.READ_METER.getStr()));
         }
-        else if (tag == TAG.CTRL_TIME){
-
+        else if (tag == TAG.CTRL_ON){
+            runTask(PkgPackUtil.geneCtrlOnOffPkg(root, TAG.CTRL_ON.getStr(), true));
         }
-        else if (tag == TAG.CTRL_ONOFF){
-
+        else if (tag == TAG.CTRL_OFF){
+            runTask(PkgPackUtil.geneCtrlOnOffPkg(root, TAG.CTRL_ON.getStr(), false));
         }
         else {
             throw new Exception("UNKNOWN TAG:" + tag);
@@ -51,6 +52,9 @@ public class DistributeUtil {
     }
 
     private static void runTask(String msgBody){
+//        ByteBuilder b = new ByteBuilder(msgBody);
+//        long id = b.BINToLong(7, 12);
+//        SocketChannel sk = ConcentratorUtil.get(id);
         DataProcessThreadUtil.getExecutor().execute(new SendHandler(msgBody));
     }
 

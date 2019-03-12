@@ -33,18 +33,35 @@ public class FieldPacker {
      * @param unitLen   每个单元长度
      * @return
      */
-    public static String getPkgLen(int originLen, int num, int unitLen){
-        String result;
+    public static String getReadMeterPkgLen(int originLen, int num, int unitLen){
         int len = originLen;
         len += num * unitLen;
-        len = (len<<2) + 1;
+        len = (len<<2) + 1;     /* 编码规律 */
         if (len > 1400){
             logger.warn("cannot pack such a long package");
         }
-        result =  Integer.toHexString(len);
+        return formativeLen(len);
+    }
+
+    public static String getOnOffPkgLen(){
+        int len = 33;        /* 33字节 */
+        len = (len<<2) + 1;  /* 编码规律 */
+        return formativeLen(len);
+    }
+
+    /**
+     * 将长度字段组装为需要的位数，一般为4位
+     * @param len
+     * @return
+     */
+    private static String formativeLen(int len){
+        return formativeLen(len, 4);
+    }
+    private static String formativeLen(int len, int lenbit){
+        String result =  Integer.toHexString(len);
         switch (result.length()){
             case 1:
-                logger.warn("package length calculate error!");
+                logger.warn("package length calculate error! too short: " + result.length());
                 return "0000";
             case 2:
                 return result + "00";

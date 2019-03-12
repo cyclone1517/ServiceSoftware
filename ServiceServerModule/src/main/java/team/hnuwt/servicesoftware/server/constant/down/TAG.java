@@ -9,7 +9,9 @@ public enum TAG {
 
 	READ_METER("READ_METER"),
 	CTRL_TIME("CTRL_TIME"),
-	CTRL_ONOFF("CTRL_ONOFF");
+	CTRL_ON("CTRL_ON"),
+	CTRL_OFF("CTRL_FF");
+
 
 	private String str;
 
@@ -31,7 +33,8 @@ public enum TAG {
 		tags = new HashMap<>();
 		tags.put("READ_METER", READ_METER);
 		tags.put("CTRL_TIME", CTRL_TIME);
-		tags.put("CTRL_ONOFF", CTRL_ONOFF);
+		tags.put("CTRL_ON", CTRL_ON);
+		tags.put("CTRL_OFF", CTRL_OFF);
 	}
 	
 }

@@ -21,7 +21,7 @@ public class PkgPackUtil {
         // get num of meters
         int meterNum = FieldPacker.getMeterNum(root);
         String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
-        String L = FieldPacker.getPkgLen(15, meterNum, 2);
+        String L = FieldPacker.getReadMeterPkgLen(15, meterNum, 2);
         List<String> ids = FieldPacker.getMeterIds(root.path("id"));
         String addr = root.path("addr").asText();
 
@@ -52,11 +52,11 @@ public class PkgPackUtil {
 
         // get num of meters
         int meterNum = FieldPacker.getMeterNum(root);
-        String L = FieldPacker.getPkgLen(20, meterNum, 2);
+        String L = FieldPacker.getReadMeterPkgLen(20, meterNum, 2);
         String addr = root.path("addr").asText();
 
         result.append("68");
-        result.append(L);       /* extraLen 抄表方式1字节 + 表数量2字节 */
+        result.append(L);
         result.append(L);
         result.append("68");
         result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
@@ -79,8 +79,33 @@ public class PkgPackUtil {
         return "";
     }
 
-    public static String geneCtrlOnOffPkg(JsonNode root, String FUN){
-        return "";
+    public static String geneCtrlOnOffPkg(JsonNode root, String FUN, boolean on){
+        StringBuilder result = new StringBuilder();
+
+        // get len of pkg
+        String L = FieldPacker.getOnOffPkgLen();
+        String addr = root.path("addr").asText();
+        List<String> ids = FieldPacker.getMeterIds(root.path("id"));
+
+        result.append("68");
+        result.append(L);
+        result.append(L);
+        result.append("68");
+        result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
+        result.append(addr);                        /* 地址域 */
+        result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
+        result.append("70");                        /* 序列号，7单帧需回复，0保留 */
+        result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
+        result.append("563412");                    /* 密码：未用 */
+        ids.forEach(result::append);                /* 表序号 */
+        result.append("01111111");                  /* 密钥：未用 */
+        result.append("00");                        /* 中继方式 */
+        result.append(on? "55":"AA");               /* 控制字 */
+        result.append("39383736353433323130");      /* 消息认证码PW：未用 */
+        result.append(FieldPacker.calcuCs(result)); /* 校验位 */
+        result.append("16");                        /* 结束符 */
+
+        return result.toString();
     }
 
     /**
