@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
+import team.hnuwt.servicesoftware.server.util.PkgPackUtil;
 
 /**
  * 登录包处理类
@@ -52,7 +53,7 @@ public class LoginHandler implements Runnable {
         b[cnt++] = (byte) 0x10;
         for (int i = 7; i < 12; i++)
             b[cnt++] = message.getByte(i);
-        b[cnt++] = (byte) 0x00;
+        b[cnt++] = (byte) 0x00;     /* 这里文档是02，应该是00 */
         b[cnt++] = (byte) 0x60;
         b[cnt++] = (byte) 0x00;
         b[cnt++] = (byte) 0x00;
@@ -77,6 +78,7 @@ public class LoginHandler implements Runnable {
         b[cnt++] = (byte) 0x16;
         try {
             sc.write(ByteBuffer.wrap(b));
+            logger.info("reply:" + PkgPackUtil.bytes2hex(b));
         } catch (IOException e) {
             logger.error("", e);
         }
