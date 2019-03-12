@@ -116,16 +116,18 @@ public class TCPMessageHandler {
             {
                 if (c == 0x16)
                 {
-                    logger.info("TCP receive : " + result.toString());
                     /* 获取功能码和数字单元标识 */
                     if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR)    /* 心跳 */
                     {
+                        logger.info("HEARTBEAT: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(sc, result));
-                    } else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)      /* 登录 */
+                    } else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)     /* 登录 */
                     {
+                        logger.info("LOGIN: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));
-                    } else      /* 其余数据包 */
+                    } else                                                                                              /* 其余数据包 */
                     {
+                        logger.info("OTHERS: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new OrderHandler(result.toString()));
                     }
                 }
