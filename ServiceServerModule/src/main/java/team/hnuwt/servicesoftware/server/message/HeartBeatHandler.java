@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
+import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
 import team.hnuwt.servicesoftware.server.util.ProduceUtil;
 
 /**
@@ -30,6 +31,13 @@ public class HeartBeatHandler implements Runnable {
     @Override
     public void run()
     {
+        /*
+         * 仅登录有效才返回报文，避免端口切换导致下发无效命令
+         */
+        long id = heartBeat.BINToLong(7, 12);
+        if (ConcentratorUtil.get(id) == null){
+            return;
+        }
         ProduceUtil.addQueue(heartBeat.toString());
 
         // 收到报文，发确认帧到集中器
