@@ -13,12 +13,14 @@ public class DATACODE {
     private static HashMap<String, String> ctrlCode;    /* 控制码 */
     private static HashMap<String, String> afnCode;     /* 功能码 */
     private static HashMap<String,String> readMtd;      /* 抄读方式 */
+    private static HashMap<String, String> serial;      /* 序列号 */
 
     static {
         DataId = new HashMap<>();
         ctrlCode = new HashMap<>();
         afnCode = new HashMap<>();
         readMtd = new HashMap<>();
+        serial = new HashMap<>();
 
         // 查询数据标识符
         DataId.put("READ_METER", "00000107");   /* 单多抄表 */
@@ -37,14 +39,18 @@ public class DATACODE {
 
         //功能码
         afnCode.put("READ_METER", "8C");
-        afnCode.put("CTRL_ON", "70");
-        afnCode.put("CTRL_OFF", "70");
+        afnCode.put("CTRL_ON", "85");
+        afnCode.put("CTRL_OFF", "85");
 
 
         //抄读方式
         readMtd.put("READ_METER", "00");
         readMtd.put("READ_TIME", "03");
         readMtd.put("READ_VERSION", "03");
+
+        //序列号
+        serial.put("CTRL_ON", "78");
+        serial.put("CTRL_OFF", "77");
 
     }
 
@@ -63,5 +69,7 @@ public class DATACODE {
     public static String getReadMtd(String key){
         return readMtd.get(key);
     }
+
+    public static String getSerial(String key) { return serial.get(key);}
 
 }

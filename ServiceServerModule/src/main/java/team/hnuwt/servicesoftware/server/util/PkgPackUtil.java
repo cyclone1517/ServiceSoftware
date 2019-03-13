@@ -94,7 +94,7 @@ public class PkgPackUtil {
         result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
         result.append(addr);                        /* 地址域 */
         result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
-        result.append("70");                        /* 序列号，7单帧需回复，0保留 */
+        result.append(DATACODE.getSerial(FUN));     /* 序列号，7单帧需回复，0保留 */
         result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
         result.append("563412");                    /* 密码：未用 */
         ids.forEach(result::append);                /* 表序号 */

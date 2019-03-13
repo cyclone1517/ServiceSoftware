@@ -62,7 +62,7 @@ public class ConsumerUtil implements Runnable {
                         }
                         else if (topic == TOPIC.DOWNSTREAM){
                             try {
-                                DistributeUtil.plainDistribute(msgBody, tag);
+                                DistributeUtil.plainDistribute(msgBody, tag);   /* 明文转发 */
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
