@@ -18,7 +18,7 @@ import com.alibaba.rocketmq.remoting.exception.RemotingException;
 public class ProduceUtil {
     private static DefaultMQProducer producer;
 
-    private final static String UPSTREAM = "Upstream";
+    private final static String UPSTREAM = "UPSTREAM";
     private final static String TAG = "Tag";
     private final static String ORDER = "Order";
 
@@ -48,8 +48,12 @@ public class ProduceUtil {
 
     public static void addQueue(String data)
     {
+        addQueue(UPSTREAM, TAG, data);
+    }
+
+    public static void addQueue(String topic, String tag, String data){
         try {
-            Message message = new Message(UPSTREAM, TAG, ORDER, (data).getBytes());
+            Message message = new Message(topic, tag, ORDER, (data).getBytes());
             producer.send(message);
         } catch (MQClientException e) {
             logger.error("", e);
@@ -60,5 +64,6 @@ public class ProduceUtil {
         } catch (InterruptedException e) {
             logger.error("", e);
         }
+        logger.info("add " + tag + " to rocketMQ successfully");
     }
 }

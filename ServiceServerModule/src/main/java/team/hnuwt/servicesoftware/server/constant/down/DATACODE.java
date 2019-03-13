@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 /**
  * @author yuanlong chen
- * 存放各种命令的标识符，控制码
+ * 存放各种命令的标识符，控制码，功能码，抄读方式，序列号
  */
 public class DATACODE {
 

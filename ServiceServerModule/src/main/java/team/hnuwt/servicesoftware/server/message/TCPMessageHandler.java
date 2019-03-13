@@ -117,16 +117,29 @@ public class TCPMessageHandler {
                 if (c == 0x16)
                 {
                     /* 获取功能码和数字单元标识 */
-                    if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR)    /* 心跳 */
+                    if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR)       /* 心跳 */
                     {
                         logger.info("HEARTBEAT: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(sc, result));
-                    } else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)     /* 登录 */
+                    }
+                    else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)      /* 登录 */
                     {
                         logger.info("LOGIN: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));
-                    } else                                                                                              /* 其余数据包 */
-                    {
+                    }
+                    else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER){     /* 抄表 */
+                        logger.info("READ_METER: " + result.toString());
+                        DataProcessThreadUtil.getExecutor().execute(new ReadMeterReHandler(sc, result));
+                    }
+                    else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.SUCCESS){     /* 操作确认 */
+                        logger.info("OPERATION SUCCESS: " + result.toString());
+                        DataProcessThreadUtil.getExecutor().execute(new StateReHandler(sc, result, true));
+                    }
+                    else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.FAIL){     /* 操作失败 */
+                        logger.info("OPERATION FAIL: " + result.toString());
+                        DataProcessThreadUtil.getExecutor().execute(new StateReHandler(sc, result, false));
+                    }
+                    else {  /* 其余数据包 */
                         logger.info("OTHERS: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new OrderHandler(result.toString()));
                     }

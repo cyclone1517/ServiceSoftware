@@ -107,7 +107,7 @@ public class FieldPacker {
         return reverseEnd(result.toString());
     }
 
-    private static String reverseEnd(String code){
+    public static String reverseEnd(String code){
         StringBuilder result = new StringBuilder();
 
         int len = code.length();
