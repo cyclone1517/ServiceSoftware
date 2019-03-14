@@ -102,4 +102,24 @@ public class RedisUtil {
         returnJedis(jedis);
         return data;
     }
+
+    /**
+     * 订阅频道
+     * @param subscriber
+     * @param channel
+     */
+    public static void subscribe(Subscriber subscriber, String channel){
+        Jedis jedis = null;
+        try {
+            jedis = getJedis();   //取出一个连接
+            jedis.subscribe(subscriber, channel);    //通过subscribe 的api去订阅，入参是订阅者和频道名
+            System.out.println("111");
+        } catch (Exception e) {
+            System.out.println(String.format("subsrcibe channel error, %s", e));
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
 }
