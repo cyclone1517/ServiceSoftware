@@ -86,7 +86,7 @@ public class MainReactor implements Runnable {
             selectors[selIndex].wakeup();
             subReactors[selIndex].setRestart(false);
 
-            logger.info("Connect: " + sc);
+            logger.info("CONNECT: " + sc);
             if (++selIndex == NUM)
             {
                 selIndex = 0;

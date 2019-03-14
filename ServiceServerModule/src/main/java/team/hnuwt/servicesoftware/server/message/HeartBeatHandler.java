@@ -38,7 +38,7 @@ public class HeartBeatHandler implements Runnable {
         if (ConcentratorUtil.get(id) == null){
             return;
         }
-        ProduceUtil.addQueue(heartBeat.toString());
+        ProduceUtil.addQueue("UPSTREAM", "HEARTBEAT", heartBeat.toString());
 
         // 收到报文，发确认帧到集中器
         Calendar cas = Calendar.getInstance();

@@ -64,6 +64,6 @@ public class ProduceUtil {
         } catch (InterruptedException e) {
             logger.error("", e);
         }
-        logger.info("add " + tag + " to rocketMQ successfully");
+        logger.info("ADD " + tag + " to rocketMQ successfully");
     }
 }
