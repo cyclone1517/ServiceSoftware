@@ -1,10 +1,10 @@
-package team.hnuwt.servicesoftware.util.test;
+package team.hnuwt.servicesoftware.prtcplugin.util.test;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import team.hnuwt.servicesoftware.model.EncodeFormat;
-import team.hnuwt.servicesoftware.util.PkgExpUtil;
+import team.hnuwt.servicesoftware.prtcplugin.model.EncodeFormat;
+import team.hnuwt.servicesoftware.prtcplugin.util.PkgExpUtil;
 
 public class PkgEcplainTest {
 

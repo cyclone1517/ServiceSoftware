@@ -1,16 +1,15 @@
-package team.hnuwt.servicesoftware.service;
+package team.hnuwt.servicesoftware.prtcplugin.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.servicesoftware.model.ListInformation;
-import team.hnuwt.servicesoftware.packet.Packet;
-import team.hnuwt.servicesoftware.util.DataUtil;
-import team.hnuwt.servicesoftware.util.PkgExpUtil;
-import team.hnuwt.servicesoftware.plugin.service.PluginService;
-import team.hnuwt.servicesoftware.plugin.util.ByteBuilder;
-import team.hnuwt.servicesoftware.model.EncodeFormat;
-import team.hnuwt.servicesoftware.util.ProtocolUtil;
+import team.hnuwt.servicesoftware.prtcplugin.model.ListInformation;
+import team.hnuwt.servicesoftware.prtcplugin.packet.Packet;
+import team.hnuwt.servicesoftware.prtcplugin.util.DataUtil;
+import team.hnuwt.servicesoftware.prtcplugin.util.PkgExpUtil;
+import team.hnuwt.servicesoftware.prtcplugin.util.ByteBuilder;
+import team.hnuwt.servicesoftware.prtcplugin.model.EncodeFormat;
+import team.hnuwt.servicesoftware.prtcplugin.util.ProtocolUtil;
 
 /**
  * 协议解析类
@@ -34,7 +33,8 @@ public class PluginServiceImpl implements PluginService {
     @Override
     public void translate(ByteBuilder pkg)
     {
-        /* 读取包结构 */
+        /* 读取包结构 AFN+ID 共同决定业务类型 */
+        logger.info("NEW TRANSLATOR!!!!!!!!!");
         long id = pkg.BINToLong(12, 13) + (pkg.BINToLong(14, 18) << 8);
         String[] FIELD_NAME = PkgExpUtil.getFiledName(id);
         Integer[] LENGTH = PkgExpUtil.getFiledLen(id);

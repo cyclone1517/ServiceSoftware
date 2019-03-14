@@ -1,10 +1,6 @@
-package team.hnuwt.servicesoftware.packet;
+package team.hnuwt.servicesoftware.prtcplugin.packet;
 
-import team.hnuwt.servicesoftware.model.Meter;
-
-import java.util.List;
-
-public class PacketAutoUpload implements Packet{
+public class PacketHeartBeat implements Packet{
     private int firstStartChar; // 起始字符
     private int firstLength; // 长度
     private int secondLength; // 长度
@@ -14,10 +10,17 @@ public class PacketAutoUpload implements Packet{
     private int afn;
     private int seq;
     private long dataId; // 数据单元标识
-    private int number; // 表数量
-    List<Meter> meter;
+    private long sigBCD;    //信号强度BCD码
     private int cs;
     private int endChar; // 结束字符
+
+    public long getSigBCD() {
+        return sigBCD;
+    }
+
+    public void setSigBCD(long sigBCD) {
+        this.sigBCD = sigBCD;
+    }
 
     public int getFirstStartChar()
     {
@@ -109,26 +112,6 @@ public class PacketAutoUpload implements Packet{
         this.dataId = dataId;
     }
 
-    public int getNumber()
-    {
-        return number;
-    }
-
-    public void setNumber(int number)
-    {
-        this.number = number;
-    }
-
-    public List<Meter> getMeter()
-    {
-        return meter;
-    }
-
-    public void setMeter(List<Meter> meter)
-    {
-        this.meter = meter;
-    }
-
     public int getCs()
     {
         return cs;
@@ -150,12 +133,20 @@ public class PacketAutoUpload implements Packet{
     }
 
     @Override
-    public String toString()
-    {
-        return "PacketAutoUpload [firstStartChar=" + firstStartChar + ", firstLength=" + firstLength + ", secondLength="
-                + secondLength + ", secondStartChar=" + secondStartChar + ", control=" + control + ", address="
-                + address + ", afn=" + afn + ", seq=" + seq + ", dataId=" + dataId + ", number=" + number + ", meter="
-                + meter + ", cs=" + cs + ", endChar=" + endChar + "]";
+    public String toString() {
+        return "PacketHeartBeat{" +
+                "firstStartChar=" + firstStartChar +
+                ", firstLength=" + firstLength +
+                ", secondLength=" + secondLength +
+                ", secondStartChar=" + secondStartChar +
+                ", control=" + control +
+                ", address=" + address +
+                ", afn=" + afn +
+                ", seq=" + seq +
+                ", dataId=" + dataId +
+                ", sigBCD=" + sigBCD +
+                ", cs=" + cs +
+                ", endChar=" + endChar +
+                '}';
     }
-
 }

@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.model;
+package team.hnuwt.servicesoftware.prtcplugin.model;
 
 /**
  * 表数据实体

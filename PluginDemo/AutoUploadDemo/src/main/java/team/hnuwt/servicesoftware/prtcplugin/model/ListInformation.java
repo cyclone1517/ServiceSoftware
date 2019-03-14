@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.model;
+package team.hnuwt.servicesoftware.prtcplugin.model;
 
 /**
  * 多数据实体的对应关系，比如多抄表

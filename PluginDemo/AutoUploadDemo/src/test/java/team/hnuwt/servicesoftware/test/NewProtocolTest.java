@@ -3,13 +3,13 @@ package team.hnuwt.servicesoftware.test;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import team.hnuwt.servicesoftware.model.EncodeFormat;
-import team.hnuwt.servicesoftware.model.ListInformation;
-import team.hnuwt.servicesoftware.packet.Packet;
-import team.hnuwt.servicesoftware.plugin.util.ByteBuilder;
-import team.hnuwt.servicesoftware.util.DataUtil;
-import team.hnuwt.servicesoftware.util.PkgExpUtil;
-import team.hnuwt.servicesoftware.util.ProtocolUtil;
+import team.hnuwt.servicesoftware.prtcplugin.model.EncodeFormat;
+import team.hnuwt.servicesoftware.prtcplugin.model.ListInformation;
+import team.hnuwt.servicesoftware.prtcplugin.packet.Packet;
+import team.hnuwt.servicesoftware.prtcplugin.util.ByteBuilder;
+import team.hnuwt.servicesoftware.prtcplugin.util.DataUtil;
+import team.hnuwt.servicesoftware.prtcplugin.util.PkgExpUtil;
+import team.hnuwt.servicesoftware.prtcplugin.util.ProtocolUtil;
 
 /**
  * @author yuanlong Chen
@@ -29,7 +29,7 @@ public class NewProtocolTest {
         Integer length[] = PkgExpUtil.getFiledLen(id);
         EncodeFormat encodeFormat[] = PkgExpUtil.getFiledCode(id);
         ListInformation listInformation[] = new ListInformation[] {
-                new ListInformation(9, 13, "team.hnuwt.servicesoftware.model.Meter", "meter") };
+                new ListInformation(9, 13, "Meter", "meter") };
         String pkg = "6881008100688803130100008C60010001070300010000629900D1D002000000000000D1D00300000901D1D0F616";
         //String pkg = "683500350068C90313010000027010000400221616";
         ProtocolUtil pu = new ProtocolUtil(fieldName, length, encodeFormat, listInformation);

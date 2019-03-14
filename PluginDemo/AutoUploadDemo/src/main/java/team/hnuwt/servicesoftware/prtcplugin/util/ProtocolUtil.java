@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.util;
+package team.hnuwt.servicesoftware.prtcplugin.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,9 +8,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.servicesoftware.model.ListInformation;
-import team.hnuwt.servicesoftware.plugin.util.ByteBuilder;
-import team.hnuwt.servicesoftware.model.EncodeFormat;
+import team.hnuwt.servicesoftware.prtcplugin.model.ListInformation;
+import team.hnuwt.servicesoftware.prtcplugin.model.EncodeFormat;
 
 /**
  * 协议解析工具类

@@ -1,8 +1,8 @@
-package team.hnuwt.servicesoftware.util;
+package team.hnuwt.servicesoftware.prtcplugin.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import team.hnuwt.servicesoftware.model.ListInformation;
+import team.hnuwt.servicesoftware.prtcplugin.model.ListInformation;
 
 import java.util.ArrayList;
 import java.util.List;

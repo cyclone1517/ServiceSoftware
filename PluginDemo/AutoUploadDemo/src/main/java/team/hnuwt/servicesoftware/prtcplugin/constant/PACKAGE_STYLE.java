@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.constant;
+package team.hnuwt.servicesoftware.prtcplugin.constant;
 
 @Deprecated
 public class PACKAGE_STYLE {

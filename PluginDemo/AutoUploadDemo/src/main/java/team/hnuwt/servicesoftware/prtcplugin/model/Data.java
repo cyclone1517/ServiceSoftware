@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.model;
+package team.hnuwt.servicesoftware.prtcplugin.model;
 
 public class Data {
     private long collectorId; // 集中器Id

@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.util;
+package team.hnuwt.servicesoftware.prtcplugin.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,9 +7,9 @@ import org.json.JSONObject;
 import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import team.hnuwt.servicesoftware.model.EncodeFormat;
-import team.hnuwt.servicesoftware.model.ListInformation;
-import team.hnuwt.servicesoftware.packet.Packet;
+import team.hnuwt.servicesoftware.prtcplugin.model.EncodeFormat;
+import team.hnuwt.servicesoftware.prtcplugin.model.ListInformation;
+import team.hnuwt.servicesoftware.prtcplugin.packet.Packet;
 
 import java.io.IOException;
 import java.io.InputStream;
