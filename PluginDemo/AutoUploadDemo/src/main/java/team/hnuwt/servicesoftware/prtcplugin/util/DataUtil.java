@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.prtcplugin.model.Data;
+import team.hnuwt.servicesoftware.prtcplugin.model.HeartData;
 import team.hnuwt.servicesoftware.prtcplugin.model.Meter;
 import team.hnuwt.servicesoftware.prtcplugin.packet.Packet;
 import team.hnuwt.servicesoftware.prtcplugin.packet.PacketAutoUpload;
@@ -22,8 +23,8 @@ public class DataUtil {
             processAutoUpload("Data", (PacketAutoUpload) pkg);
             RedisUtil.publishData("data");  /* 这里是推送消息，但由于未知原因无法添加新方法 */
         } else if (pkg instanceof PacketHeartBeat){
-//            processHeartBeat("HeartBeat", (PacketHeartBeat) pkg);
-//            RedisUtil.publishData("heartbeat");
+            processHeartBeat("HeartBeat", (PacketHeartBeat) pkg);
+            RedisUtil.publishData("heartbeat");
         }
     }
 
@@ -33,12 +34,21 @@ public class DataUtil {
             Data data = new Data(p.getAddress(), meter.getId(), meter.getData(), meter.getState());
             datas.add(data);
         }
-        //String finalData = JSON.toJSONString(datas);
         RedisUtil.pushQueue(key, JSON.toJSONString(datas));
-        logger.info("the number of data : " + datas.size());
+        logger.info("AUTOUPLOADED NUM: " + datas.size());
     }
 
     private static void processHeartBeat(String key, PacketHeartBeat p){
-        logger.warn("certain data to store should be settled...");
+        HeartData data = new HeartData();
+        String addr = Long.toHexString(p.getAddress());
+        int len = 10 - addr.length();
+        StringBuilder zeros = new StringBuilder();
+        while (len -- > 0) zeros.append("0");
+        String finalAddr = zeros + addr;
+        data.setAddr(finalAddr);
+
+        String temp = JSON.toJSONString(data);
+        RedisUtil.pushQueue(key, temp);
+        logger.info("SEND HEARTBEAT FROM:" + finalAddr);
     }
 }

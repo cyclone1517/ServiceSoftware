@@ -22,7 +22,7 @@ import java.util.*;
 public class PkgExpUtil {
 
     private final static String XML_PATH = "pkgDesc.xml";
-    private final static String PKG_PATH = "team.hnuwt.servicesoftware.packet";
+    private final static String PKG_PATH = "team.hnuwt.servicesoftware.prtcplugin.packet";
 
     private static HashMap<Long, List<String>> totalFieldName;    /* 数据字段名 */
     private static HashMap<Long, List<Integer>> totalFieldLen;    /* 每个字段长 */
@@ -38,7 +38,7 @@ public class PkgExpUtil {
             init();
             loadPropXml();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("INIT FAILED!!!");
         }
     }
 
@@ -94,7 +94,16 @@ public class PkgExpUtil {
             String fieldLenStr = headLenStr;
             String fieldCodeStr = headCodeStr;
 
-            Long id = Long.parseLong(prop.path("id").asText());   /* 读取业务id */
+            Long id;
+            String idStr = "";
+            try {
+                idStr = prop.path("id").asText();
+                id = Long.parseLong(idStr);   /* 读取业务id */
+            } catch (NumberFormatException e){
+                logger.error("Not a numerical id @#@" + idStr);
+                continue;
+            }
+
             String function = prop.path("function").asText();   /* 业务功能名 */
 
             JsonNode fieldNames = prop.path("fieldNames").get("fn");  /*  用户字段名 */
@@ -111,12 +120,17 @@ public class PkgExpUtil {
             Boolean isBulk = Boolean.valueOf(isBulkStr);
 
             if (isBulk) {
-                JsonNode rptField = prop.path("RptField").get("rpf");      /* 读取重复字段信息区 */
+                JsonNode rptField = prop.get("rptfld");      /* 读取重复字段信息区 */
+                if (rptField == null) {
+                    logger.error("NOT A BULK PACKAGE!!!");
+                    continue;
+                }
                 List<ListInformation> listInformations = PkgExpHelper.geneListImformations(rptField);
                 rptFieldMap.put(id, listInformations);
             }
 
             //存入数据
+
             busiName.put(id, function);
             totalFieldName.put(id, fieldNameList);
             totalFieldLen.put(id, fldLenToArray(fieldLenStr));
@@ -177,7 +191,7 @@ public class PkgExpUtil {
         if (null != result){
             return result.toArray(new ListInformation[0]);
         }
-        return null;
+        return new ListInformation[0];
     }
 
     public static Packet getPacketModel(long id){

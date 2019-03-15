@@ -1,6 +1,6 @@
 <PackageInfos>
     <headProp>
-        <porp>
+        <prop>
             <fn>firstStartChar</fn>
             <fn>firstLength</fn>
             <fn>secondLength</fn>
@@ -10,14 +10,15 @@
             <fn>afn</fn>
             <fn>seq</fn>
             <fn>dataId</fn>
-        </porp>
+        </prop>
         <fldlen>122115115</fldlen>
         <encode>000000000</encode>
     </headProp>
     <userProp>
         <prop>
             <id>30081548684</id>
-            <function>AUTO_UPLOAD</function>
+            <function>AutoUpload</function>
+            <isBulk>true</isBulk>
             <fieldNames>
                 <fn>number</fn>
                 <fn>id</fn>
@@ -28,24 +29,24 @@
             </fieldNames>
             <fldlen>224211</fldlen>
             <encode>001000</encode>
-            <info>
+            <rptfld>
                 <start>9</start>
                 <end>13</end>
                 <className>Meter</className>
                 <classFld>meter</classFld>
-            </info>
+            </rptfld>
         </prop>
         <prop>
-            <id>id2</id>
-            <function>AUTO_UPLOAD</function>
+            <id>67112962</id>
+            <function>HeartBeat</function>
+            <isBulk>false</isBulk>
             <fieldNames>
-                <fn>number</fn>
-                <fn>id</fn>
-                <fn>data</fn>
-                <fn>state</fn>
+                <fn>signal</fn>
                 <fn>cs</fn>
                 <fn>endChar</fn>
             </fieldNames>
+            <fldlen>111</fldlen>
+            <encode>100</encode>
         </prop>
     </userProp>
 </PackageInfos>
