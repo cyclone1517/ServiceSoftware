@@ -2,7 +2,7 @@
 <plugins>
     <plugin>
         <id>30081548684</id>
-        <jar>/home/zgh/project/ServiceProtocolModule/PluginDemo/servicesoftware-auto-upload-demo-1.0.0.jar</jar>
-        <class>PluginServiceImpl</class>
+        <jar>D:/CylWorkFile/WorkSpace/IDEA/ServiceSoftwareTrk2/PluginDemo/AutoUploadDemo/target/servicesoftware-auto-upload-demo-1.0.0.jar</jar>
+        <class>team.hnuwt.servicesoftware.prtcplugin.service.PluginServiceImpl</class>
     </plugin>
 </plugins>

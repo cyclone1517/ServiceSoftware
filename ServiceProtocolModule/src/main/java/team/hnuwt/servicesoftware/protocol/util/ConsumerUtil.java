@@ -25,7 +25,7 @@ public class ConsumerUtil implements Runnable {
     private final static String APPLICATION_FILE = "application.properties";
     private static Properties props;
 
-    private final static String UPSTREAM = "Upstream";
+    private final static String UPSTREAM = "UPSTREAM";
     private final static String TAG = "Tag";
 
     private static Logger logger = LoggerFactory.getLogger(ConsumerUtil.class);
@@ -46,7 +46,7 @@ public class ConsumerUtil implements Runnable {
             consumer.setNamesrvAddr(props.getProperty("rocketmq.consumer.address"));
             consumer.setInstanceName(props.getProperty("rocketmq.consumer.consumerName"));
             consumer.setVipChannelEnabled(false);
-            consumer.subscribe(UPSTREAM, TAG);
+            consumer.subscribe(UPSTREAM, "*");
             consumer.registerMessageListener(new MessageListenerConcurrently()
             {
 
@@ -61,6 +61,7 @@ public class ConsumerUtil implements Runnable {
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             });
+            logger.info("ConsumerUtil started successfully");
         } catch (MQClientException e) {
             logger.error("", e);
         }

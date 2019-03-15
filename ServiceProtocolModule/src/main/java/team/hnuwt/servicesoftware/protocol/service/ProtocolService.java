@@ -28,8 +28,13 @@ public class ProtocolService implements Runnable {
             logger.warn("package is illegal, checksum error!");
             return;
         }
-        long pluginId = pkg.BINToLong(12, 13) + (pkg.BINToLong(14, 18) << 8);
-        PluginService ps = PluginUtil.getInstance(pluginId);
+        //long pluginId = pkg.BINToLong(12, 13) + (pkg.BINToLong(14, 18) << 8);
+        // 由于一个插件解析一套协议，现把编号写为定值，配置文件在ServiceProtocolModule<plugin.xml>
+        PluginService ps = PluginUtil.getInstance(Long.valueOf("30081548684"));
+        if (ps == null){
+            logger.warn("no supported plugins! @#@id" + "30081548684");
+            return;
+        }
         ps.translate(pkg);
     }
 
