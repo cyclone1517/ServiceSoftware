@@ -1,44 +1,25 @@
-package team.hnuwt.servicesoftware.synchronizer.service;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package team.hnuwt.servicesoftware.synchronizer.handler;
 
 import com.alibaba.fastjson.JSON;
-
 import team.hnuwt.servicesoftware.synchronizer.model.Data;
+import team.hnuwt.servicesoftware.synchronizer.service.DataService;
 import team.hnuwt.servicesoftware.synchronizer.util.DataProcessThreadUtil;
 import team.hnuwt.servicesoftware.synchronizer.util.RedisUtil;
 
-@Deprecated
-public class DataManagerService implements Runnable {
-    private static Logger logger = LoggerFactory.getLogger(DataManagerService.class);
+import java.util.ArrayList;
+import java.util.List;
 
-    private final static String APPLICATION_FILE = "application.properties";
-    private static Properties props;
+public class DataHandler implements Runnable {
 
-    private static int batchNum;
+    private static final String DATA = "Data";
+    private int batchNum;
 
-    private final static String DATA = "Data";
+    public DataHandler(int batchNum){
+        this.batchNum = batchNum;
+    }
 
-    /**
-     * 从Redis数据库中获取数据
-     */
     @Override
-    public void run()
-    {
-        try {
-            props = new Properties();
-            props.load(DataManagerService.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
-        } catch (IOException e) {
-            logger.error("", e);
-        }
-
-        batchNum = Integer.parseInt(props.getProperty("db.batch"));
+    public void run() {
         DataProcessThreadUtil dptu = new DataProcessThreadUtil();
         while (true)
         {
@@ -59,5 +40,4 @@ public class DataManagerService implements Runnable {
             }
         }
     }
-
 }
