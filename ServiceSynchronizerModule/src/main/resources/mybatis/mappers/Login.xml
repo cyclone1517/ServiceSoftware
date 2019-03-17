@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Login">
+
+    <insert id="add" parameterType="team.hnuwt.servicesoftware.synchronizer.model.Login">
+        replace into tb_Login(collectorId,port,state,time)
+        values(#{collectorId},#{port},#{state})
+    </insert>
+
+    <insert id="addBatch">
+        replace into tb_Login(collectorId,port,state,time)
+        values
+        <foreach collection="list" item="login" separator=",">
+            (#{login.collectorId},#{login.port},#{login.state}, #{login.time})
+        </foreach>
+    </insert>
+
+</mapper>

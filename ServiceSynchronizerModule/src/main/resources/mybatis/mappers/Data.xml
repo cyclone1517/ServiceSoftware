@@ -6,12 +6,12 @@
 <mapper namespace="Data">
 
     <insert id="add" parameterType="team.hnuwt.servicesoftware.synchronizer.model.Data">
-        insert into tb_data(collectorId,meterId,data,state)
+        insert into tb_Data(collectorId,meterId,data,state)
         values(#{collectorId},#{meterId},#{data},#{state})
     </insert>
 
     <insert id="addBatch">
-        insert into tb_data(collectorId,meterId,data,state)
+        insert into tb_Data(collectorId,meterId,data,state)
         values
         <foreach collection="list" item="data" separator=",">
             (#{data.collectorId},#{data.meterId},#{data.data},#{data.state})
