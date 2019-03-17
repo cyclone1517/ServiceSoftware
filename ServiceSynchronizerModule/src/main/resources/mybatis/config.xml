@@ -11,15 +11,17 @@
             </transactionManager>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:36810/servicesoftware"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/servicesoftware"/>
                 <property name="username" value="root"/>
-                <property name="password" value="123456"/>
+                <property name="password" value="root"/>
             </dataSource>
         </environment>
     </environments>
 
     <mappers>
         <mapper resource="mybatis/mappers/Data.xml"/>
+        <mapper resource="mybatis/mappers/HeartBeat.xml"/>
+        <mapper resource="mybatis/mappers/Login.xml"/>
     </mappers>
 
 </configuration>
