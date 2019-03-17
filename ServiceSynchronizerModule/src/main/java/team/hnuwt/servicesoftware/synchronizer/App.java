@@ -1,6 +1,5 @@
 package team.hnuwt.servicesoftware.synchronizer;
 
-import team.hnuwt.servicesoftware.synchronizer.service.DataManagerService;
 import team.hnuwt.servicesoftware.synchronizer.service.DataSubscribeService;
 import team.hnuwt.servicesoftware.synchronizer.util.Subscriber;
 
