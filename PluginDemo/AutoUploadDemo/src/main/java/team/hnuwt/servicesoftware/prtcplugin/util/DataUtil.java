@@ -40,15 +40,11 @@ public class DataUtil {
 
     private static void processHeartBeat(String key, PacketHeartBeat p){
         HeartData data = new HeartData();
-        String addr = Long.toHexString(p.getAddress());
-        int len = 10 - addr.length();
-        StringBuilder zeros = new StringBuilder();
-        while (len -- > 0) zeros.append("0");
-        String finalAddr = zeros + addr;
-        data.setAddr(finalAddr);
+        long addr = p.getAddress();
+        data.setAddr(addr);
 
         String temp = JSON.toJSONString(data);
         RedisUtil.pushQueue(key, temp);
-        logger.info("SEND HEARTBEAT FROM:" + finalAddr);
+        logger.info("SEND HEARTBEAT FROM:" + addr);
     }
 }

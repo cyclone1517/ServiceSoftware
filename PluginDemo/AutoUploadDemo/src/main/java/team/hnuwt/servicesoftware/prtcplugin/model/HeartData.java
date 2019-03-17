@@ -3,14 +3,14 @@ package team.hnuwt.servicesoftware.prtcplugin.model;
 import java.sql.Timestamp;
 
 public class HeartData {
-    private String addr;
+    private long addr;
     private Timestamp timestamp;
 
-    public String getAddr() {
+    public long getAddr() {
         return addr;
     }
 
-    public void setAddr(String addr) {
+    public void setAddr(long addr) {
         this.addr = addr;
     }
 
