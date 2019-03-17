@@ -6,8 +6,7 @@ import redis.clients.jedis.JedisPubSub;
 import team.hnuwt.servicesoftware.synchronizer.constant.MESSAGE;
 import team.hnuwt.servicesoftware.synchronizer.handler.DataHandler;
 import team.hnuwt.servicesoftware.synchronizer.handler.HeartBeatHandler;
-import team.hnuwt.servicesoftware.synchronizer.service.DataManagerService;
-import team.hnuwt.servicesoftware.synchronizer.service.DataService;
+import team.hnuwt.servicesoftware.synchronizer.handler.LoginHandler;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -33,13 +32,16 @@ public class Subscriber extends JedisPubSub {
 
     @Override
     public void onMessage(String channel, String message) {       //收到消息会调用
-        System.out.println(String.format("receive redis published message, channel %s, message %s", channel, message));
-        MESSAGE msg = MESSAGE.getMSG(message);
+        System.out.println(String.format("receive redis published message, @#@ channel: %s, @#@ message: %s", channel, message));
+        MESSAGE msg = MESSAGE.getMSG(message.toUpperCase());
         if (msg == MESSAGE.DATA){
             dptu.getExecutor().execute(new DataHandler(batchNum));
         }
         else if (msg == MESSAGE.HEARTBEAT) {
             dptu.getExecutor().execute(new HeartBeatHandler(batchNum));
+        }
+        else if (msg == MESSAGE.LOGIN) {
+            dptu.getExecutor().execute(new LoginHandler(batchNum));
         }
     }
     @Override

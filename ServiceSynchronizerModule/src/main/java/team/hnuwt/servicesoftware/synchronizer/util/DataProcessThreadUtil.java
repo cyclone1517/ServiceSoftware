@@ -1,13 +1,14 @@
 package team.hnuwt.servicesoftware.synchronizer.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 线程池管理类
@@ -25,7 +26,8 @@ public class DataProcessThreadUtil {
     {
         try {
             props = new Properties();
-            props.load(DataProcessThreadUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
+            InputStream is = DataProcessThreadUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE);
+            props.load(is);
         } catch (IOException e) {
             logger.error("", e);
         }

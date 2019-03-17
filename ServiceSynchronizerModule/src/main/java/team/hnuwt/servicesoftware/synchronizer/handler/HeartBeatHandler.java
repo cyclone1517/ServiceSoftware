@@ -1,8 +1,10 @@
 package team.hnuwt.servicesoftware.synchronizer.handler;
 
 import com.alibaba.fastjson.JSON;
-import team.hnuwt.servicesoftware.synchronizer.model.Data;
-import team.hnuwt.servicesoftware.synchronizer.service.DataService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import team.hnuwt.servicesoftware.synchronizer.model.HeartBeat;
+import team.hnuwt.servicesoftware.synchronizer.service.HeartBeatService;
 import team.hnuwt.servicesoftware.synchronizer.util.DataProcessThreadUtil;
 import team.hnuwt.servicesoftware.synchronizer.util.RedisUtil;
 
@@ -13,6 +15,7 @@ public class HeartBeatHandler implements Runnable {
 
     private static final String DATA = "HeartBeat";
     private int batchNum;
+    private static Logger logger = LoggerFactory.getLogger(HeartBeatHandler.class);
 
     public HeartBeatHandler(int batchNum){
         this.batchNum = batchNum;
@@ -23,20 +26,29 @@ public class HeartBeatHandler implements Runnable {
         DataProcessThreadUtil dptu = new DataProcessThreadUtil();
         while (true)
         {
-            List<Data> list = new ArrayList<>();
+            List<String> list = new ArrayList<>();
             for (int i = 0; i < batchNum; i++)      /* 连续取batchNum条 */
             {
                 String s = RedisUtil.getData(DATA);
                 if (s != null)
                 {
-                    List<Data> data = JSON.parseArray(s, Data.class);
-                    list.addAll(data);
+                    list.add(s);
                 } else                              /* 数据为空结束 */
                     break;
             }
-            if (list.size() > 0)
+            if (list.size() > 0)                    /* 打包装入Mysql */
             {
-                dptu.getExecutor().execute(new DataService(list));
+                List<HeartBeat> heartList = new ArrayList<>();
+                list.forEach(collectorId -> {
+                    long cdId = Long.parseLong("0");
+                    try {
+                        cdId = Long.parseLong(collectorId);
+                    } catch (NumberFormatException e){
+                        logger.warn("Collector pack failed, @#@ id: " + collectorId);
+                    }
+                    heartList.add(new HeartBeat(cdId));
+                });
+                dptu.getExecutor().execute(new HeartBeatService(heartList));
             }
         }
     }
