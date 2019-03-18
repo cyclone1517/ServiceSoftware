@@ -7,7 +7,7 @@
 
     <insert id="add" parameterType="team.hnuwt.servicesoftware.synchronizer.model.Login">
         replace into tb_Login(collectorId,port,state,time)
-        values(#{collectorId},#{port},#{state})
+        values(#{collectorId},#{port},#{state}, #{time})
     </insert>
 
     <insert id="addBatch">
