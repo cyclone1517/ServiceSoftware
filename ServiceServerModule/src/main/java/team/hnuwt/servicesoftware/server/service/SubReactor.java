@@ -1,6 +1,7 @@
 package team.hnuwt.servicesoftware.server.service;
 
 import java.io.IOException;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import team.hnuwt.servicesoftware.server.message.TCPMessageHandler;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
+import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
 
 public class SubReactor implements Runnable {
     private Selector selector;
@@ -76,6 +78,8 @@ public class SubReactor implements Runnable {
             if (num == -1)
             {
                 logger.info("CLOSE: " + sk.channel());
+                SocketAddress saddr = ((SocketChannel) sk.channel()).getRemoteAddress();
+                TCPMessageHandler.handleLogout(ConcentratorUtil.findLogout(saddr));
                 sk.cancel();
                 if (sk.channel() != null)
                 {

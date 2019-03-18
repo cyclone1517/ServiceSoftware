@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.hnuwt.servicesoftware.server.constant.down.TAG;
+import team.hnuwt.servicesoftware.server.constant.down.TOPIC;
 import team.hnuwt.servicesoftware.server.constant.up.CONSTANT;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.FieldPacker;
@@ -47,8 +49,11 @@ public class ReadMeterReHandler implements Runnable{
         root.put("num", num);
         root.set("data", geneMeterData(result.substring(CONSTANT.DATA_LOC), num, mapper));
 
-
-        ProduceUtil.addQueue("UPSTREAM", "READ_METER", root.toString());
+        /*
+         * 既要返回给中间服务，也要传送到数据库
+         */
+        ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), TAG.READ_METER.getStr(), root.toString());
+        //ProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.HEARTBEAT.getStr(), meterData.toString());
 
     }
 

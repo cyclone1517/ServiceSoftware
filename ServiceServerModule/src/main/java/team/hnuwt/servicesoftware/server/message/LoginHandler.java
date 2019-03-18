@@ -8,9 +8,12 @@ import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import team.hnuwt.servicesoftware.server.constant.down.TAG;
+import team.hnuwt.servicesoftware.server.constant.down.TOPIC;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
 import team.hnuwt.servicesoftware.server.util.PkgPackUtil;
+import team.hnuwt.servicesoftware.server.util.ProduceUtil;
 
 /**
  * 登录包处理类
@@ -33,6 +36,7 @@ public class LoginHandler implements Runnable {
     {
         long id = message.BINToLong(7, 12);
         ConcentratorUtil.add(id, sc);
+        ProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.LOGIN.getStr(), message.toString());
 
         Calendar cas = Calendar.getInstance();
         int year = cas.get(Calendar.YEAR);

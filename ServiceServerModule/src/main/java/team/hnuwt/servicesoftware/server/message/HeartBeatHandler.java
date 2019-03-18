@@ -8,6 +8,8 @@ import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import team.hnuwt.servicesoftware.server.constant.down.TAG;
+import team.hnuwt.servicesoftware.server.constant.down.TOPIC;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
 import team.hnuwt.servicesoftware.server.util.ProduceUtil;
@@ -38,7 +40,7 @@ public class HeartBeatHandler implements Runnable {
         if (ConcentratorUtil.get(id) == null){
             return;
         }
-        ProduceUtil.addQueue("UPSTREAM", "HEARTBEAT", heartBeat.toString());
+        ProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.HEARTBEAT.getStr(), heartBeat.toString());
 
         // 收到报文，发确认帧到集中器
         Calendar cas = Calendar.getInstance();

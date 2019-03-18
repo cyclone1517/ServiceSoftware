@@ -3,15 +3,25 @@ package team.hnuwt.servicesoftware.server.constant.down;
 import java.util.HashMap;
 
 /**
- * 消费者工具中所有的标签类型
+ * @author yuanlong chen
+ * 标签类型
  */
 public enum TAG {
 
+	/*
+	 * 下发命令标签类型
+	 */
 	READ_METER("READ_METER"),
 	CTRL_TIME("CTRL_TIME"),
-	CTRL_ON("CTRL_ON"),
-	CTRL_OFF("CTRL_FF");
+	CTRL_ON("CTRL_ON"),		/* 下发命令要指明ON或OFF */
+	CTRL_OFF("CTRL_OFF"),
+	CTRL_ONOFF("CTRL_ONOFF"),	/* 反馈数据要分大类 */
 
+	/*
+	 * 上行报文标签类型
+	 */
+	HEARTBEAT("HEARTBEAT"),
+	LOGIN("LOGIN");
 
 	private String str;
 
@@ -35,6 +45,14 @@ public enum TAG {
 		tags.put("CTRL_TIME", CTRL_TIME);
 		tags.put("CTRL_ON", CTRL_ON);
 		tags.put("CTRL_OFF", CTRL_OFF);
+		tags.put("HEARTBEAT", HEARTBEAT);
+		tags.put("LOGIN", LOGIN);
+		tags.put("CTRL_ONOFF", CTRL_ONOFF);
+	}
+
+	@Override
+	public String toString(){
+		return str;
 	}
 	
 }

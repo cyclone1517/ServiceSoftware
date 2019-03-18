@@ -3,12 +3,14 @@ package team.hnuwt.servicesoftware.server.message;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import team.hnuwt.servicesoftware.model.Logout;
 import team.hnuwt.servicesoftware.server.constant.up.FUNID;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;
@@ -53,6 +55,14 @@ public class TCPMessageHandler {
         {
             map.put(sa, remainder);
         }
+    }
+
+    /**
+     * 将主动登出的集中器汇报给数据库和中间服务
+     * @param logoutList
+     */
+    public static void handleLogout(List<Logout> logoutList){
+        DataProcessThreadUtil.getExecutor().execute(new LogoutHandler(logoutList));
     }
 
     /**
@@ -116,33 +126,47 @@ public class TCPMessageHandler {
             {
                 if (c == 0x16)
                 {
-                    /* 获取功能码和数字单元标识 */
-                    if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR)       /* 心跳 */
+                    /* 心跳：走协议栈单线 */
+                    if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR)   /* 获取功能码和数字单元标识 */
                     {
                         logger.info("HEARTBEAT: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(sc, result));
                     }
-                    else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)      /* 登录 */
+
+                    /* 登录：走协议栈单线 */
+                    else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)
                     {
                         logger.info("LOGIN: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));
                     }
-                    else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER){     /* 抄表 */
+
+                    /* 抄表：（解析了明文）走协议栈和中间服务双线 */
+                    else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER){
                         logger.info("READ_METER: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new ReadMeterReHandler(sc, result));
                     }
-                    else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.SUCCESS){     /* 操作确认 */
+
+                    /* 操作确认：走中间服务单线 */
+                    else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.SUCCESS){
                         logger.info("OPERATION SUCCESS: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new StateReHandler(sc, result, true));
                     }
-                    else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.FAIL){     /* 操作失败 */
+
+                    /* 操作失败：走中间服务单线 */
+                    else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.FAIL){
                         logger.info("OPERATION FAIL: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new StateReHandler(sc, result, false));
                     }
-                    else {  /* 其余数据包 */
+
+                    /* 其余数据包：待定 */
+                    else {
                         logger.info("OTHERS: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new OrderHandler(result.toString()));
                     }
+
+                    /*
+                     * 登出没有报文，见上文 handleLogout 方法
+                     */
                 }
                 result = new ByteBuilder();
                 state = 0;

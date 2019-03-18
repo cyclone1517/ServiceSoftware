@@ -1,17 +1,15 @@
 package team.hnuwt.servicesoftware.server.util;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Transaction;
+import redis.clients.jedis.Pipeline;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Redis操作工具类
@@ -36,7 +34,7 @@ public class RedisUtil {
             jedisPool = new JedisPool(config, props.getProperty("redis.ip"),
                     Integer.valueOf(props.getProperty("redis.port")),
                     Integer.valueOf(props.getProperty("redis.timeout")));
-            logger.info("Redis has been set up");
+            logger.info("redis has been set up");
         } catch (IOException e) {
             logger.error("", e);
         }
@@ -49,54 +47,67 @@ public class RedisUtil {
 
     private static void returnJedis(Jedis jedis)
     {
-        if (jedis != null)
-        {
+        if (jedis != null) {
             jedisPool.returnResource(jedis);
         }
     }
 
     /**
-     * 更新心跳包
-     * @param device
+     * 将数据放入到redis数据库中
+     * @param key
+     * @param data
      */
-    public static void updateHeatBeat(String device)
+    public static void pushQueue(String key, String data)
     {
         Jedis jedis = getJedis();
-        jedis.hset("DeviceHeartBeat", device, String.valueOf(System.currentTimeMillis()));
+        jedis.rpush(key, data);
         returnJedis(jedis);
     }
 
     /**
-     * 注册多个设备
-     * @param devices
+     * 将数据批量放入到redis数据库中
+     * @param key
+     * @param list
      */
-    public static void registDevice(List<String> devices)
+    public static void pushQueue(String key, List<String> list)
     {
-        try {
-            Jedis jedis = getJedis();
-            Transaction trans = jedis.multi();
-            for (int i = 0, len = devices.size(); i < len; i++)
-            {
-                trans.sadd("RegisteredDevices", devices.get(i));
-            }
-            trans.exec();
-            jedis.save();
-            trans.close();
-            returnJedis(jedis);
-        } catch (IOException e) {
-            e.printStackTrace();
+        Jedis jedis = getJedis();
+        Pipeline pipe = jedis.pipelined();
+        for (String s : list)
+        {
+            pipe.rpush(key, s);
         }
+        pipe.sync();
+        returnJedis(jedis);
     }
 
     /**
-     * 获取当前已经注册的设备
+     * 从redis中获取数据
+     * @param key
      * @return
      */
-    public static Set<String> getRegisteredDevices()
+    public static String getData(String key)
     {
+        String data = null;
         Jedis jedis = getJedis();
-        Set<String> devices = jedis.smembers("RegisteredDevices");
+        List<String> datas = jedis.brpop(1, key);
+        if (datas != null)
+        {
+            for (int i = 1, len = datas.size(); i < len; i += 2)
+            {
+                data = datas.get(i);
+            }
+        }
         returnJedis(jedis);
-        return devices;
+        return data;
+    }
+
+    /**
+     * 通过订阅机制
+     */
+    public static void publishData(String dataType){
+        Jedis jedis = getJedis();
+        jedis.publish("notifier", dataType);
+        returnJedis(jedis);
     }
 }

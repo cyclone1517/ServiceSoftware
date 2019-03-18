@@ -18,9 +18,9 @@ public class RedisTest {
     public void tearDown() throws Exception {
     }
 
-    @Test
-    public void test() {
-        RedisUtil.updateHeatBeat("123");
-    }
+//    @Test
+//    public void test() {
+//        RedisUtil.updateHeatBeat("123");
+//    }
 
 }

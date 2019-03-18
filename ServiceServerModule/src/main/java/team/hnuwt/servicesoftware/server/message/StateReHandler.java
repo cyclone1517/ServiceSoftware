@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.hnuwt.servicesoftware.server.constant.down.TAG;
+import team.hnuwt.servicesoftware.server.constant.down.TOPIC;
 import team.hnuwt.servicesoftware.server.constant.up.CONSTANT;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.FieldPacker;
@@ -41,7 +43,7 @@ public class StateReHandler implements Runnable{
         root.put("addr", addr);
         root.put("success", success);
 
-        ProduceUtil.addQueue("UPSTREAM", "CTRL_ONOFF", root.toString());
+        ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), TAG.CTRL_ONOFF.getStr(), root.toString());
 
     }
 }
