@@ -23,6 +23,7 @@ public class PkgExpUtil {
 
     private final static String XML_PATH = "pkgDesc.xml";
     private final static String PKG_PATH = "team.hnuwt.servicesoftware.prtcplugin.packet";
+    private final static String MODEL_PATH = "team.hnuwt.servicesoftware.prtcplugin.model";
 
     private static HashMap<Long, List<String>> totalFieldName;    /* 数据字段名 */
     private static HashMap<Long, List<Integer>> totalFieldLen;    /* 每个字段长 */
@@ -125,7 +126,7 @@ public class PkgExpUtil {
                     logger.error("NOT A BULK PACKAGE!!!");
                     continue;
                 }
-                List<ListInformation> listInformations = PkgExpHelper.geneListImformations(rptField);
+                List<ListInformation> listInformations = PkgExpHelper.geneListImformations(rptField, MODEL_PATH);
                 rptFieldMap.put(id, listInformations);
             }
 
@@ -212,5 +213,7 @@ public class PkgExpUtil {
     public static boolean isBulk(long id){
         return isBulkMap.get(id);
     }
+
+    public static void doNothing(){};
 
 }

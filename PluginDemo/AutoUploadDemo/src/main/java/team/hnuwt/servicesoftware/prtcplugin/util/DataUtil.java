@@ -3,12 +3,12 @@ package team.hnuwt.servicesoftware.prtcplugin.util;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.hnuwt.servicesoftware.prtcplugin.constant.TAG;
 import team.hnuwt.servicesoftware.prtcplugin.model.Data;
 import team.hnuwt.servicesoftware.prtcplugin.model.HeartData;
+import team.hnuwt.servicesoftware.prtcplugin.model.LoginData;
 import team.hnuwt.servicesoftware.prtcplugin.model.Meter;
-import team.hnuwt.servicesoftware.prtcplugin.packet.Packet;
-import team.hnuwt.servicesoftware.prtcplugin.packet.PacketAutoUpload;
-import team.hnuwt.servicesoftware.prtcplugin.packet.PacketHeartBeat;
+import team.hnuwt.servicesoftware.prtcplugin.packet.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +20,20 @@ public class DataUtil {
 
     public static void putDataToRedis(Packet pkg){
         if (pkg instanceof PacketAutoUpload){
-            processAutoUpload("Data", (PacketAutoUpload) pkg);
-            RedisUtil.publishData("data");  /* 这里是推送消息，但由于未知原因无法添加新方法 */
-        } else if (pkg instanceof PacketHeartBeat){
-            processHeartBeat("HeartBeat", (PacketHeartBeat) pkg);
-            RedisUtil.publishData("heartbeat");
+            processAutoUpload(TAG.UPLOAD.getStr(), (PacketAutoUpload) pkg);
+            RedisUtil.publishData(TAG.UPLOAD.getStr());  /* 这里是推送消息，但由于未知原因无法添加新方法 */
+        }
+        else if (pkg instanceof PacketReadMeter){
+            processReadMeter(TAG.UPLOAD.getStr(), (PacketReadMeter) pkg);
+            RedisUtil.publishData(TAG.UPLOAD.getStr());  /* 这里是推送消息，但由于未知原因无法添加新方法 */
+        }
+        else if (pkg instanceof PacketHeartBeat){
+            processHeartBeat(TAG.HEARTBEAT.getStr(), (PacketHeartBeat) pkg);
+            RedisUtil.publishData(TAG.HEARTBEAT.getStr());
+        }
+        else if (pkg instanceof PacketLogin){
+            processLogin(TAG.LOGIN.getStr(), (PacketLogin) pkg);
+            RedisUtil.publishData(TAG.LOGIN.getStr());
         }
     }
 
@@ -35,7 +44,17 @@ public class DataUtil {
             datas.add(data);
         }
         RedisUtil.pushQueue(key, JSON.toJSONString(datas));
-        logger.info("AUTOUPLOADED NUM: " + datas.size());
+        logger.info("UPLOADED NUM: " + datas.size());
+    }
+
+    private static void processReadMeter(String key, PacketReadMeter p){
+        List<Data> datas = new ArrayList<>();
+        for (Meter meter : p.getMeter()) {
+            Data data = new Data(p.getAddress(), meter.getId(), meter.getData(), meter.getState());
+            datas.add(data);
+        }
+        RedisUtil.pushQueue(key, JSON.toJSONString(datas));
+        logger.info("UPLOADED NUM: " + datas.size());
     }
 
     private static void processHeartBeat(String key, PacketHeartBeat p){
@@ -46,5 +65,15 @@ public class DataUtil {
         String temp = JSON.toJSONString(data);
         RedisUtil.pushQueue(key, temp);
         logger.info("SEND HEARTBEAT FROM:" + addr);
+    }
+
+    private static void processLogin(String key, PacketLogin p){
+        LoginData data = new LoginData();
+        long addr = p.getAddress();
+        data.setAddr(addr);
+
+        String temp = JSON.toJSONString(data);
+        RedisUtil.pushQueue(key, temp);
+        logger.info("SEND LOGIN FROM:" + addr);
     }
 }

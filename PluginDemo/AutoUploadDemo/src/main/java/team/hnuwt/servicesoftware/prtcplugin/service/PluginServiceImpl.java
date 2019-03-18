@@ -31,12 +31,17 @@ public class PluginServiceImpl implements PluginService {
 
     private static final String DATA = "Data";
 
+    static {
+        // 让这个人类先加载
+        PkgExpUtil.doNothing();
+    }
+
     @Override
     public void translate(ByteBuilder pkg) {
         /* 读取包结构 AFN+ID 共同决定业务类型 */
         long id = pkg.BINToLong(12, 13) + (pkg.BINToLong(14, 18) << 8);
         if (PkgExpUtil.getBusiName(id)==null){
-            logger.warn("Not a supported business type: @#@pkg:" + pkg + " @#@id:" + id);
+            logger.warn("NOT SUPPORTED BUSINESS TYPE @#@pkg:" + pkg + " @#@id:" + id);
             return;
         }
 
@@ -45,7 +50,6 @@ public class PluginServiceImpl implements PluginService {
         EncodeFormat[] ENCODEFORMAT = PkgExpUtil.getFiledCode(id);
         ListInformation[] LIST_IMFORMATION = PkgExpUtil.getReptedListInfo(id);
 
-        //PacketAutoUpload p = new PacketAutoUpload();
         Packet p = PkgExpUtil.getPacketModel(id);       /* 通过反射获取Packet对象模板 */
         ProtocolUtil pu = new ProtocolUtil(FIELD_NAME, LENGTH, ENCODEFORMAT, LIST_IMFORMATION);     /* LIST_IMFORMATION可以为空 */
         pu.translate(pkg, p, PkgExpUtil.isBulk(id));    /* 把报文数据解析为明文 */

@@ -41,7 +41,10 @@ public class Subscriber extends JedisPubSub {
             dptu.getExecutor().execute(new HeartBeatHandler(batchNum));
         }
         else if (msg == MESSAGE.LOGIN) {
-            dptu.getExecutor().execute(new LoginHandler(batchNum));
+            dptu.getExecutor().execute(new LoginHandler(batchNum, 1));  // state: 1-登录 0-掉线 2-登出
+        }
+        else if (msg == MESSAGE.LOGOUT){
+            dptu.getExecutor().execute(new LoginHandler(batchNum, 2));
         }
     }
     @Override
