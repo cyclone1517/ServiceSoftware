@@ -7,15 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class CheckOfflineHandler implements ResultHandler {
+public class CheckHandler implements ResultHandler {
 
     private List<String> offlineList = new ArrayList<>();
 
     @Override
     public void handleResult(ResultContext context) {
-        Map<String, Object> resultObj = (Map<String, Object>) context.getResultObject();
-        String collectorId = (String) resultObj.get("collectorId");
-        offlineList.add(collectorId);
+        offlineList = (List<String>) context.getResultObject();
+        return;
     }
 
     public List<String> getOfflineList(){

@@ -3,30 +3,32 @@ package team.hnuwt.servicesoftware.synchronizer.dao;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import team.hnuwt.servicesoftware.synchronizer.handler.CheckOfflineHandler;
-import team.hnuwt.servicesoftware.synchronizer.model.Login;
+import team.hnuwt.servicesoftware.synchronizer.handler.CheckHandler;
 import team.hnuwt.servicesoftware.synchronizer.util.DBUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CheckDao {
 
     private static Logger logger = LoggerFactory.getLogger(CheckDao.class);
 
-    public void check(Login data)
+    public List<String> check()
     {
         DBUtil dbUtil = new DBUtil();
         SqlSession sqlSession = null;
+        List<String> offList = null;
         try {
             sqlSession = dbUtil.getSqlSession();
-            sqlSession.select("check.offline", new CheckOfflineHandler());
+            offList = sqlSession.selectList("Check.offline");
             sqlSession.commit();
         } catch (IOException e) {
             logger.error("", e);
         } finally {
             if (sqlSession != null)
                 sqlSession.close();
+            return (offList==null)? new ArrayList<>(): offList;
         }
     }
 }
