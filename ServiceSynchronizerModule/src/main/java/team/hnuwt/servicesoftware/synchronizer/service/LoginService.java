@@ -27,7 +27,7 @@ public class LoginService implements Runnable {
     public void run()
     {
         new LoginDao().insertBatch(addrList);
-        logger.info("the number of data : " + addrList.size());
+        logger.info(addrList.size() + " collectors have LOGIN STATE CHANGED!");
     }
 
 }

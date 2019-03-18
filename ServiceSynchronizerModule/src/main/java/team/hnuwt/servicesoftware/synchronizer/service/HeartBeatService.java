@@ -25,7 +25,7 @@ public class HeartBeatService implements Runnable {
     public void run()
     {
         new HeartBeatDao().insertBatch(addrList);
-        logger.info("the number of data : " + addrList.size());
+        logger.info(addrList.size() + " HEARTBEAT PUT INTO MYSQL");
     }
 
 }

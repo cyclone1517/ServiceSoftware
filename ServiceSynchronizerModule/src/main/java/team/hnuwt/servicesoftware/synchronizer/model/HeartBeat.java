@@ -19,7 +19,6 @@ public class HeartBeat {
     public HeartBeat(long collectorId)
     {
         this(collectorId, 0);
-        logger.warn("NO PORT INFO YET!!");
     }
 
     public HeartBeat(long collectorId, int port) {
