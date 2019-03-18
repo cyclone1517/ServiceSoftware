@@ -37,8 +37,40 @@
             </rptfld>
         </prop>
         <prop>
+            <id>30081548428</id>
+            <function>ReadMeter</function>
+            <isBulk>true</isBulk>
+            <fieldNames>
+                <fn>number</fn>
+                <fn>id</fn>
+                <fn>data</fn>
+                <fn>cs</fn>
+                <fn>endChar</fn>
+            </fieldNames>
+            <fldlen>22411</fldlen>
+            <encode>00100</encode>
+            <rptfld>
+                <start>9</start>
+                <end>12</end>
+                <className>Meter</className>
+                <classFld>meter</classFld>
+            </rptfld>
+        </prop>
+        <prop>
             <id>67112962</id>
             <function>HeartBeat</function>
+            <isBulk>false</isBulk>
+            <fieldNames>
+                <fn>signal</fn>
+                <fn>cs</fn>
+                <fn>endChar</fn>
+            </fieldNames>
+            <fldlen>111</fldlen>
+            <encode>100</encode>
+        </prop>
+        <prop>
+            <id>16781314</id>
+            <function>Login</function>
             <isBulk>false</isBulk>
             <fieldNames>
                 <fn>signal</fn>

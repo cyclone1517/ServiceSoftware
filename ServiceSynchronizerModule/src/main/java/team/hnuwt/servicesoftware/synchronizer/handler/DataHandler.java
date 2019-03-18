@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DataHandler implements Runnable {
 
-    private static final String DATA = "Data";
+    private static final String DATA = "UPLOAD";
     private int batchNum;
 
     public DataHandler(int batchNum){
@@ -21,23 +21,22 @@ public class DataHandler implements Runnable {
     @Override
     public void run() {
         DataProcessThreadUtil dptu = new DataProcessThreadUtil();
-        while (true)
+
+        List<Data> list = new ArrayList<>();
+        for (int i = 0; i < batchNum; i++)      /* 连续取batchNum条 */
         {
-            List<Data> list = new ArrayList<>();
-            for (int i = 0; i < batchNum; i++)      /* 连续取batchNum条 */
+            String s = RedisUtil.getData(DATA);
+            if (s != null)
             {
-                String s = RedisUtil.getData(DATA);
-                if (s != null)
-                {
-                    List<Data> data = JSON.parseArray(s, Data.class);
-                    list.addAll(data);
-                } else                              /* 数据为空结束 */
-                    break;
-            }
-            if (list.size() > 0)
-            {
-                dptu.getExecutor().execute(new DataService(list));
-            }
+                List<Data> data = JSON.parseArray(s, Data.class);
+                list.addAll(data);
+            } else                              /* 数据为空结束 */
+                break;
         }
+        if (list.size() > 0)
+        {
+            dptu.getExecutor().execute(new DataService(list));
+        }
+
     }
 }
