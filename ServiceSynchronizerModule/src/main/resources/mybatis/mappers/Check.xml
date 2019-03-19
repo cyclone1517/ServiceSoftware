@@ -16,6 +16,14 @@
             )
     </select>
 
+    <update id="resetOffline" parameterType="java.util.List">
+        update tb_Login
+        set tb_Login.state = 0
+        where tb_Login.collectorId in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
 
 
 </mapper>

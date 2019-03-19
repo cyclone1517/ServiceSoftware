@@ -10,17 +10,19 @@ public class App {
 
     public static void main(String[] args)
     {
+
+        // 启动 Timer 定时检测任务
+        Timer timer = new Timer();
+        int checkSecond = 200;   /* 过期时间200分 */
+        int period = 10000;       /* 扫描时间10秒 */
+        timer.schedule(new CheckTask(checkSecond), 0,period);
+
         // 启动 redis 数据订阅服务
         Subscriber subscriber = new Subscriber();
         String myChanel = "notifier";
         DataSubscribeService dss = new DataSubscribeService(subscriber, myChanel);
         dss.run();
 
-        // 启动 Timer 定时检测任务
-        Timer timer = new Timer();
-        int checkSecond = 200;   /* 过期时间200分 */
-        int period = 5000;       /* 扫描时间5秒 */
-        timer.schedule(new CheckTask(checkSecond), 0,period);
     }
 
 }

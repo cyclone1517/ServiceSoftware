@@ -7,6 +7,7 @@ import team.hnuwt.servicesoftware.synchronizer.constant.MESSAGE;
 import team.hnuwt.servicesoftware.synchronizer.handler.DataHandler;
 import team.hnuwt.servicesoftware.synchronizer.handler.HeartBeatHandler;
 import team.hnuwt.servicesoftware.synchronizer.handler.LoginHandler;
+import team.hnuwt.servicesoftware.synchronizer.handler.OfflineReHandler;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -45,6 +46,9 @@ public class Subscriber extends JedisPubSub {
         }
         else if (msg == MESSAGE.LOGOUT){
             dptu.getExecutor().execute(new LoginHandler(batchNum, 2));
+        }
+        else if (msg == MESSAGE.OFFLINE_RE) {
+            dptu.getExecutor().execute(new OfflineReHandler(batchNum));
         }
     }
     @Override
