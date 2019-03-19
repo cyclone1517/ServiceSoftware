@@ -13,16 +13,27 @@ public enum TAG {
 	 */
 	READ_METER("READ_METER"),
 	CTRL_TIME("CTRL_TIME"),
-	CTRL_ON("CTRL_ON"),		/* 下发命令要指明ON或OFF */
+	CTRL_ON("CTRL_ON"),		    /* 下发命令要指明ON或OFF */
 	CTRL_OFF("CTRL_OFF"),
 	CTRL_ONOFF("CTRL_ONOFF"),	/* 反馈数据要分大类 */
-	OFFLINE("OFFLINE"),
 
 	/*
 	 * 上行报文标签类型
 	 */
 	HEARTBEAT("HEARTBEAT"),
-	LOGIN("LOGIN");
+	LOGIN("LOGIN"),
+
+    /*
+     * 前置机的内部请求
+     */
+    OFFLINE("OFFLINE"),
+
+    /*
+     * 消息推送相关
+     */
+    COLC_STATE("COLC_STATE"),
+	PUBL_DATA("PUBL_DATA");
+
 
 	private String str;
 
@@ -50,6 +61,9 @@ public enum TAG {
 		tags.put("LOGIN", LOGIN);
 		tags.put("CTRL_ONOFF", CTRL_ONOFF);
 		tags.put("OFFLINE", OFFLINE);
+		tags.put("PUBL_DATA", PUBL_DATA);
+		tags.put("COLC_STATE", COLC_STATE);
+
 	}
 
 	@Override
