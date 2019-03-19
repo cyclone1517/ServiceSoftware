@@ -3,7 +3,6 @@ package team.hnuwt.servicesoftware.synchronizer.dao;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import team.hnuwt.servicesoftware.synchronizer.handler.CheckHandler;
 import team.hnuwt.servicesoftware.synchronizer.util.DBUtil;
 
 import java.io.IOException;
