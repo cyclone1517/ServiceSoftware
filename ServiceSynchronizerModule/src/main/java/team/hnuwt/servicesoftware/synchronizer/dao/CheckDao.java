@@ -13,21 +13,23 @@ public class CheckDao {
 
     private static Logger logger = LoggerFactory.getLogger(CheckDao.class);
 
-    public List<String> check()
+    public List<String> check(int checkTime)
     {
+        int currTime = checkTime;
         DBUtil dbUtil = new DBUtil();
         SqlSession sqlSession = null;
         List<String> offList = null;
         try {
             sqlSession = dbUtil.getSqlSession();
-            offList = sqlSession.selectList("Check.offline");
+            currTime = (checkTime == -1)? Integer.MAX_VALUE : currTime;
+            offList = sqlSession.selectList("Check.offline", currTime);
             sqlSession.commit();
         } catch (IOException e) {
             logger.error("", e);
         } finally {
             if (sqlSession != null)
                 sqlSession.close();
-            return (offList==null)? new ArrayList<>(): offList;
         }
+        return (offList==null)? new ArrayList<>(): offList;
     }
 }

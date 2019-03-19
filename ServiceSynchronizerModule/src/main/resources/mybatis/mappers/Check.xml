@@ -5,10 +5,17 @@
 
 <mapper namespace="Check">
 
-    <select id="offline" resultType="String">
+    <select id="offline" parameterType="int" resultType="String">
         select collectorId from tb_HeartBeat
         where
-            current_timestamp - tb_HeartBeat.time &gt; 0
+            current_timestamp - tb_HeartBeat.time &lt; #{checkTime}
+        and
+            tb_HeartBeat.collectorId = (
+                select collectorId from tb_Login
+                where tb_Login.state = 1
+            )
     </select>
+
+
 
 </mapper>
