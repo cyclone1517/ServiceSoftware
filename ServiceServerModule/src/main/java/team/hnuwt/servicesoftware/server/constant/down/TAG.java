@@ -16,6 +16,7 @@ public enum TAG {
 	CTRL_ON("CTRL_ON"),		/* 下发命令要指明ON或OFF */
 	CTRL_OFF("CTRL_OFF"),
 	CTRL_ONOFF("CTRL_ONOFF"),	/* 反馈数据要分大类 */
+	OFFLINE("OFFLINE"),
 
 	/*
 	 * 上行报文标签类型
@@ -48,6 +49,7 @@ public enum TAG {
 		tags.put("HEARTBEAT", HEARTBEAT);
 		tags.put("LOGIN", LOGIN);
 		tags.put("CTRL_ONOFF", CTRL_ONOFF);
+		tags.put("OFFLINE", OFFLINE);
 	}
 
 	@Override

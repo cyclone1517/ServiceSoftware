@@ -44,6 +44,11 @@ public class ConcentratorUtil {
         map.remove(id);
     }
 
+    public static boolean removeAndOK(Long id)
+    {
+        return map.remove(id) != null;
+    }
+
     public static List<Logout> findLogout(SocketAddress sAddr){
         List<Logout> result = new ArrayList<>();
         for (Map.Entry<Long, SocketChannel> entry: map.entrySet())
