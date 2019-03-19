@@ -11,7 +11,7 @@ public class CheckDaoTest {
 
     @Test
     public void runCheckDao(){
-        List<String> result = new CheckDao().check();
+        List<String> result = new CheckDao().check(Integer.MAX_VALUE);
         result.forEach(System.out::println);
     }
 }
