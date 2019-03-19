@@ -1,8 +1,11 @@
 package team.hnuwt.servicesoftware.synchronizer.handler;
 
 import com.alibaba.fastjson.JSON;
-import team.hnuwt.servicesoftware.synchronizer.dao.CheckDao;
+import team.hnuwt.servicesoftware.synchronizer.constant.TAG;
+import team.hnuwt.servicesoftware.synchronizer.service.OfflineReService;
 import team.hnuwt.servicesoftware.synchronizer.util.DataProcessThreadUtil;
+import team.hnuwt.servicesoftware.synchronizer.util.HandlerUtil;
+import team.hnuwt.servicesoftware.synchronizer.util.ProduceUtil;
 import team.hnuwt.servicesoftware.synchronizer.util.RedisUtil;
 
 import java.util.ArrayList;
@@ -37,8 +40,12 @@ public class OfflineReHandler implements Runnable{
                 List<String> tempList = JSON.parseArray(l, String.class);
                 offlineOKList.addAll(tempList);
             });
+            dptu.getExecutor().execute(new OfflineReService(offlineOKList));
+
+            // 推送到消息队列
+            String data = HandlerUtil.geneMsg(offlineOKList, 0);
+            ProduceUtil.addQueue("UPSTREAM", TAG.COLC_STATE.getStr(), data);
         }
 
-        new CheckDao().resetOffline(offlineOKList);
     }
 }

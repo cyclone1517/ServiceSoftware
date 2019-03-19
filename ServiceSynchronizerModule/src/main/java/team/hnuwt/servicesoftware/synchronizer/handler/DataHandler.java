@@ -1,9 +1,12 @@
 package team.hnuwt.servicesoftware.synchronizer.handler;
 
 import com.alibaba.fastjson.JSON;
+import team.hnuwt.servicesoftware.synchronizer.constant.TAG;
 import team.hnuwt.servicesoftware.synchronizer.model.Data;
 import team.hnuwt.servicesoftware.synchronizer.service.DataService;
 import team.hnuwt.servicesoftware.synchronizer.util.DataProcessThreadUtil;
+import team.hnuwt.servicesoftware.synchronizer.util.HandlerUtil;
+import team.hnuwt.servicesoftware.synchronizer.util.ProduceUtil;
 import team.hnuwt.servicesoftware.synchronizer.util.RedisUtil;
 
 import java.util.ArrayList;
@@ -36,7 +39,10 @@ public class DataHandler implements Runnable {
         if (list.size() > 0)
         {
             dptu.getExecutor().execute(new DataService(list));
-        }
 
+            // 推送到消息队列
+            String pubData = JSON.toJSONString(list);
+            ProduceUtil.addQueue("UPSTREAM", TAG.PUBL_DATA.getStr(), pubData);
+        }
     }
 }
