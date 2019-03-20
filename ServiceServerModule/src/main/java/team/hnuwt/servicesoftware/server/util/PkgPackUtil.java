@@ -23,14 +23,15 @@ public class PkgPackUtil {
         String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
         String L = FieldPacker.getReadMeterPkgLen(15, meterNum, 2);
         List<String> ids = FieldPacker.getMeterIds(root.path("id"));
-        String addr = root.path("addr").asText();
+        int addr = root.path("addr").asInt();
+        String addrId = FieldPacker.toHexAddrId(addr);
 
         result.append("68");
         result.append(L);       /* extraLen 抄表方式1字节 + 表数量2字节 */
         result.append(L);
         result.append("68");
         result.append(DATACODE.getCtrlCode(TAG));   /* 控制符 */
-        result.append(addr);                        /* 地址域 */
+        result.append(addrId);                        /* 地址域 */
         result.append(DATACODE.getAfnCode(TAG));    /* AFN功能码 */
         result.append("70");                        /* 序列号，7单帧需回复，0保留 */
         result.append(DATACODE.getDataId(TAG));     /* 数据单元标识 */
@@ -53,14 +54,15 @@ public class PkgPackUtil {
         // get num of meters
         int meterNum = FieldPacker.getMeterNum(root);
         String L = FieldPacker.getReadMeterPkgLen(20, meterNum, 2);
-        String addr = root.path("addr").asText();
+        int addr = root.path("addr").asInt();
+        String addrId = FieldPacker.toHexAddrId(addr);
 
         result.append("68");
         result.append(L);
         result.append(L);
         result.append("68");
         result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
-        result.append(addr);                        /* 地址域 */
+        result.append(addrId);                        /* 地址域 */
         result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
         result.append("70");                        /* 序列号，7单帧需回复，0保留 */
         result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
@@ -84,7 +86,8 @@ public class PkgPackUtil {
 
         // get len of pkg
         String L = FieldPacker.getOnOffPkgLen();
-        String addr = root.path("addr").asText();
+        int addr = root.path("addr").asInt();
+        String addrId = FieldPacker.toHexAddrId(addr);
         List<String> ids = FieldPacker.getMeterIds(root.path("id"));
 
         result.append("68");
@@ -92,7 +95,7 @@ public class PkgPackUtil {
         result.append(L);
         result.append("68");
         result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
-        result.append(addr);                        /* 地址域 */
+        result.append(addrId);                        /* 地址域 */
         result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
         result.append(DATACODE.getSerial(FUN));     /* 序列号，7单帧需回复，0保留 */
         result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */

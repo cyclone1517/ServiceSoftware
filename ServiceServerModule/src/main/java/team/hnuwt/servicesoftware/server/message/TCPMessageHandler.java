@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.servicesoftware.model.Logout;
+import team.hnuwt.servicesoftware.server.model.Logout;
 import team.hnuwt.servicesoftware.server.constant.up.FUNID;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;

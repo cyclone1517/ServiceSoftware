@@ -1,5 +1,6 @@
 package team.hnuwt.servicesoftware.server.message;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -12,6 +13,7 @@ import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.FieldPacker;
 import team.hnuwt.servicesoftware.server.util.ProduceUtil;
 
+import java.io.File;
 import java.nio.channels.SocketChannel;
 
 /**
@@ -36,6 +38,7 @@ public class ReadMeterReHandler implements Runnable{
         String result = meterData.toString();
 
         String addr = result.substring(CONSTANT.ADD_START, CONSTANT.ADD_END);
+        String addrId = FieldPacker.toIntAddrId(addr);
         String numStr = FieldPacker.reverseEnd(result.substring(CONSTANT.NUM_START, CONSTANT.NUM_END));
         int num = 0;
         try {
@@ -45,32 +48,46 @@ public class ReadMeterReHandler implements Runnable{
             return;
         }
 
-        root.put("addr", addr);
+        root.put("addr", addrId);
         root.put("num", num);
         root.set("data", geneMeterData(result.substring(CONSTANT.DATA_LOC), num, mapper));
+        root.put("time", FieldPacker.getSysTime());
 
         /*
          * 既要返回给中间服务，也要传送到数据库
          */
         ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), TAG.READ_METER.getStr(), root.toString());
-        //ProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.HEARTBEAT.getStr(), meterData.toString());
 
     }
 
-    private ArrayNode geneMeterData(String userStr, int num, ObjectMapper mapper){
-        ArrayNode result = mapper.createArrayNode();
-
+    private JsonNode geneMeterData(String userStr, int num, ObjectMapper mapper){
         int locate = 0;
-        for (int i=0; i<num; i++){
+
+        if (num > 1) {
+            ArrayNode result = mapper.createArrayNode();
+            for (int i = 0; i < num; i++) {
+                ObjectNode meter = mapper.createObjectNode();
+                meter.put("id", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[0])));
+                locate += fieldlen[0];
+                meter.put("read", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[1])).substring(0, 6));
+                locate += fieldlen[1];
+
+                result.add(meter);
+            }
+            return result;
+
+        }
+        else if (num == 1){
             ObjectNode meter = mapper.createObjectNode();
             meter.put("id", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[0])));
             locate += fieldlen[0];
-            meter.put("read", userStr.substring(locate, locate + fieldlen[1]));
+            meter.put("read", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[1])).substring(0, 6));
             locate += fieldlen[1];
-
-            result.add(meter);
+//            meter.put("state", )
+            return meter;
         }
-
-        return result;
+        else {
+            return null;
+        }
     }
 }

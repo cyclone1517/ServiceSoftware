@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import team.hnuwt.servicesoftware.model.Logout;
+import team.hnuwt.servicesoftware.server.model.Logout;
 import team.hnuwt.servicesoftware.server.util.RedisUtil;
 import java.util.List;
 

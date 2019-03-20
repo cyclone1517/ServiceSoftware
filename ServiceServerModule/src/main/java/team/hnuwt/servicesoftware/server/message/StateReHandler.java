@@ -38,9 +38,10 @@ public class StateReHandler implements Runnable{
         String result = meterData.toString();
 
         String addr = result.substring(CONSTANT.ADD_START, CONSTANT.ADD_END);
+        String addrId = FieldPacker.toIntAddrId(addr);
 
 
-        root.put("addr", addr);
+        root.put("addr", addrId);
         root.put("success", success);
 
         ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), TAG.CTRL_ONOFF.getStr(), root.toString());

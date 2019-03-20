@@ -1,6 +1,7 @@
 package team.hnuwt.servicesoftware.server.message;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Calendar;
@@ -33,12 +34,18 @@ public class HeartBeatHandler implements Runnable {
     @Override
     public void run()
     {
-        /*
-         * 仅登录有效才返回报文，避免端口切换导致下发无效命令
-         */
         long id = heartBeat.BINToLong(7, 12);
-        if (ConcentratorUtil.get(id) == null){
-            return;
+        SocketChannel currSc = ConcentratorUtil.get(id);
+        if (currSc == null){
+            return;       /* 若没有登录，不予理会 */
+        } else {
+            try {
+                 if (((InetSocketAddress)currSc.getRemoteAddress()).getPort() != ((InetSocketAddress)sc.getRemoteAddress()).getPort()){
+                     ConcentratorUtil.add(id, sc);     /* 若登录却端口过期，应更换 */
+                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         ProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.HEARTBEAT.getStr(), heartBeat.toString());
 
