@@ -39,9 +39,27 @@ public class ConcentratorUtil {
         return map.get(id);
     }
 
-    public static void remove(Long id)
+    public static boolean remove(Long id)
     {
-        map.remove(id);
+        SocketChannel sk = map.remove(id);
+        try {
+            if (sk != null && sk.isConnected()) {
+                sk.close();
+                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + id );
+                return true;
+            }
+            logger.info("NO INVALID SOCKET YET @#@ id: " + id);
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.info("FAILED CLOSED AN INVALID SOCKET! @#@ id: " +id);
+            return false;
+        }
+    }
+
+    public static boolean removeAndOK(Long id)
+    {
+        return remove(id);
     }
 
     public static List<Logout> findLogout(SocketAddress sAddr){

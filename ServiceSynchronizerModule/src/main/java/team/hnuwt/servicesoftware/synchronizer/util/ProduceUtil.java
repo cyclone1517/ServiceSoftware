@@ -76,5 +76,6 @@ public class ProduceUtil {
         } catch (InterruptedException e) {
             logger.error("", e);
         }
+        logger.info("SEND TO ROCKETMQ @#@ TOPIC: "+ topic + " @#@ TAG: " + tag);
     }
 }

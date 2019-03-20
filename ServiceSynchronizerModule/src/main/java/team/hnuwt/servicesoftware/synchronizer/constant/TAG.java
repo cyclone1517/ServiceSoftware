@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.server.constant.down;
+package team.hnuwt.servicesoftware.synchronizer.constant;
 
 import java.util.HashMap;
 
@@ -62,8 +62,6 @@ public enum TAG {
 		tags.put("CTRL_ONOFF", CTRL_ONOFF);
 		tags.put("OFFLINE", OFFLINE);
 		tags.put("PUBL_DATA", PUBL_DATA);
-		tags.put("COLC_STATE", COLC_STATE);
-
 	}
 
 	@Override

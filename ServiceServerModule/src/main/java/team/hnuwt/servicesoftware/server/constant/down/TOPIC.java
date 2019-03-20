@@ -4,10 +4,10 @@ import java.util.HashMap;
 
 public enum TOPIC {
 
-    DOWNSTREAM("DOWNSTREAM"),
-    UPSTREAM("UPSTREAM"),
-    DIRECT("DIRECT"),
-    PROTOCOL("PROTOCOL");
+    DOWNSTREAM("DOWNSTREAM"),   /* 来自中间服务的命令，或来根据心跳分析的过期资源关闭请求 */
+    UPSTREAM("UPSTREAM"),       /* 上传到中间服务 */
+    DIRECT("DIRECT"),           /* 透明转发 */
+    PROTOCOL("PROTOCOL");       /* 前置机内部通讯用 */
 
     private String name;
     TOPIC(String name){

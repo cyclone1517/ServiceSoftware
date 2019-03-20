@@ -3,12 +3,27 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="Login">
+<mapper namespace="Check">
 
-    <select id="offline" resultType="java.util.List">
-        select * from ${tb_heartbeat}
-          <where>
-          </where>
+    <select id="offline" parameterType="int" resultType="String">
+        select collectorId from tb_HeartBeat
+        where
+            current_timestamp - tb_HeartBeat.time &lt; #{checkTime}
+        and
+            tb_HeartBeat.collectorId = (
+                select collectorId from tb_Login
+                where tb_Login.state = 1
+            )
     </select>
+
+    <update id="resetOffline" parameterType="java.util.List">
+        update tb_Login
+        set tb_Login.state = 0
+        where tb_Login.collectorId in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
 
 </mapper>

@@ -4,6 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+    </settings>
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC">
@@ -22,6 +25,7 @@
         <mapper resource="mybatis/mappers/Data.xml"/>
         <mapper resource="mybatis/mappers/HeartBeat.xml"/>
         <mapper resource="mybatis/mappers/Login.xml"/>
+        <mapper resource="mybatis/mappers/Check.xml"/>
     </mappers>
 
 </configuration>

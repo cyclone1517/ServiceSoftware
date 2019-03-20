@@ -1,15 +1,18 @@
 package team.hnuwt.servicesoftware.server.util;
 
+import com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.constant.down.FUNTYPE;
 import team.hnuwt.servicesoftware.server.constant.down.TAG;
+import team.hnuwt.servicesoftware.server.message.CloseOfflineHandler;
 import team.hnuwt.servicesoftware.server.message.SendHandler;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.util.List;
 
 /**
  * @author yuanlong chen
@@ -29,22 +32,36 @@ public class DistributeUtil {
     }
 
     /**
-     * 明文转发
+     * 明文转发，和部分控制指令
      * @param msg 消息
      * @TAG 业务类型
      */
     public static void plainDistribute(String msg, TAG tag) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(msg);
+
+        /* 读表 */
         if (tag == TAG.READ_METER){
             runTask(PkgPackUtil.geneReadMeterPkg(root, TAG.READ_METER.getStr()));
         }
+
+        /* 开阀 */
         else if (tag == TAG.CTRL_ON){
             runTask(PkgPackUtil.geneCtrlOnOffPkg(root, TAG.CTRL_ON.getStr(), true));
         }
+
+        /* 关阀 */
         else if (tag == TAG.CTRL_OFF){
             runTask(PkgPackUtil.geneCtrlOnOffPkg(root, TAG.CTRL_ON.getStr(), false));
         }
+
+        /* 清除离线集中器连接资源 */
+        else if (tag == TAG.OFFLINE){
+            List<String> offlineList = JSON.parseArray(msg, String.class);
+            runTask(new CloseOfflineHandler(offlineList));
+        }
+
+        /* 其它 */
         else {
             throw new Exception("UNKNOWN TAG:" + tag);
         }
@@ -52,10 +69,11 @@ public class DistributeUtil {
     }
 
     private static void runTask(String msgBody){
-//        ByteBuilder b = new ByteBuilder(msgBody);
-//        long id = b.BINToLong(7, 12);
-//        SocketChannel sk = ConcentratorUtil.get(id);
         DataProcessThreadUtil.getExecutor().execute(new SendHandler(msgBody));
+    }
+
+    private static void runTask(Runnable handler){
+        DataProcessThreadUtil.getExecutor().execute(handler);
     }
 
 }
