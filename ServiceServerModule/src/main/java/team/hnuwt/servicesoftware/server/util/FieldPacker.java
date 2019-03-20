@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,6 +17,7 @@ import java.util.List;
 public class FieldPacker {
 
     private static Logger logger = LoggerFactory.getLogger(FieldPacker.class);
+    private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static int getMeterNum(JsonNode root){
         try {
@@ -100,7 +103,7 @@ public class FieldPacker {
         return result;
     }
 
-    public static String getNBitHexNum(int num, int bit){
+    public static String getNBitHexNum(int num, int bit){   /* 自带反转 */
         StringBuilder result = new StringBuilder();
         result.append(Integer.toHexString(num));
         while (result.length() < bit) result.insert(0, "0");
@@ -117,4 +120,25 @@ public class FieldPacker {
 
         return result.toString();
     }
+
+    public static String toIntAddrId(String addr){
+        String addrId = reverseEnd(addr).substring(2,6);
+        try {
+            return Integer.parseInt(addrId, 16) +"";
+        } catch (NumberFormatException e){
+            return null;
+        }
+    }
+
+    public static String toHexAddrId(int addr){
+        return "0000" + getNBitHexNum(addr, 4) + "00";
+    }
+
+    public static String getSysTime(){
+        return df.format(new Date());
+    }
+
+//    public static String getLastNbit(String stateStr){
+//        String
+//    }
 }

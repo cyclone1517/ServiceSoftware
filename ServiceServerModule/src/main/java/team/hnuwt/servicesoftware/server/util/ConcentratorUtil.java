@@ -2,7 +2,7 @@ package team.hnuwt.servicesoftware.server.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import team.hnuwt.servicesoftware.model.Logout;
+import team.hnuwt.servicesoftware.server.model.Logout;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -23,8 +23,8 @@ public class ConcentratorUtil {
     public static void add(Long id, SocketChannel sc)
     {
         // 建立新连接前删去旧连接
-        if (map.containsKey(id)){
-            SocketChannel old = map.get(id);
+        SocketChannel old = map.remove(id);
+        if (old != null && old.isConnected()) {
             try {
                 old.close();
             } catch (IOException e) {
