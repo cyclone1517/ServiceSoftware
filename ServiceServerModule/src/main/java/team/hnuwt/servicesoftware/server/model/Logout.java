@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.model;
+package team.hnuwt.servicesoftware.server.model;
 
 public class Logout {
 
