@@ -13,9 +13,9 @@ public class App {
 
         // 启动 Timer 定时检测任务
         Timer timer = new Timer();
-        int checkSecond = 200;   /* 过期时间200分 */
-        int period = 10000;       /* 扫描时间10秒 */
-        timer.schedule(new CheckTask(checkSecond), 0,period);
+        int checkSecond = 5;   /* 过期时间5分 */
+        int period = 5;       /* 扫描时间5分 */
+        timer.schedule(new CheckTask(checkSecond), 0, period * 1000 * 60);
 
         // 启动 redis 数据订阅服务
         Subscriber subscriber = new Subscriber();

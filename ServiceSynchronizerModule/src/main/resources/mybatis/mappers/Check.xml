@@ -8,7 +8,7 @@
     <select id="offline" parameterType="int" resultType="String">
         select collectorId from tb_HeartBeat
         where
-            current_timestamp - tb_HeartBeat.time &lt; #{checkTime}
+            current_timestamp - tb_HeartBeat.time &gt; #{checkTime}
         and
             tb_HeartBeat.collectorId = (
                 select collectorId from tb_Login
