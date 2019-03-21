@@ -140,28 +140,34 @@ public class TCPMessageHandler {
                         DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));
                     }
 
-                    /* 抄表：（解析了明文）走协议栈和中间服务双线 */
+                    /* 抄表：中间服务单线 */
                     else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER){
                         logger.info("READ_METER: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new ReadMeterReHandler(sc, result));
                     }
 
+                    /* 自动上传：走协议栈单线 */
+                    else if (result.getByte(12) == (byte) 0x88 && result.BINToLong(14, 18) == FUNID.AUTOUPLOAD){
+                        logger.info("AUTO_UPLOAD: " + result.toString());
+                        DataProcessThreadUtil.getExecutor().execute(new AutoUploadHandler(sc, result));
+                    }
+
                     /* 操作确认：走中间服务单线 */
                     else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.SUCCESS){
-                        logger.info("OPERATION SUCCESS: " + result.toString());
+                        logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new StateReHandler(sc, result, true));
                     }
 
                     /* 操作失败：走中间服务单线 */
                     else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.FAIL){
-                        logger.info("OPERATION FAIL: " + result.toString());
+                        logger.info("DEVICE ON/OFF FAIL: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new StateReHandler(sc, result, false));
                     }
 
-                    /* 其余数据包：待定 */
+                    /* 其余数据包：设置自动上报回复0x84还没处理 */
                     else {
                         logger.info("OTHERS: " + result.toString());
-                        DataProcessThreadUtil.getExecutor().execute(new OrderHandler(result.toString()));
+//                        DataProcessThreadUtil.getExecutor().execute(new OrderHandler(result.toString()));
                     }
 
                     /*

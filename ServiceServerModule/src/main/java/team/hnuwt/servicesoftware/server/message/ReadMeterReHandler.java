@@ -54,7 +54,8 @@ public class ReadMeterReHandler implements Runnable{
         root.put("time", FieldPacker.getSysTime());
 
         /*
-         * 既要返回给中间服务，也要传送到数据库
+         * 返回给中间服务
+         * 还没有做刷新本地数据库的需求
          */
         ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), TAG.READ_METER.getStr(), root.toString());
 

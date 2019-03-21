@@ -44,7 +44,7 @@ public class StateReHandler implements Runnable{
         root.put("addr", addrId);
         root.put("success", success);
 
-        ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), TAG.CTRL_ONOFF.getStr(), root.toString());
+        ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), TAG.OPER_RE.getStr(), root.toString());
 
     }
 }
