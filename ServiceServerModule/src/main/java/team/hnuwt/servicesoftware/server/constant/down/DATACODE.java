@@ -31,16 +31,25 @@ public class DATACODE {
         DataId.put("CTRL_TIME", "00001001");    /* 对时命令 */
         DataId.put("CTRL_ON", "00000100");    /* 远程开关阀 */
         DataId.put("CTRL_OFF", "00000100");    /* 远程开关阀 */
+        DataId.put("UPLOAD_ON", "00004003");    /* 上报允许 */
+        DataId.put("UPLOAD_OFF", "00004003");   /* 上报停止 */
+        DataId.put("READ_UPLOAD", "00004003");   /* 读取上报是否允许 */
 
         // 控制码
         ctrlCode.put("READ_METER", "70");
         ctrlCode.put("CTRL_ON", "70");
         ctrlCode.put("CTRL_OFF", "70");
+        ctrlCode.put("UPLOAD_ON", "70");
+        ctrlCode.put("UPLOAD_OFF", "70");
+        ctrlCode.put("READ_UPLOAD", "70");
 
         //功能码
         afnCode.put("READ_METER", "8C");
         afnCode.put("CTRL_ON", "85");
         afnCode.put("CTRL_OFF", "85");
+        afnCode.put("UPLOAD_ON", "84");
+        afnCode.put("UPLOAD_OFF", "84");
+        afnCode.put("READ_UPLOAD", "8A");
 
 
         //抄读方式
@@ -51,6 +60,9 @@ public class DATACODE {
         //序列号
         serial.put("CTRL_ON", "78");
         serial.put("CTRL_OFF", "77");
+        serial.put("UPLOAD_ON", "70");
+        serial.put("UPLOAD_OFF", "7F");
+        serial.put("READ_UPLOAD", "70");
 
     }
 
