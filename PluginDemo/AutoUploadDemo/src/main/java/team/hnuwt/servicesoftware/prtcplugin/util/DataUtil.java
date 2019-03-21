@@ -21,11 +21,11 @@ public class DataUtil {
     public static void putDataToRedis(Packet pkg){
         if (pkg instanceof PacketAutoUpload){
             processAutoUpload(TAG.UPLOAD.getStr(), (PacketAutoUpload) pkg);
-            RedisUtil.publishData(TAG.UPLOAD.getStr());  /* 这里是推送消息，但由于未知原因无法添加新方法 */
+            RedisUtil.publishData(TAG.UPLOAD.getStr());
         }
         else if (pkg instanceof PacketReadMeter){
             processReadMeter(TAG.UPLOAD.getStr(), (PacketReadMeter) pkg);
-            RedisUtil.publishData(TAG.UPLOAD.getStr());  /* 这里是推送消息，但由于未知原因无法添加新方法 */
+            RedisUtil.publishData(TAG.UPLOAD.getStr());
         }
         else if (pkg instanceof PacketHeartBeat){
             processHeartBeat(TAG.HEARTBEAT.getStr(), (PacketHeartBeat) pkg);
