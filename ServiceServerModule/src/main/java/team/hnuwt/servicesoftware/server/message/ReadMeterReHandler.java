@@ -84,7 +84,7 @@ public class ReadMeterReHandler implements Runnable{
             locate += fieldlen[0];
             meter.put("read", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[1])).substring(0, 6));
             locate += fieldlen[1];
-//            meter.put("state", )
+            meter.put("state", FieldPacker.parseHexStr2Byte(userStr.substring(locate, locate + 2)));
             return meter;
         }
         else {

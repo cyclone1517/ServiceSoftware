@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,7 @@ public class FieldPacker {
 
     private static Logger logger = LoggerFactory.getLogger(FieldPacker.class);
     private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static DecimalFormat g1 = new DecimalFormat("0000");
 
     public static int getMeterNum(JsonNode root){
         try {
@@ -137,7 +139,16 @@ public class FieldPacker {
         return df.format(new Date());
     }
 
-//    public static String getLastNbit(String stateStr){
-//        String
-//    }
+    public static String parseHexStr2Byte(String hexStr){
+        StringBuilder sb = new StringBuilder();
+        if (hexStr.length() < 1) return null;
+
+        char[] hexArr = hexStr.toCharArray();
+        for (char i: hexArr){
+            int val = Integer.parseInt(i+"", 16);
+            sb.append(g1.format(Integer.toBinaryString(val)));
+        }
+
+        return sb.toString();
+    }
 }
