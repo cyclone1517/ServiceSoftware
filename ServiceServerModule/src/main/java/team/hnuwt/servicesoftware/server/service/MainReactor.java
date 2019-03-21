@@ -95,4 +95,30 @@ public class MainReactor implements Runnable {
             logger.error("", e);
         }
     }
+
+    /**
+     * 主动向外发起连接请求并注册
+     * @param sc
+     */
+    @Deprecated
+    public synchronized void applyConnect(SocketChannel sc){
+
+        try {
+            sc.configureBlocking(false);
+            subReactors[selIndex].setRestart(true);
+            selectors[selIndex].wakeup();
+            sc.register(selectors[selIndex], SelectionKey.OP_READ);
+            selectors[selIndex].wakeup();
+            subReactors[selIndex].setRestart(false);
+
+            logger.info("CONNECT @#@SOCKET:" + sc);
+            if (++selIndex == NUM)
+            {
+                selIndex = 0;
+            }
+        } catch (IOException e) {
+            logger.error("", e);
+        }
+
+    }
 }
