@@ -61,6 +61,21 @@ public class DistributeUtil {
             runTask(new CloseOfflineHandler(offlineList));
         }
 
+        /* 上报开启 */
+        else if (tag == TAG.UPLOAD_ON){
+            runTask(PkgPackUtil.geneUploadOnOffPkg(root, TAG.UPLOAD_ON.getStr(), true));
+        }
+
+        /* 上报关闭 */
+        else if (tag == TAG.UPLOAD_OFF){
+            runTask(PkgPackUtil.geneUploadOnOffPkg(root, TAG.UPLOAD_OFF.getStr(), false));
+        }
+
+        /* 读取上报允许 */
+        else if (tag == TAG.READ_UPLOAD){
+            runTask(PkgPackUtil.geneReadUploadPkg(root, TAG.READ_UPLOAD.getStr()));
+        }
+
         /* 其它 */
         else {
             throw new Exception("UNKNOWN TAG:" + tag);

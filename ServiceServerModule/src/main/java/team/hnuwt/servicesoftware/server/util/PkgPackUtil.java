@@ -62,7 +62,7 @@ public class PkgPackUtil {
         result.append(L);
         result.append("68");
         result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
-        result.append(addrId);                        /* 地址域 */
+        result.append(addrId);                      /* 地址域 */
         result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
         result.append("70");                        /* 序列号，7单帧需回复，0保留 */
         result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
@@ -85,7 +85,7 @@ public class PkgPackUtil {
         StringBuilder result = new StringBuilder();
 
         // get len of pkg
-        String L = FieldPacker.getOnOffPkgLen();
+        String L = FieldPacker.genePkgLen(33);  /* 用户字段长33字节 */
         int addr = root.path("addr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
         List<String> ids = FieldPacker.getMeterIds(root.path("id"));
@@ -95,7 +95,7 @@ public class PkgPackUtil {
         result.append(L);
         result.append("68");
         result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
-        result.append(addrId);                        /* 地址域 */
+        result.append(addrId);                      /* 地址域 */
         result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
         result.append(DATACODE.getSerial(FUN));     /* 序列号，7单帧需回复，0保留 */
         result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
@@ -105,6 +105,55 @@ public class PkgPackUtil {
         result.append("00");                        /* 中继方式 */
         result.append(on? "55":"AA");               /* 控制字 */
         result.append("39383736353433323130");      /* 消息认证码PW：未用 */
+        result.append(FieldPacker.calcuCs(result)); /* 校验位 */
+        result.append("16");                        /* 结束符 */
+
+        return result.toString();
+    }
+
+    public static String geneUploadOnOffPkg(JsonNode root, String FUN, boolean on){
+        StringBuilder result = new StringBuilder();
+
+        // get len of pkg
+        String L = FieldPacker.genePkgLen(29);      /* 用户字段长29字节 */
+        int addr = root.path("addr").asInt();
+        String addrId = FieldPacker.toHexAddrId(addr);
+        //List<String> ids = FieldPacker.getMeterIds(root.path("id"));
+
+        result.append("68");
+        result.append(L);
+        result.append(L);
+        result.append("68");
+        result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
+        result.append(addrId);                      /* 地址域 */
+        result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
+        result.append(DATACODE.getSerial(FUN));     /* 序列号，7单帧需回复，0保留 */
+        result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
+        result.append(on? "55":"AA");               /* 启停设置 */
+        result.append("36353433323139383736353433323130");      /* 消息认证码PW：未用 */
+        result.append(FieldPacker.calcuCs(result)); /* 校验位 */
+        result.append("16");                        /* 结束符 */
+
+        return result.toString();
+    }
+
+    public static String geneReadUploadPkg(JsonNode root, String FUN){
+        StringBuilder result = new StringBuilder();
+
+        // get len of pkg
+        String L = FieldPacker.genePkgLen(12);      /* 用户字段长12字节 */
+        int addr = root.path("addr").asInt();
+        String addrId = FieldPacker.toHexAddrId(addr);
+
+        result.append("68");
+        result.append(L);
+        result.append(L);
+        result.append("68");
+        result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
+        result.append(addrId);                      /* 地址域 */
+        result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
+        result.append(DATACODE.getSerial(FUN));     /* 序列号，7单帧需回复，0保留 */
+        result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
         result.append(FieldPacker.calcuCs(result)); /* 校验位 */
         result.append("16");                        /* 结束符 */
 

@@ -46,10 +46,9 @@ public class FieldPacker {
         return formativeLen(len);
     }
 
-    public static String getOnOffPkgLen(){
-        int len = 33;        /* 33字节 */
-        len = (len<<2) + 1;  /* 编码规律 */
-        return formativeLen(len);
+    public static String genePkgLen(int byteLen){
+        byteLen = (byteLen<<2) + 1;  /* 编码规律 */
+        return formativeLen(byteLen);
     }
 
     /**
