@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.server.test;
+package team.hnuwt.servicesoftware.server;
 
 import static org.junit.Assert.*;
 
@@ -6,9 +6,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import team.hnuwt.servicesoftware.server.util.ProduceUtil;
+import team.hnuwt.servicesoftware.server.util.RedisUtil;
 
-public class ProduceTest {
+public class RedisTest {
 
     @Before
     public void setUp() throws Exception {
@@ -18,9 +18,9 @@ public class ProduceTest {
     public void tearDown() throws Exception {
     }
 
-    @Test
-    public void test() {
-        ProduceUtil.addQueue("12345");
-    }
+//    @Test
+//    public void test() {
+//        RedisUtil.updateHeatBeat("123");
+//    }
 
 }

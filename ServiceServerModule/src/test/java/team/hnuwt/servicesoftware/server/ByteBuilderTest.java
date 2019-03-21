@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.server.test;
+package team.hnuwt.servicesoftware.server;
 
 import static org.junit.Assert.*;
 
