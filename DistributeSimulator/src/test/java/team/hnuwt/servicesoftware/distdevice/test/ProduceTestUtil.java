@@ -6,14 +6,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ProduceTestUtil {
 
-    public static String geneReadMeterJson(){
+    public static String geneReadMeterJson(String addr){
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.createObjectNode();
 
         //String addr = "3607000000";
-        String addr = "0000FD0300";
-        String num = "2";
-        String[] ids = {"0008","0008"};
+        String num = "1";
+        String[] ids = {"0008"};
 
         root.put("addr", addr);
         root.put("num", num);

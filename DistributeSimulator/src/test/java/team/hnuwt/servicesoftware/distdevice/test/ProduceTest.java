@@ -12,7 +12,7 @@ public class ProduceTest {
     public void sendReadMeter() {
         String topic = "DOWNSTREAM";
         String tag = "READ_METER";
-        String msg = ProduceTestUtil.geneReadMeterJson();
+        String msg = ProduceTestUtil.geneReadMeterJson("1021");
         ProduceUtil.addQueue(topic, tag, msg);
     }
 
@@ -65,6 +65,15 @@ public class ProduceTest {
         String tag = "READ_UPLOAD";
         String msg = ProduceTestUtil.geneReadUploadJson("0008");
         ProduceUtil.addQueue(topic, tag, msg);
+    }
+
+    @Test
+    public void mimicAutoUpload(){
+        String topic = "PROTOCOL";
+        String tag = "AUTO_UPLOAD";
+        String msg = "685500550068880000FD03008C60100001070100010000000015FFA216";
+        ProduceUtil.addQueue(topic, tag, msg);
+
     }
 
 }
