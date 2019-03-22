@@ -35,6 +35,10 @@ public class PkgExpUtil {
     private static Logger logger = LoggerFactory.getLogger(PkgExpUtil.class);
 
     static {
+        initiate();
+    }
+
+    private static synchronized void initiate(){    /* 类锁 */
         try {
             init();
             loadPropXml();
