@@ -11,7 +11,6 @@ import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import team.hnuwt.servicesoftware.server.compatible.FortendAgency;
 import team.hnuwt.servicesoftware.server.message.TCPMessageHandler;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
@@ -20,9 +19,6 @@ public class SubReactor implements Runnable {
     private Selector selector;
     private int id;
     private boolean restart = false;
-    private boolean compatible = false;     /* 老前置机兼容模式 */
-
-    private FortendAgency fortendAgency;
 
     private static Logger logger = LoggerFactory.getLogger(SubReactor.class);
 
@@ -30,13 +26,6 @@ public class SubReactor implements Runnable {
     {
         this.selector = selector;
         this.id = id;
-    }
-
-    public SubReactor(Selector selector, int id, boolean compatible)
-    {
-        this.selector = selector;
-        this.id = id;
-        this.compatible = compatible;
     }
 
     public void setRestart(boolean restart)

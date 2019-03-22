@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import team.hnuwt.servicesoftware.server.compatible.FortendAgency;
 import team.hnuwt.servicesoftware.server.model.Logout;
 import team.hnuwt.servicesoftware.server.constant.up.FUNID;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
@@ -23,6 +24,19 @@ public class TCPMessageHandler {
     private static Logger logger = LoggerFactory.getLogger(TCPMessageHandler.class);
 
     private static Map<SocketAddress, Remainder> map = new ConcurrentHashMap<>();
+
+    private static FortendAgency fortendAgency;
+    private static boolean compatible = false;
+
+    public static void openTCPCompatible(){
+        compatible = true;
+        fortendAgency = new FortendAgency();
+    }
+
+    public static void closeTCPCompatible(){
+        fortendAgency.close();
+        compatible = false;
+    }
 
     /**
      * 读消息处理
@@ -126,6 +140,8 @@ public class TCPMessageHandler {
             {
                 if (c == 0x16)
                 {
+                    if (compatible) fortendAgency.directSend("@COMPATIBLE@", result.toString());
+
                     /* 心跳：走协议栈单线 */
                     if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR)   /* 获取功能码和数字单元标识 */
                     {

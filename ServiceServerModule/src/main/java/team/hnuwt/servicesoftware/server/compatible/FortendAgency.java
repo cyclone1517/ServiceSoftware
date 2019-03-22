@@ -48,4 +48,15 @@ public class FortendAgency {
         }
         logger.info("SEND @#@TOPIC:" + TOPIC + " @#@MSG:" + msg);
     }
+
+    public void close(){
+        if (socketChannel.isConnected()){
+            try {
+                socketChannel.close();
+                logger.info("CLOSED COMPATIBLE LINK SUCCESSFULLY");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
