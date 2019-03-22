@@ -147,7 +147,7 @@ public class TCPMessageHandler {
                     }
 
                     /* 自动上传：走协议栈单线 */
-                    else if (result.getByte(12) == (byte) 0x88 && result.BINToLong(14, 18) == FUNID.AUTOUPLOAD){
+                    else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.AUTOUPLOAD){
                         logger.info("AUTO_UPLOAD: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new AutoUploadHandler(sc, result));
                     }

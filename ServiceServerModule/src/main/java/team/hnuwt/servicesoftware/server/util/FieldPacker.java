@@ -19,7 +19,6 @@ public class FieldPacker {
 
     private static Logger logger = LoggerFactory.getLogger(FieldPacker.class);
     private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static DecimalFormat g1 = new DecimalFormat("0000");
 
     public static int getMeterNum(JsonNode root){
         try {
@@ -146,7 +145,11 @@ public class FieldPacker {
         char[] hexArr = hexStr.toCharArray();
         for (char i: hexArr){
             int val = Integer.parseInt(i+"", 16);
-            sb.append(g1.format(Integer.toBinaryString(val)));
+            StringBuilder binStr = new StringBuilder(Integer.toBinaryString(val));
+            while (binStr.length() < 4){
+                binStr.insert(0, 0);
+            }
+            sb.append(binStr);
         }
 
         return sb.toString();
