@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DataHandler implements Runnable {
 
-    private static final String DATA = "UPLOAD";
+    private static final String DATA = "AUTO_UPLOAD";
     private int batchNum;
 
     public DataHandler(int batchNum){
@@ -42,7 +42,7 @@ public class DataHandler implements Runnable {
 
             // 推送到消息队列
             String pubData = JSON.toJSONString(list);
-            ProduceUtil.addQueue("UPSTREAM", TAG.PUBL_DATA.getStr(), pubData);
+            ProduceUtil.addQueue("UPSTREAM", TAG.AUTO_UPLOAD.getStr(), pubData);
         }
     }
 }

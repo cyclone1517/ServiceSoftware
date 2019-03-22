@@ -38,6 +38,9 @@ public class Subscriber extends JedisPubSub {
         if (msg == MESSAGE.DATA){
             dptu.getExecutor().execute(new DataHandler(batchNum));
         }
+        else if (msg == MESSAGE.AUTOUPLOAD){
+            dptu.getExecutor().execute(new DataHandler(batchNum));
+        }
         else if (msg == MESSAGE.HEARTBEAT) {
             dptu.getExecutor().execute(new HeartBeatHandler(batchNum));
         }
