@@ -20,12 +20,12 @@ public class DataUtil {
 
     public static void putDataToRedis(Packet pkg){
         if (pkg instanceof PacketAutoUpload){
-            processAutoUpload(TAG.UPLOAD.getStr(), (PacketAutoUpload) pkg);
-            RedisUtil.publishData(TAG.UPLOAD.getStr());
+            processAutoUpload(TAG.AUTO_UPLOAD.getStr(), (PacketAutoUpload) pkg);
+            RedisUtil.publishData(TAG.AUTO_UPLOAD.getStr());
         }
         else if (pkg instanceof PacketReadMeter){
-            processReadMeter(TAG.UPLOAD.getStr(), (PacketReadMeter) pkg);
-            RedisUtil.publishData(TAG.UPLOAD.getStr());
+            processReadMeter(TAG.READ_METER.getStr(), (PacketReadMeter) pkg);
+            RedisUtil.publishData(TAG.READ_METER.getStr());
         }
         else if (pkg instanceof PacketHeartBeat){
             processHeartBeat(TAG.HEARTBEAT.getStr(), (PacketHeartBeat) pkg);
@@ -44,7 +44,7 @@ public class DataUtil {
             datas.add(data);
         }
         RedisUtil.pushQueue(key, JSON.toJSONString(datas));
-        logger.info("UPLOADED NUM: " + datas.size());
+        logger.info("UPLOADED METER NUM: " + datas.size());
     }
 
     private static void processReadMeter(String key, PacketReadMeter p){

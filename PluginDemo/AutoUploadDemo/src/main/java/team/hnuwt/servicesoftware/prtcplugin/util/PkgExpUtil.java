@@ -214,6 +214,6 @@ public class PkgExpUtil {
         return isBulkMap.get(id);
     }
 
-    public static void doNothing(){};
+    public static synchronized void doNothing(){};
 
 }

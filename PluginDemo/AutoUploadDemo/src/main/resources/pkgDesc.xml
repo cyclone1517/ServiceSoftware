@@ -11,12 +11,12 @@
             <fn>seq</fn>
             <fn>dataId</fn>
         </prop>
-        <fldlen>122115115</fldlen>
+        <fldlen>122115114</fldlen>
         <encode>000000000</encode>
     </headProp>
     <userProp>
         <prop>
-            <id>30081548684</id>
+            <id>30081552524</id>
             <function>AutoUpload</function>
             <isBulk>true</isBulk>
             <fieldNames>
@@ -27,7 +27,7 @@
                 <fn>cs</fn>
                 <fn>endChar</fn>
             </fieldNames>
-            <fldlen>224211</fldlen>
+            <fldlen>224111</fldlen>
             <encode>001000</encode>
             <rptfld>
                 <start>9</start>
