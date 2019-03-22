@@ -100,8 +100,7 @@ public class MainReactor implements Runnable {
      * 主动向外发起连接请求并注册
      * @param sc
      */
-    @Deprecated
-    public synchronized void applyConnect(SocketChannel sc){
+    public synchronized void registerRead(SocketChannel sc){
 
         try {
             sc.configureBlocking(false);
@@ -111,7 +110,7 @@ public class MainReactor implements Runnable {
             selectors[selIndex].wakeup();
             subReactors[selIndex].setRestart(false);
 
-            logger.info("CONNECT @#@SOCKET:" + sc);
+            logger.info("AGENCY @#@ REGISTERED:" + sc);
             if (++selIndex == NUM)
             {
                 selIndex = 0;

@@ -2,6 +2,7 @@ package team.hnuwt.servicesoftware.server.compatible;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.hnuwt.servicesoftware.server.service.MainReactor;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 
 import java.io.IOException;
@@ -58,5 +59,9 @@ public class FortendAgency {
                 e.printStackTrace();
             }
         }
+    }
+
+    public SocketChannel getSocketChannel(){
+        return socketChannel;
     }
 }

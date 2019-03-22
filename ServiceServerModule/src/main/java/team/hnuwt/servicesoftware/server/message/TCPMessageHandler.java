@@ -5,6 +5,7 @@ import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.compatible.FortendAgency;
 import team.hnuwt.servicesoftware.server.model.Logout;
 import team.hnuwt.servicesoftware.server.constant.up.FUNID;
+import team.hnuwt.servicesoftware.server.service.MainReactor;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;
 
@@ -21,21 +23,51 @@ import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;
  */
 public class TCPMessageHandler {
 
+    private final static String APPLICATION_FILE = "application.properties";
+
     private static Logger logger = LoggerFactory.getLogger(TCPMessageHandler.class);
 
     private static Map<SocketAddress, Remainder> map = new ConcurrentHashMap<>();
 
-    private static FortendAgency fortendAgency;
+    private static FortendAgency[] agencyList;
     private static boolean compatible = false;
 
-    public static void openTCPCompatible(){
+    private static int agenCurr = 0;
+    private static int angenNum;
+
+    private static MainReactor mRec;
+
+    static {
+        Properties prop = new Properties();
+        try {
+            prop.load(TCPMessageHandler.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        angenNum = Integer.parseInt(prop.getProperty("angenNum"));
+        if (angenNum > 1){
+            logger.warn("NOT SUPPORT MULTIPLE AGENCY, PLEASE SET angenNum to '1' / 暂不支持多个代理，请设置angenNum为1");
+        }
+        agencyList = new FortendAgency[angenNum];
+        for (int i=0; i< angenNum; i++){
+            agencyList[i] = new FortendAgency();
+        }
+    }
+
+    public static void openTCPCompatible(MainReactor mainReactor){
         compatible = true;
-        fortendAgency = new FortendAgency();
+        mRec = mainReactor;
+        registAgency();
     }
 
     public static void closeTCPCompatible(){
-        fortendAgency.close();
         compatible = false;
+    }
+
+    private static void registAgency(){
+        for (FortendAgency agency: agencyList){
+            mRec.registerRead(agency.getSocketChannel());
+        }
     }
 
     /**
@@ -140,7 +172,15 @@ public class TCPMessageHandler {
             {
                 if (c == 0x16)
                 {
-                    if (compatible) fortendAgency.directSend("@COMPATIBLE@", result.toString());
+                    if (compatible){
+//                        agencyList[agenCurr].directSend("AGENCY @#@ NO:" + agenCurr, result.toString());
+//                        if (++agenCurr == angenNum){
+//                            agenCurr = 0;
+//                        }
+
+                        // 暂时不支持分流代理
+                        agencyList[0].directSend("AGENCY @#@ NO:" + agenCurr, result.toString());
+                    }
 
                     /* 心跳：走协议栈单线 */
                     if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR)   /* 获取功能码和数字单元标识 */
