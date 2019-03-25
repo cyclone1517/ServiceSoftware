@@ -218,6 +218,4 @@ public class PkgExpUtil {
         return isBulkMap.get(id);
     }
 
-    public static synchronized void doNothing(){};
-
 }

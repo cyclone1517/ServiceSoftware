@@ -31,11 +31,6 @@ public class PluginServiceImpl implements PluginService {
 
     private static final String DATA = "Data";
 
-    static {
-        // 让这个人类先加载
-        PkgExpUtil.doNothing();
-    }
-
     @Override
     public void translate(ByteBuilder pkg) {
         /* 读取包结构 AFN+ID 共同决定业务类型 */
