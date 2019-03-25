@@ -14,6 +14,7 @@ import java.util.Properties;
 /**
  * 代理集中器，转发消息
  */
+@Deprecated
 public class FortendAgency {
 
     private SocketChannel socketChannel;

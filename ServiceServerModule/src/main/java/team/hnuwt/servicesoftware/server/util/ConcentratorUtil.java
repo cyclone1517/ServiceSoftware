@@ -49,7 +49,7 @@ public class ConcentratorUtil {
                 return true;
             }
             logger.info("NO INVALID SOCKET YET @#@ id: " + id);
-            return false;
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
             logger.info("FAILED CLOSED AN INVALID SOCKET! @#@ id: " +id);
