@@ -11,13 +11,11 @@ public class App {
 
     public static void main(String[] args) throws IOException
     {
-        MainReactor mainReactor = new MainReactor();
-
         // 开启前置机兼容模式
-        TCPMessageHandler.openTCPCompatible(mainReactor);
+//        TCPMessageHandler.openTCPCompatible(mainReactor);
 
         // 启动集中器连接和数据读取侦听
-        new Thread(mainReactor).start();
+        new Thread(new MainReactor()).start();
         new Thread(new UDPReactor()).start();
 
         // 启动三方和内部消息命令侦听
