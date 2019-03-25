@@ -18,7 +18,7 @@ public class CheckTask extends TimerTask {
     public CheckTask(){}
 
     public CheckTask(int checkSecond) {
-        checkTime = checkSecond * 1000 * 60;
+        checkTime = checkSecond * 60;
     }
 
     private static Logger logger = LoggerFactory.getLogger(CheckTask.class);

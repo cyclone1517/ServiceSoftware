@@ -10,7 +10,7 @@
         where
             current_timestamp - tb_HeartBeat.time &gt; #{checkTime}
         and
-            tb_HeartBeat.collectorId = (
+            tb_HeartBeat.collectorId in (
                 select collectorId from tb_Login
                 where tb_Login.state = 1
             )
