@@ -37,7 +37,7 @@ public class FieldPacker {
      * @param unitLen   每个单元长度
      * @return
      */
-    public static String getReadMeterPkgLen(int originLen, int num, int unitLen){
+    public static String getMultiMeterPkgLen(int originLen, int num, int unitLen){
         int len = originLen;
         len += num * unitLen;
         len = (len<<2) + 1;     /* 编码规律 */
@@ -153,5 +153,30 @@ public class FieldPacker {
         }
 
         return sb.toString();
+    }
+
+    public static String geneArchive(JsonNode archive){
+        StringBuilder sb =  new StringBuilder();
+        if (archive instanceof ArrayNode){
+            for (JsonNode ac: archive){
+                sb.append(geneSgArchive(ac));
+            }
+        } else {
+            sb.append(geneSgArchive(archive));
+        }
+        return sb.toString();
+    }
+
+    public static String geneSgArchive(JsonNode ac){
+        StringBuilder result = new StringBuilder();
+        JsonNode id = ac.get("id");
+        JsonNode mt_id = ac.get("mt_id");
+        JsonNode mode_addr = ac.get("mode_addr");
+
+        result.append((id == null)? "": id.asText())
+                .append((mt_id == null)? "": mt_id.asText())
+                .append((mode_addr == null)? "": mode_addr.asText());
+
+        return result.toString();
     }
 }

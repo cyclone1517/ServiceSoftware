@@ -76,6 +76,11 @@ public class DistributeUtil {
             runTask(PkgPackUtil.geneReadUploadPkg(root, TAG.READ_UPLOAD.getStr()));
         }
 
+        /* 下载档案 */
+        else if (tag == TAG.ARCHIVE_DOWNLOAD){
+            runTask(PkgPackUtil.geneArchive(root, TAG.ARCHIVE_DOWNLOAD.getStr()));
+        }
+
         /* 其它 */
         else {
             throw new Exception("UNKNOWN TAG:" + tag);
