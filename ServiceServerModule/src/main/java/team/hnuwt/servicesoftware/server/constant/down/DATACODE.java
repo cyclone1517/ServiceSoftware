@@ -34,6 +34,8 @@ public class DATACODE {
         DataId.put("UPLOAD_ON", "00004003");    /* 上报允许 */
         DataId.put("UPLOAD_OFF", "00004003");   /* 上报停止 */
         DataId.put("READ_UPLOAD", "00004003");   /* 读取上报是否允许 */
+        DataId.put("ARCHIVE_DOWNLOAD", "11000100"); /* 档案下载 */
+
 
         // 控制码
         ctrlCode.put("READ_METER", "70");
@@ -42,6 +44,7 @@ public class DATACODE {
         ctrlCode.put("UPLOAD_ON", "70");
         ctrlCode.put("UPLOAD_OFF", "70");
         ctrlCode.put("READ_UPLOAD", "70");
+        ctrlCode.put("ARCHIVE_DOWNLOAD", "70");
 
         //功能码
         afnCode.put("READ_METER", "8C");
