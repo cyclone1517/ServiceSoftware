@@ -17,6 +17,7 @@ import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
 public class SendHandler implements Runnable {
     private String pkg;
     private boolean upstream;
+    private SocketChannel agenSocket;
 
     private static Logger logger = LoggerFactory.getLogger(SendHandler.class);
 
@@ -29,6 +30,12 @@ public class SendHandler implements Runnable {
         this.upstream = upstream;
     }
 
+    public SendHandler(String pkg, boolean upstream, SocketChannel agenSocket){
+        this.pkg = pkg;
+        this.upstream = upstream;
+        this.agenSocket = agenSocket;
+    }
+
     @Override
     public void run()
     {
@@ -36,12 +43,7 @@ public class SendHandler implements Runnable {
         long id = b.BINToLong(7, 12);
         SocketChannel sc = null;
         if (upstream){
-            sc = CompatibleUtil.get(id);
-            if (sc == null || !sc.isConnected()){
-                CompatibleUtil.addConn(id);      // 上行创建兼容链接
-                sc = CompatibleUtil.get(id);
-                CompatibleUtil.registSocketRead(sc);
-            }
+            sc = agenSocket;
         } else {
             sc = ConcentratorUtil.get(id);       // 下行获取集中器链接
             if (sc == null || !sc.isConnected())

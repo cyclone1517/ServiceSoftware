@@ -15,10 +15,8 @@ import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.compatible.FortendAgency;
 import team.hnuwt.servicesoftware.server.model.Logout;
 import team.hnuwt.servicesoftware.server.constant.up.FUNID;
-import team.hnuwt.servicesoftware.server.service.MainReactor;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.CompatibleUtil;
-import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
 import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;
 
 /**
@@ -32,8 +30,11 @@ public class TCPMessageHandler {
 
     private static boolean compatible = false;
 
+    private static FortendAgency fortendAgency;
+
     public static void openTCPCompatible(){
         compatible = true;
+        fortendAgency = new FortendAgency();
     }
 
 //    public static void closeTCPCompatible(){
@@ -149,9 +150,20 @@ public class TCPMessageHandler {
                 if (c == 0x16)
                 {
                     if (compatible){
-                        if (CompatibleUtil.isUpstream(result.getByte(6))){  // 如果上行，往老系统发
-                            DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), true));
-                        } else {    // 如果下行，往集中器发
+
+                        // 如果上行，往兼容模块发
+                        if (CompatibleUtil.isUpstream(result.getByte(6))){
+                            SocketChannel agenSocket = fortendAgency.getAlivedCompatibleLink();
+                            if (agenSocket != null) {
+                                DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), true, agenSocket));
+                            }
+                            else {
+                                logger.warn("AGENCY WARN: No available agency link!!");
+                            }
+                        }
+
+                        // 如果下行，往集中器发
+                        else {
                             DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), false));
                         }
                     }
