@@ -71,7 +71,7 @@ public class SubReactor implements Runnable {
                     result.append(buffer.get());
                 num = sc.read(buffer);
             }
-            logger.info("READ: " + sk.channel());
+            logger.info("READ: " + sk.channel() + " " + result.toString());
             TCPMessageHandler.handler(sc, result);
             if (num == -1)      /* 代理或老系统断开连接 */
             {
