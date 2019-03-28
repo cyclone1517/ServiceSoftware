@@ -15,7 +15,7 @@ public class App {
         Timer timer = new Timer();
         int checkSecond = 5;   /* 过期时间5分 */
         int period = 5;       /* 扫描时间5分 */
-        timer.schedule(new CheckTask(checkSecond), 0, period * 1000 * 60);
+        timer.schedule(new CheckTask(checkSecond), period * 1000 * 60, period * 1000 * 60);
 
         // 启动 redis 数据订阅服务
         Subscriber subscriber = new Subscriber();
