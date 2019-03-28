@@ -9,9 +9,6 @@ import team.hnuwt.servicesoftware.server.constant.down.FUNTYPE;
 import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.message.CloseOfflineHandler;
 import team.hnuwt.servicesoftware.server.message.SendHandler;
-
-import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.util.List;
 
 /**
@@ -78,7 +75,14 @@ public class DistributeUtil {
 
         /* 下载档案 */
         else if (tag == TAG.ARCHIVE_DOWNLOAD){
-            runTask(PkgPackUtil.geneArchive(root, TAG.ARCHIVE_DOWNLOAD.getStr()));
+            String torun = PkgPackUtil.geneArchive(root, TAG.ARCHIVE_DOWNLOAD.getStr());
+            //runTask(PkgPackUtil.geneArchive(root, TAG.ARCHIVE_DOWNLOAD.getStr()));
+        }
+
+        /* 关闭档案 */
+        else if (tag == TAG.ARCHIVE_CLOSE){
+            String torun = PkgPackUtil.geneCloseArchive(root, TAG.ARCHIVE_CLOSE.getStr());
+            //runTask(PkgPackUtil.geneCloseArchive(root, TAG.ARCHIVE_CLOSE.getStr()));
         }
 
         /* 其它 */

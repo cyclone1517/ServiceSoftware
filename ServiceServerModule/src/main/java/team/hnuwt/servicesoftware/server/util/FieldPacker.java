@@ -34,7 +34,7 @@ public class FieldPacker {
      * 计算包长度
      * @param originLen 固定初始长度(从0到数据单元标识长18字节，CS+末位长2字节)
      * @param num       数据单元个数
-     * @param unitLen   每个单元长度
+     * @param unitLen   每个单元长度(字节)
      * @return
      */
     public static String getMultiMeterPkgLen(int originLen, int num, int unitLen){
@@ -170,12 +170,18 @@ public class FieldPacker {
     public static String geneSgArchive(JsonNode ac){
         StringBuilder result = new StringBuilder();
         JsonNode id = ac.get("id");
-        JsonNode mt_id = ac.get("mt_id");
-        JsonNode mode_addr = ac.get("mode_addr");
+        JsonNode madd = ac.get("madd");
+        JsonNode prtc = ac.get("prtc");
+        JsonNode port = ac.get("port");
+        JsonNode cadd = ac.get("cadd");
 
-        result.append((id == null)? "": id.asText())
-                .append((mt_id == null)? "": mt_id.asText())
-                .append((mode_addr == null)? "": mode_addr.asText());
+        result.append((id==null)? "": id.asText())          /* 表序号 */
+                .append((madd==null)? "": madd.asText())    /* 表地址 */
+                .append("33000010")                         /* 测量点性质、接线方式 */
+                .append("01000000")                         /* 线路表箱编号 */
+                .append((port==null)? "": port.asText())    /* 端口 */
+                .append((prtc==null)? "": prtc.asText())    /* 协议 */
+                .append((cadd==null)? "": cadd.asText());   /* 测量地址 */
 
         return result.toString();
     }

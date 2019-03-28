@@ -55,7 +55,8 @@ public class ConsumerUtil implements Runnable {
                     for (MessageExt msg : msgs)
                     {
                         String msgBody = new String(msg.getBody());
-                        TAG tag = TAG.getTAG(msg.getTags());
+                        String msgTag = msg.getTags();
+                        TAG tag = TAG.getTAG(msgTag);
                         TOPIC topic = TOPIC.getTopic(msg.getTopic());
                         if (topic == TOPIC.DIRECT){
                             DistributeUtil.directDistribute(msgBody);   /* 透明转发 */

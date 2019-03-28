@@ -174,7 +174,7 @@ public class PkgPackUtil {
         result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
         result.append(addrId);                      /* 地址域 */
         result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
-        result.append("7B");                        /* 序列号，7单帧需回复，0保留 */
+        result.append(DATACODE.getSerial(FUN));     /* 序列号，7单帧需回复，0保留 */
         result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
         result.append(numStr);                      /* 表数量 */
         result.append(FieldPacker.geneArchive(archive));
@@ -184,10 +184,44 @@ public class PkgPackUtil {
             logger.error("No archive msg in ROCKETMQ order");
             return null;
         }
+        result.append("36353433323139383736353433323130");
         result.append(FieldPacker.calcuCs(result)); /* 校验位 */
         result.append("16");                        /* 结束符 */
 
-        if (nullFiledCheck(result.toString())) return null;
+        if (!nullFiledCheck(result.toString())) return null;
+
+        return result.toString();
+    }
+
+    /**
+     * 关闭档案报文生成
+     */
+    public static String geneCloseArchive(JsonNode root, String FUN){
+        StringBuilder result = new StringBuilder();
+
+        // get num of meters
+        int meterNum = FieldPacker.getMeterNum(root);
+        String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
+        String L = FieldPacker.getMultiMeterPkgLen(14, meterNum, 2);
+        List<String> ids = FieldPacker.getMeterIds(root.path("id"));
+        int addr = root.path("addr").asInt();
+        String addrId = FieldPacker.toHexAddrId(addr);
+
+        result.append("68");
+        result.append(L);
+        result.append(L);
+        result.append("68");
+        result.append("70");                        /* 控制符 */
+        result.append(addrId);                      /* 地址域 */
+        result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
+        result.append(DATACODE.getSerial(FUN));     /* 序列号，7单帧需回复，0保留 */
+        result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
+        result.append(numStr);                      /* 表数量 */
+        ids.forEach(result::append);                /* 表序号 */
+        result.append(FieldPacker.calcuCs(result)); /* 校验位 */
+        result.append("16");                        /* 结束符 */
+
+        if (!nullFiledCheck(result.toString())) return null;
 
         return result.toString();
     }
