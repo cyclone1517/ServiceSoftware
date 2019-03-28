@@ -105,6 +105,7 @@ public enum TAG {
 		tags.put("UPLOAD_OFF", UPLOAD_OFF);
 		tags.put("READ_UPLOAD", READ_UPLOAD);
 		tags.put("ARCHIVE_DOWNLOAD", ARCHIVE_DOWNLOAD);
+		tags.put("ARCHIVE_CLOSE", ARCHIVE_CLOSE);
 	}
 
 	@Override

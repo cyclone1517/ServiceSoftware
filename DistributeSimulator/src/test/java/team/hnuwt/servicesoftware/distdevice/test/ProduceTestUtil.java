@@ -1,8 +1,14 @@
 package team.hnuwt.servicesoftware.distdevice.test;
 
+import com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import team.hnuwt.servicesoftware.disdevice.mode.AddrNumIds;
+import team.hnuwt.servicesoftware.disdevice.mode.Archive;
+import team.hnuwt.servicesoftware.disdevice.mode.Archive_download;
+
+import java.util.List;
 
 public class ProduceTestUtil {
 
@@ -62,4 +68,22 @@ public class ProduceTestUtil {
 
         return root.toString();
     }
+
+    public static String geneArchive(String addr, int num, List<Archive> archives){
+        Archive_download ad = new Archive_download();
+        ad.setAddr(addr);
+        ad.setNum(num + "");
+        ad.setArchives(archives);
+        return JSON.toJSONString(ad);
+    }
+
+    public static String geneCloseArchive(String addr, List<String> meterIds){
+        AddrNumIds ad = new AddrNumIds();
+        ad.setAddr(addr);
+        ad.setNum(meterIds.size());
+        ad.setId(meterIds);
+        return JSON.toJSONString(ad);
+    }
+
+
 }
