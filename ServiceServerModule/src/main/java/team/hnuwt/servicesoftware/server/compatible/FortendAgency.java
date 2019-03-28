@@ -50,6 +50,7 @@ public class FortendAgency {
     public SocketChannel getAlivedCompatibleLink(){
         if (socketChannel.isConnected()) return socketChannel;
         else {
+            logger.info("UPDATED NEW AGENCY SOCKET");
             return openNewAgency();
         }
     }

@@ -5,10 +5,7 @@ import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.sun.corba.se.impl.ior.ByteBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +15,7 @@ import team.hnuwt.servicesoftware.server.constant.up.FUNID;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.CompatibleUtil;
 import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;
+import team.hnuwt.servicesoftware.server.util.RedisUtil;
 
 /**
  * TCP消息处理工具类
@@ -85,7 +83,30 @@ public class TCPMessageHandler {
      * @param logoutList
      */
     public static void handleLogout(List<Logout> logoutList){
+        /*
+         * 通知数据库和中间服务
+         */
         DataProcessThreadUtil.getExecutor().execute(new LogoutHandler(logoutList));
+
+        /*
+         * 通知兼容模块
+         */
+        RedisUtil.publishData("agency", geneLogoutStr(logoutList));
+    }
+
+    private static String geneLogoutStr(List<Logout> logoutList){
+        StringBuilder sb = new StringBuilder();
+
+        int size = logoutList.size();
+        if (size > 0) {
+            sb.append(logoutList.get(0).getId());
+        }
+        if (size > 1){
+            for (int i=1; i<size; i++){
+                sb.append("||").append(logoutList.get(i).getId());
+            }
+        }
+        return sb.toString();
     }
 
     /**
