@@ -8,6 +8,7 @@ import team.hnuwt.servicesoftware.compatible.util.CompatibleUtil;
 import team.hnuwt.servicesoftware.compatible.util.DataProcessThreadUtil;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.List;
@@ -130,10 +131,17 @@ public class TCPMessageHandler {
                     long id = result.BINToLong(7,12);
 
                     /*
-                     * 注册代理
+                     * 如果收到上行报文，就注册来自前置机的代理链接
                      */
                     if (upstream){
-                        AgencyAcptUtil.add(id, sc);
+                        SocketChannel currSc = AgencyAcptUtil.get(id);
+                        try {
+                            if (currSc==null || ((InetSocketAddress)currSc.getRemoteAddress()).getPort() != ((InetSocketAddress)sc.getRemoteAddress()).getPort()){
+                                AgencyAcptUtil.add(id, sc);     /* 若登录却端口过期，应更换 */
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     /*

@@ -44,6 +44,9 @@ public class SendHandler implements Runnable {
         SocketChannel sc = null;
         if (upstream){
             sc = agenSocket;
+            if (!sc.isConnected()) {
+                return;
+            }
         } else {
             sc = ConcentratorUtil.get(id);       // 下行获取集中器链接
             if (sc == null || !sc.isConnected())

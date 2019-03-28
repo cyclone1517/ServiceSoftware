@@ -110,4 +110,10 @@ public class RedisUtil {
         jedis.publish("notifier", dataType);
         returnJedis(jedis);
     }
+
+    public static void publishData(String topic, String dataType){
+        Jedis jedis = getJedis();
+        jedis.publish(topic, dataType);
+        returnJedis(jedis);
+    }
 }
