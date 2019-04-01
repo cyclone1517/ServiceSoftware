@@ -39,7 +39,6 @@ public class DataManagerService implements Runnable {
         }
 
         batchNum = Integer.parseInt(props.getProperty("db.batch"));
-        DataProcessThreadUtil dptu = new DataProcessThreadUtil();
         while (true)
         {
             List<Data> list = new ArrayList<>();
@@ -55,7 +54,7 @@ public class DataManagerService implements Runnable {
             }
             if (list.size() > 0)
             {
-                dptu.getExecutor().execute(new DataService(list));
+                DataProcessThreadUtil.getExecutor().execute(new DataService(list));
             }
         }
     }

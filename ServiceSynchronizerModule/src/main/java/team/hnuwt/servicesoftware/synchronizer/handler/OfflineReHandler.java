@@ -22,7 +22,6 @@ public class OfflineReHandler implements Runnable{
 
     @Override
     public void run() {
-        DataProcessThreadUtil dptu = new DataProcessThreadUtil();
         List<String> offlineOKList = new ArrayList<>();
 
         List<String> list = new ArrayList<>();
@@ -40,7 +39,7 @@ public class OfflineReHandler implements Runnable{
                 List<String> tempList = JSON.parseArray(l, String.class);
                 offlineOKList.addAll(tempList);
             });
-            dptu.getExecutor().execute(new OfflineReService(offlineOKList));
+            DataProcessThreadUtil.getExecutor().execute(new OfflineReService(offlineOKList));
 
             // 推送到消息队列
             String data = HandlerUtil.geneMsg(offlineOKList, 0);

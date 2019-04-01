@@ -23,7 +23,6 @@ public class DataHandler implements Runnable {
 
     @Override
     public void run() {
-        DataProcessThreadUtil dptu = new DataProcessThreadUtil();
 
         List<Data> list = new ArrayList<>();
         for (int i = 0; i < batchNum; i++)      /* 连续取batchNum条 */
@@ -38,7 +37,7 @@ public class DataHandler implements Runnable {
         }
         if (list.size() > 0)
         {
-            dptu.getExecutor().execute(new DataService(list));
+            DataProcessThreadUtil.getExecutor().execute(new DataService(list));
 
             // 推送到消息队列
             String pubData = JSON.toJSONString(list);
