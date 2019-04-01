@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.synchronizer.dao.CheckDao;
+import team.hnuwt.servicesoftware.synchronizer.util.InnerProduceUtil;
 import team.hnuwt.servicesoftware.synchronizer.util.ProduceUtil;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class CheckTask extends TimerTask {
         List<String> offList = new CheckDao().check(checkTime);
         if (offList.size() != 0) {
             String offListStr = JSON.toJSONString(offList);
-            ProduceUtil.addQueue(TOPIC, TAG, offListStr);
+            InnerProduceUtil.addQueue(TOPIC, TAG, offListStr);
         }
         else {
             logger.info("no newly offline collectors in @#@ %d seconds", checkTime);
