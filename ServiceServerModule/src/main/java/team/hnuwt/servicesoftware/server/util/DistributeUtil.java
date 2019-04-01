@@ -76,13 +76,13 @@ public class DistributeUtil {
         /* 下载档案 */
         else if (tag == TAG.ARCHIVE_DOWNLOAD){
             String torun = PkgPackUtil.geneArchive(root, TAG.ARCHIVE_DOWNLOAD.getStr());
-            //runTask(PkgPackUtil.geneArchive(root, TAG.ARCHIVE_DOWNLOAD.getStr()));
+            runTask(torun);
         }
 
         /* 关闭档案 */
         else if (tag == TAG.ARCHIVE_CLOSE){
             String torun = PkgPackUtil.geneCloseArchive(root, TAG.ARCHIVE_CLOSE.getStr());
-            //runTask(PkgPackUtil.geneCloseArchive(root, TAG.ARCHIVE_CLOSE.getStr()));
+            runTask(torun);
         }
 
         /* 其它 */
