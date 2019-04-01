@@ -229,8 +229,14 @@ public class TCPMessageHandler {
 
                     /* 其余数据包：设置自动上报回复0x84还没处理 */
                     else {
-                        logger.info("OTHERS: " + result.toString());
-//                        DataProcessThreadUtil.getExecutor().execute(new OrderHandler(result.toString()));
+                        /* 转发的心跳回复不打印 */
+                        if (result.getByte(12) == (byte) 0x00 && result.BINToLong(14, 18) == FUNID.HEART_LOGIN_RE){
+                            // do nothing
+                        }
+
+                        else {
+                            logger.info("OTHERS: " + result.toString());
+                        }
                     }
 
                     /*
