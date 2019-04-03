@@ -48,9 +48,9 @@ public class ReadMeterReHandler implements Runnable{
             return;
         }
 
-        root.put("addr", addrId);
-        root.put("num", num);
-        root.set("data", geneMeterData(result.substring(CONSTANT.DATA_LOC), num, mapper));
+        root.put("termAddr", addrId);
+        root.put("count", num);
+        root.set("meter", geneMeterData(result.substring(CONSTANT.DATA_LOC), num, mapper));
         root.put("time", FieldPacker.getSysTime());
 
         /*
@@ -68,9 +68,9 @@ public class ReadMeterReHandler implements Runnable{
             ArrayNode result = mapper.createArrayNode();
             for (int i = 0; i < num; i++) {
                 ObjectNode meter = mapper.createObjectNode();
-                meter.put("id", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[0])));
+                meter.put("meterAddr", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[0])));
                 locate += fieldlen[0];
-                meter.put("read", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[1])).substring(0, 6));
+                meter.put("readValue", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[1])).substring(0, 6));
                 locate += fieldlen[1];
 
                 result.add(meter);
@@ -79,16 +79,18 @@ public class ReadMeterReHandler implements Runnable{
 
         }
         else if (num == 1){
+            ArrayNode result = mapper.createArrayNode();
             ObjectNode meter = mapper.createObjectNode();
-            meter.put("id", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[0])));
+            meter.put("meterAddr", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[0])));
             locate += fieldlen[0];
-            meter.put("read", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[1])).substring(0, 6));
+            meter.put("readValue", FieldPacker.reverseEnd(userStr.substring(locate, locate + fieldlen[1])).substring(0, 6));
             locate += fieldlen[1];
             String stateStr = FieldPacker.parseHexStr2Byte(userStr.substring(locate, locate + 2));
             if (stateStr != null && stateStr.length() > 2) {
                 meter.put("state", stateStr.substring(stateStr.length() - 2));
             }
-            return meter;
+            result.add(meter);
+            return result;
         }
         else {
             return null;

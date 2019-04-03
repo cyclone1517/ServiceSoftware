@@ -22,8 +22,8 @@ public class PkgPackUtil {
         int meterNum = FieldPacker.getMeterNum(root);
         String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
         String L = FieldPacker.getMultiMeterPkgLen(15, meterNum, 2);
-        List<String> ids = FieldPacker.getMeterIds(root.path("id"));
-        int addr = root.path("addr").asInt();
+        List<String> ids = FieldPacker.getMeterIds(root.path("meter"));
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
 
         result.append("68");
@@ -54,7 +54,7 @@ public class PkgPackUtil {
         // get num of meters
         int meterNum = FieldPacker.getMeterNum(root);
         String L = FieldPacker.getMultiMeterPkgLen(20, meterNum, 2);
-        int addr = root.path("addr").asInt();
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
 
         result.append("68");
@@ -78,7 +78,7 @@ public class PkgPackUtil {
 
         // get len of pkg
         String L = FieldPacker.genePkgLen(33);  /* 用户字段长33字节 */
-        int addr = root.path("addr").asInt();
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
         List<String> ids = FieldPacker.getMeterIds(root.path("id"));
 
@@ -108,7 +108,7 @@ public class PkgPackUtil {
 
         // get len of pkg
         String L = FieldPacker.genePkgLen(29);      /* 用户字段长29字节 */
-        int addr = root.path("addr").asInt();
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
         //List<String> ids = FieldPacker.getMeterIds(root.path("id"));
 
@@ -134,7 +134,7 @@ public class PkgPackUtil {
 
         // get len of pkg
         String L = FieldPacker.genePkgLen(12);      /* 用户字段长12字节 */
-        int addr = root.path("addr").asInt();
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
 
         result.append("68");
@@ -164,7 +164,7 @@ public class PkgPackUtil {
         String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
         String L = FieldPacker.getMultiMeterPkgLen(14, meterNum, 22);
         JsonNode archive = root.get("archive");
-        int addr = root.path("addr").asInt();
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
 
         result.append("68");
@@ -204,7 +204,7 @@ public class PkgPackUtil {
         String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
         String L = FieldPacker.getMultiMeterPkgLen(14, meterNum, 2);
         List<String> ids = FieldPacker.getMeterIds(root.path("id"));
-        int addr = root.path("addr").asInt();
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
 
         result.append("68");

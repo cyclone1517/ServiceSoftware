@@ -22,10 +22,10 @@ public class FieldPacker {
 
     public static int getMeterNum(JsonNode root){
         try {
-            String numStr = root.path("num").asText();
+            String numStr = root.path("count").asText();
             return Integer.parseInt(numStr);
         }catch (Exception e){
-            logger.error("wrong num type, cannot be transfered to a num");
+            logger.error("wrong num type, cannot be transfered to a num", e);
             return 0;
         }
     }
