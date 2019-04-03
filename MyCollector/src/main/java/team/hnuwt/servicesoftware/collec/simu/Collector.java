@@ -2,6 +2,8 @@ package team.hnuwt.servicesoftware.collec.simu;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.hnuwt.servicesoftware.collec.util.ByteBuilder;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -14,30 +16,36 @@ import java.util.Properties;
 public class Collector implements Runnable{
 
     private SocketChannel socketChannel;
-    private String originAddr;
-    private int originPort;
+    private static String originAddr;
+    private static int originPort;
 
     private static final String APPLICATION_FILE = "application.properties";
     private Logger logger = LoggerFactory.getLogger(Collector.class);
-    private ByteBuffer login;
-    private ByteBuffer hearbeat;
+    private boolean isLogin = false;
 
-    public Collector(String addr, int plus){
-        init();
-    }
+    private String login;
+    private String hearbeat;
 
-    private void init() {
+    /* 加载类变量的静态代码块 */
+    static {
+        Properties prop = new Properties();
         try {
-            Properties prop = new Properties();
             prop.load(Collector.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
-            originAddr = prop.getProperty("server.address");
-            originPort = Integer.parseInt(prop.getProperty("server.port"));
-
-            // 仅连接
-            openNewLink();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        originAddr = prop.getProperty("server.address");
+        originPort = Integer.parseInt(prop.getProperty("server.port"));
+    }
+
+    public Collector(String login, String hearbeat){
+        init();
+        this.login = login;
+        this.hearbeat = hearbeat;
+    }
+
+    private void init() {
+        openNewLink();
     }
 
     private SocketChannel openNewLink(){
@@ -68,14 +76,30 @@ public class Collector implements Runnable{
         }
     }
 
-    private void sendMsg(){
-        if (!socketChannel.isConnected()){
-            //socketChannel.write()
+    private void sendMsg(String msg){
+        try {
+            socketChannel.write(ByteBuffer.wrap(new ByteBuilder(msg).getBytes()));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void run() {
-
+        while (true){
+            if (!isLogin){
+                sendMsg(login);
+                isLogin = true;
+                logger.info("Login: " + login);
+            } else {
+                sendMsg(hearbeat);
+                logger.info("HeartBeat: " + hearbeat);
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                logger.info("", e);
+            }
+        }
     }
 }
