@@ -6,14 +6,20 @@
 <mapper namespace="Check">
 
     <select id="offline" parameterType="int" resultType="String">
-        select collectorId from tb_HeartBeat
+        select collectorId from tb_Login
         where
-            current_timestamp - tb_HeartBeat.time &gt; #{checkTime}
+            tb_Login.state = 1
         and
-            tb_HeartBeat.collectorId in (
-                select collectorId from tb_Login
-                where tb_Login.state = 1
+        (
+            tb_Login.collectorId in (
+                select collectorId from tb_HeartBeat
+                where current_timestamp - tb_HeartBeat.time &gt; #{checkTime}
             )
+            or
+            tb_Login.collectorId not in (
+                select collectorId from tb_HeartBeat
+            )
+        )
     </select>
 
     <update id="resetOffline" parameterType="java.util.List">
