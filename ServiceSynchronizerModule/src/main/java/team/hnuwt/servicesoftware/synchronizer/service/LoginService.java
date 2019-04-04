@@ -14,10 +14,12 @@ public class LoginService implements Runnable {
     private static Logger logger = LoggerFactory.getLogger(LoginService.class);
 
     private List<Login> addrList;
+    private boolean login;
 
-    public LoginService(List<Login> addrList)
+    public LoginService(List<Login> addrList, boolean login)
     {
         this.addrList = addrList;
+        this.login = login;
     }
 
     /**
@@ -27,7 +29,7 @@ public class LoginService implements Runnable {
     public void run()
     {
         new LoginDao().insertBatch(addrList);
-        logger.info(addrList.size() + " collectors have LOGIN/OFFLINE state updated.");
+        logger.info(addrList.size() + " collectors have " + ((login)?"LOGIN":"OFFLINE") + " state updated.");
     }
 
 }

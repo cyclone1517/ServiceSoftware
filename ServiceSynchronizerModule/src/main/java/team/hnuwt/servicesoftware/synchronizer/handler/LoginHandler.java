@@ -78,7 +78,7 @@ public class LoginHandler implements Runnable {
                 loginList.add(new Login(cdId, cdPort, state));
                 loginIds.add(HandlerUtil.packAddrToHex(cdId));
             });
-            DataProcessThreadUtil.getExecutor().execute(new LoginService(loginList));
+            DataProcessThreadUtil.getExecutor().execute(new LoginService(loginList, state==1));
 
             // 推送到消息队列
             String data = HandlerUtil.geneMsg(loginIds, state);
