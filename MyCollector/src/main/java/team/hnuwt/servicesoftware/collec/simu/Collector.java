@@ -25,6 +25,9 @@ public class Collector implements Runnable{
 
     private String login;
     private String hearbeat;
+    private int loop;
+    private int interval;
+    private int delay;
 
     /* 加载类变量的静态代码块 */
     static {
@@ -38,10 +41,30 @@ public class Collector implements Runnable{
         originPort = Integer.parseInt(prop.getProperty("server.port"));
     }
 
-    public Collector(String login, String hearbeat){
+    /**
+     * 基础集中器
+     * @param login
+     * @param hearbeat
+     * @param loop
+     */
+    public Collector(String login, String hearbeat, int loop, int interval){
+        this(login, hearbeat, loop, interval, 0);
+    }
+
+    /**
+     * 带不同延时的集中器
+     * @param login
+     * @param hearbeat
+     * @param loop
+     * @param delay 延时参数
+     */
+    public Collector(String login, String hearbeat, int loop, int interval, int delay){
         init();
         this.login = login;
         this.hearbeat = hearbeat;
+        this.loop = loop;
+        this.interval = interval;
+        this.delay = delay;
     }
 
     private void init() {
@@ -86,7 +109,7 @@ public class Collector implements Runnable{
 
     @Override
     public void run() {
-        while (true){
+        while (loop-->0){
             if (!isLogin){
                 sendMsg(login);
                 isLogin = true;
@@ -96,10 +119,15 @@ public class Collector implements Runnable{
                 logger.info("HeartBeat: " + hearbeat);
             }
             try {
-                Thread.sleep(5000);
+                Thread.sleep(delay * 1000);
             } catch (InterruptedException e) {
                 logger.info("", e);
             }
+        }
+        try {
+            socketChannel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
