@@ -42,17 +42,18 @@ public class ConcentratorUtil {
     public static boolean remove(Long id)
     {
         SocketChannel sk = map.remove(id);
+        int realId = Integer.parseInt(Long.toHexString(id),16);
         try {
             if (sk != null && sk.isConnected()) {
                 sk.close();
-                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + id );
+                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + realId );
                 return true;
             }
-            logger.info("INVALID SOCKET @#@ id: " + id);
+            logger.info("NO INVALID SOCKET @#@ id: " + realId);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            logger.info("FAILED CLOSED AN INVALID SOCKET! @#@ id: " +id);
+            logger.info("FAILED CLOSED AN INVALID SOCKET! @#@ id: " + realId);
             return false;
         }
     }

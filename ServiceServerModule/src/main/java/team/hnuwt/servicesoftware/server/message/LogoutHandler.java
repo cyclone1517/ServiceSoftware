@@ -28,9 +28,9 @@ public class LogoutHandler implements Runnable {
     {
         for (Logout i: logoutAddr) {
             ObjectNode node = mapper.createObjectNode();
-            node.put("id", i.getId());
-            node.put("port", i.getPort());
-            RedisUtil.pushQueue("Logout", node.toString());
+            node.put("addr", i.getId());
+            node.put("port", 0);
+            RedisUtil.pushQueue("LOGOUT", node.toString());
             logger.info("SEND LOGOUT TO REDIS DIRECTLT @#@ id: " + i.getId() + " @#@ port: " + i.getPort());
         }
         RedisUtil.publishData("LOGOUT");

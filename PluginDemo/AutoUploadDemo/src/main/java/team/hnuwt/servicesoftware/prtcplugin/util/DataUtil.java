@@ -62,9 +62,12 @@ public class DataUtil {
         long addr = p.getAddress();
         data.setAddr(addr);
 
+        String hexNum = Long.toHexString(addr);
+        int realId = Integer.parseInt(hexNum.substring(0, hexNum.length()-4),16);
+
         String temp = JSON.toJSONString(data);
         RedisUtil.pushQueue(key, temp);
-        logger.info("SEND HEARTBEAT FROM:" + addr);
+        logger.info("SEND HEARTBEAT FROM:" + realId);
     }
 
     private static void processLogin(String key, PacketLogin p){
@@ -72,8 +75,11 @@ public class DataUtil {
         long addr = p.getAddress();
         data.setAddr(addr);
 
+        String hexNum = Long.toHexString(addr);
+        int realId = Integer.parseInt(hexNum.substring(0, hexNum.length()-4),16);
+
         String temp = JSON.toJSONString(data);
         RedisUtil.pushQueue(key, temp);
-        logger.info("SEND LOGIN FROM:" + addr);
+        logger.info("SEND LOGIN FROM:" + realId);
     }
 }
