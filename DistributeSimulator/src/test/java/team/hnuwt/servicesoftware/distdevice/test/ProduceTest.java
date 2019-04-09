@@ -44,7 +44,7 @@ public class ProduceTest {
     public void sendReadMeter() {
         String topic = "DOWNSTREAM";
         String tag = "READ_METER";
-        String msg = ProduceTestUtil.geneReadMeterJson("1020");
+        String msg = ProduceTestUtil.geneReadMeterJson("1044", "0002");
         ProduceUtil.addQueue(topic, tag, msg);
     }
 
@@ -72,10 +72,10 @@ public class ProduceTest {
         List<Archive> archives = new ArrayList<>();
         Archive ac1 = new Archive();
         ac1.setId("0800");
-        ac1.setMadd("080104151101");
+        ac1.setMadd("201607249928");
         ac1.setPrtc("01");
         ac1.setCadd("00000000");
-        ac1.setPort("04");
+        ac1.setPort("03");
         archives.add(ac1);
 
 //        Archive ac2 = new Archive();

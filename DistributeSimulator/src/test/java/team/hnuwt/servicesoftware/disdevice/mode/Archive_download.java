@@ -3,31 +3,31 @@ package team.hnuwt.servicesoftware.disdevice.mode;
 import java.util.List;
 
 public class Archive_download {
-    private String addr;
-    private String num;
+    private String termAddr;
+    private String count;
     private List<Archive> archive;
 
-    public String getAddr() {
-        return addr;
+    public String getTermAddr() {
+        return termAddr;
     }
 
-    public void setAddr(String addr) {
-        this.addr = addr;
+    public void setTermAddr(String termAddr) {
+        this.termAddr = termAddr;
     }
 
-    public String getNum() {
-        return num;
+    public String getCount() {
+        return count;
     }
 
-    public void setNum(String num) {
-        this.num = num;
+    public void setCount(String count) {
+        this.count = count;
     }
 
     public List<Archive> getArchive() {
         return archive;
     }
 
-    public void setArchives(List<Archive> archive) {
+    public void setArchive(List<Archive> archive) {
         this.archive = archive;
     }
 }

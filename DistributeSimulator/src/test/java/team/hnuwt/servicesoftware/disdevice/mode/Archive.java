@@ -2,11 +2,11 @@ package team.hnuwt.servicesoftware.disdevice.mode;
 
 public class Archive {
 
-    private String id;
-    private String madd;
-    private String prtc;
-    private String port;
-    private String cadd;
+    private String id;      /* 表序号 */
+    private String madd;    /* 表地址 */
+    private String prtc;    /* 协议类型 */
+    private String port;    /* 端口 */
+    private String cadd;    /* 采集模块地址 */
 
     public String getId() {
         return id;
@@ -46,16 +46,5 @@ public class Archive {
 
     public void setCadd(String cadd) {
         this.cadd = cadd;
-    }
-
-    @Override
-    public String toString() {
-        return "Archive{" +
-                "id='" + id + '\'' +
-                ", madd='" + madd + '\'' +
-                ", prtc='" + prtc + '\'' +
-                ", port='" + port + '\'' +
-                ", cadd='" + cadd + '\'' +
-                '}';
     }
 }

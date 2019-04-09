@@ -12,21 +12,21 @@ import java.util.List;
 
 public class ProduceTestUtil {
 
-    public static String geneReadMeterJson(String addr){
+    public static String geneReadMeterJson(String addr, String meter){
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.createObjectNode();
 
         //String addr = "3607000000";
         String num = "1";
-        String[] ids = {"0008"};
+        String[] ids = {meter};
 
-        root.put("addr", addr);
-        root.put("num", num);
+        root.put("termAddr", addr);
+        root.put("count", num);
 
         ArrayNode idArr = mapper.createArrayNode();
         for (String id: ids) idArr.add(id);
 
-        root.set("id", idArr);
+        root.set("meterAddr", idArr);
         return root.toString();
     }
 
@@ -69,11 +69,11 @@ public class ProduceTestUtil {
         return root.toString();
     }
 
-    public static String geneArchive(String addr, int num, List<Archive> archives){
+    public static String geneArchive(String addr, int count, List<Archive> archives){
         Archive_download ad = new Archive_download();
-        ad.setAddr(addr);
-        ad.setNum(num + "");
-        ad.setArchives(archives);
+        ad.setTermAddr(addr);
+        ad.setCount(count + "");
+        ad.setArchive(archives);
         return JSON.toJSONString(ad);
     }
 
