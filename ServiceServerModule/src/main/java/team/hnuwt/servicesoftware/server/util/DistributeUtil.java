@@ -77,6 +77,7 @@ public class DistributeUtil {
         else if (tag == TAG.ARCHIVE_DOWNLOAD){
             String torun = PkgPackUtil.geneArchive(root, TAG.ARCHIVE_DOWNLOAD.getStr());
             runTask(torun);
+            logger.info("SENDED ARCHIVE_DOWNLOAD");
         }
 
         /* 关闭档案 */

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.model.Logout;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
@@ -22,16 +23,34 @@ public class ConcentratorUtil {
 
     public static void add(Long id, SocketChannel sc)
     {
-        // 建立新连接前删去旧连接
+        // 建立新连接前删去旧连接引用
         SocketChannel old = map.remove(id);
         if (old != null && old.isConnected()) {
             try {
-                old.close();
+                old.close();    /* 切断旧连接 */
             } catch (IOException e) {
                 logger.error("DUPLICATE LINK FORM SAME COLLECTOR! AND CANNOT CLOSE", e);
             }
         }
         map.put(id, sc);
+    }
+
+    /**
+     * 检测不同IP的集中器是否配置了相同ID，暂不启用
+     */
+    public static boolean containsDuplicate(Long id, SocketChannel sc){
+        SocketChannel old = map.get(id);
+        if (old == null || !old.isConnected()) return false;  /* 不存在该ID的连接 */
+        else {
+            try {
+                InetAddress newAddr = ((InetSocketAddress) sc.getRemoteAddress()).getAddress();
+                InetAddress oldAddr = ((InetSocketAddress) old.getRemoteAddress()).getAddress();
+                return newAddr != oldAddr;
+            } catch (IOException e) {
+                logger.error("CANNOT GET DUPLICATE JUDGEMENT", e);
+                return false;
+            }
+        }
     }
 
     public static SocketChannel get(Long id)
@@ -68,7 +87,7 @@ public class ConcentratorUtil {
         for (Map.Entry<Long, SocketChannel> entry: map.entrySet())
         {
             try {
-                if (sAddr == entry.getValue().getRemoteAddress()){
+                if (entry.getValue().isConnected() && sAddr == entry.getValue().getRemoteAddress()){
                     result.add(new Logout(entry.getKey(), ((InetSocketAddress)sAddr).getPort()));
                 }
             } catch (IOException e) {

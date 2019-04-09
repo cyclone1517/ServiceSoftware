@@ -177,9 +177,8 @@ public class PkgPackUtil {
         result.append(DATACODE.getSerial(FUN));     /* 序列号，7单帧需回复，0保留 */
         result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
         result.append(numStr);                      /* 表数量 */
-        result.append(FieldPacker.geneArchive(archive));
         if (archive != null){
-            result.append(FieldPacker.geneArchive(archive));
+            result.append(FieldPacker.geneArchive(archive));    /* 生成档案 */
         } else {
             logger.error("No archive msg in ROCKETMQ order");
             return null;
