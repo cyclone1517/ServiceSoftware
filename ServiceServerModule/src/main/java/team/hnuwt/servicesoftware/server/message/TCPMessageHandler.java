@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import team.hnuwt.servicesoftware.server.compatible.FortendAgency;
+import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.model.Logout;
 import team.hnuwt.servicesoftware.server.constant.up.FUNID;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
@@ -199,7 +200,7 @@ public class TCPMessageHandler {
                     /* 登录：走协议栈单线 */
                     else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)
                     {
-                        logger.info("LOGIN: " + result.toString());
+                        logger.info("LOGIN: " + sc + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));
                     }
 
@@ -215,16 +216,28 @@ public class TCPMessageHandler {
                         DataProcessThreadUtil.getExecutor().execute(new AutoUploadHandler(sc, result));
                     }
 
-                    /* 操作确认：走中间服务单线 */
-                    else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.SUCCESS){
-                        logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
-                        DataProcessThreadUtil.getExecutor().execute(new StateReHandler(sc, result, true));
+                    /* 开关阀操作反馈：走中间服务单线 */
+                    else if (result.getByte(12) == (byte) 0x85){
+                            if (result.BINToLong(14, 18) == FUNID.GATE_SUCCESS) {
+                                logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
+                                DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.CTRL_ONOFF, true));
+                            }
+                            if (result.BINToLong(14, 18) == FUNID.GATE_FAIL){
+                                logger.info("DEVICE ON/OFF FAIL: " + result.toString());
+                                DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.CTRL_ONOFF, false));
+                            }
                     }
 
-                    /* 操作失败：走中间服务单线 */
-                    else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.FAIL){
-                        logger.info("DEVICE ON/OFF FAIL: " + result.toString());
-                        DataProcessThreadUtil.getExecutor().execute(new StateReHandler(sc, result, false));
+                    /* 下载档案操作反馈：走中间服务单线 */
+                    else if (result.getByte(12) == (byte) 0x84){
+                        if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_SUCCESS) {
+                            logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
+                            DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD,true));
+                        }
+                        if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_FAIL){
+                            logger.info("DEVICE ON/OFF FAIL: " + result.toString());
+                            DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD,false));
+                        }
                     }
 
                     /* 其余数据包：设置自动上报回复0x84还没处理 */
