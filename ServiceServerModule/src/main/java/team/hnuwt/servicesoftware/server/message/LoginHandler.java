@@ -32,6 +32,17 @@ public class LoginHandler implements Runnable {
     public void run()
     {
         long id = message.BINToLong(7, 12);
+
+//        // 重复集中器ID判断相关，暂不启用
+//        if (ConcentratorUtil.containsDuplicate(id, sc)){
+//            try {
+//                logger.info("REFUSE CONN for duplicate link from @#@ id:" + id + " at " + sc);
+//                sc.close();
+//            } catch (IOException e) {
+//                logger.error("Failed to close duplicate link from different collectors" ,e);
+//            }
+//            return;
+//        }
         ConcentratorUtil.add(id, sc);
         InnerProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.LOGIN.getStr(), message.toString());
 
