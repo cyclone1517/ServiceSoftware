@@ -14,6 +14,7 @@ public enum TAG {
 	READ_METER("READ_METER"),					/* 远程抄表 */
 	CTRL_ON("CTRL_ON"),		    				/* 开阀 */
 	CTRL_OFF("CTRL_OFF"),						/* 关阀 */
+	CTRL_ONOFF("CTRL_ONOFF"),					/* 操作回复没有指明开阀还是关阀，笼统标识 */
 
 	ARCHIVE_DOWNLOAD("ARCHIVE_DOWNLOAD"),		/* 下载档案 */
 	ARCHIVE_CLOSE("ARCHIVE_CLOSE"),				/* 关闭档案 */
@@ -94,6 +95,7 @@ public enum TAG {
 		tags.put("CTRL_TIME", CTRL_TIME);
 		tags.put("CTRL_ON", CTRL_ON);
 		tags.put("CTRL_OFF", CTRL_OFF);
+		tags.put("CTRL_ONOFF", CTRL_ONOFF);
 		tags.put("HEARTBEAT", HEARTBEAT);
 		tags.put("LOGIN", LOGIN);
 		tags.put("OPER_RE", OPER_RE);
