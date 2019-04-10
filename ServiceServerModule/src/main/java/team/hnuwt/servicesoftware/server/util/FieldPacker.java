@@ -185,4 +185,10 @@ public class FieldPacker {
 
         return result.toString();
     }
+
+    public static int getRealId(Long id){
+        String rstStr = Long.toHexString(id);
+        rstStr = rstStr.substring(0, rstStr.length()-4);        /* 舍弃区号 */
+        return Integer.parseInt(rstStr,16);
+    }
 }

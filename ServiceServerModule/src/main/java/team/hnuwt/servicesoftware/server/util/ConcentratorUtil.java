@@ -61,7 +61,7 @@ public class ConcentratorUtil {
     public static boolean remove(Long id)
     {
         SocketChannel sk = map.remove(id);
-        int realId = Integer.parseInt(Long.toHexString(id),16);
+        int realId = FieldPacker.getRealId(id);
         try {
             if (sk != null && sk.isConnected()) {
                 sk.close();
