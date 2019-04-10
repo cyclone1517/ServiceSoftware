@@ -25,11 +25,13 @@ public class ConcentratorUtil {
     {
         // 建立新连接前删去旧连接引用
         SocketChannel old = map.remove(id);
-        if (old != null && old.isConnected()) {
-            try {
-                old.close();    /* 切断旧连接 */
-            } catch (IOException e) {
-                logger.error("DUPLICATE LINK FORM SAME COLLECTOR! AND CANNOT CLOSE", e);
+        if (old != null) {
+            if (old.isConnected() && sc.isConnected() && diffPort(old, sc)) {    /* 如果两个连接都在连接中，且来自不同端口 */
+                try {
+                    old.close();    /* 切断旧连接 */
+                } catch (IOException e) {
+                    logger.error("DUPLICATE LINK FORM SAME COLLECTOR! AND CANNOT CLOSE", e);
+                }
             }
         }
         map.put(id, sc);
@@ -53,6 +55,15 @@ public class ConcentratorUtil {
         }
     }
 
+    private static boolean diffPort(SocketChannel old, SocketChannel req){
+        try {
+            return old.getRemoteAddress() != req.getRemoteAddress();
+        } catch (IOException e) {
+            logger.error("cannot get remote address",e);
+            return false;
+        }
+    }
+
     public static SocketChannel get(Long id)
     {
         return map.get(id);
@@ -61,18 +72,16 @@ public class ConcentratorUtil {
     public static boolean remove(Long id)
     {
         SocketChannel sk = map.remove(id);
-        int realId = FieldPacker.getRealId(id);
         try {
             if (sk != null && sk.isConnected()) {
                 sk.close();
-                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + realId );
+                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + id  + "\n" + DebugUtil.getMapKeys(map));
                 return true;
             }
-            logger.info("NO INVALID SOCKET @#@ id: " + realId);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            logger.info("FAILED CLOSED AN INVALID SOCKET! @#@ id: " + realId);
+            logger.info("FAILED CLOSED AN INVALID SOCKET! @#@ id: " + id);
             return false;
         }
     }
