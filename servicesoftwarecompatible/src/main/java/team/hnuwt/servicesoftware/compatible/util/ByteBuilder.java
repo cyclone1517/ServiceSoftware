@@ -170,6 +170,31 @@ public class ByteBuilder {
         return ans;
     }
 
+    /*
+     * 为了兼容测试软件，需要忽略区号
+     */
+    public ByteBuilder ignoreDistCode(){
+
+        if (length()<2) return this;
+
+        // 屏蔽区号
+        if (length() > 8) {
+            value[7] = (byte) 0x00;
+            value[8] = (byte) 0x00;
+        }
+
+        // 修改校验和
+        byte sum = 0;
+        for (int i = 6; i < length() - 2; i++)
+        {
+            byte b = value[i];
+            sum += b;
+        }
+        value[length()-2] = sum;
+
+        return this;
+    }
+
     @Override
     public String toString()
     {

@@ -5,6 +5,7 @@ import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,15 +37,22 @@ public class TCPMessageHandler {
         fortendAgency = new FortendAgency();
     }
 
-//    public static void closeTCPCompatible(){
-//        compatible = false;
-//    }
+    private static final String APPLICATION_FILE = "application.properties";
+    private static boolean ignoreDistrict = true;       /* 默认屏蔽，设置false启动区号 */
 
-//    private static void registAgency(){
-//        for (FortendAgency agency: agencyList){
-//            mRec.registerRead(agency.getSocketChannel());
-//        }
-//    }
+    static {
+        try {
+            Properties props = new Properties();
+            props.load(DataProcessThreadUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
+            try {
+                ignoreDistrict = Boolean.valueOf(props.getProperty("district.code.ignore"));
+            }catch (NumberFormatException e){
+                logger.warn("cant get district.code.ignore from application.properties", e);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 读消息处理
@@ -71,6 +79,12 @@ public class TCPMessageHandler {
             map.remove(sa);
         }
 
+        /*
+         * 为了兼容测试软件，需要忽略区号
+         */
+        if (ignoreDistrict) {
+            pkg = pkg.ignoreDistCode();
+        }
         remainder = translate(pkg, state, result, sc);
 
         if (!"".equals(remainder.getResult().toString()))
@@ -187,6 +201,10 @@ public class TCPMessageHandler {
                         // 如果下行，往集中器发
                         else {
                             DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), false));
+
+                            result = new ByteBuilder();
+                            state = 0;
+                            return new Remainder(result, state);    /* 本地不必解析下行报文了 */
                         }
                     }
 
@@ -205,7 +223,8 @@ public class TCPMessageHandler {
                     }
 
                     /* 抄表：中间服务单线 */
-                    else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER){
+                    else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER
+                        && CompatibleUtil.isUpstream(result.getByte(6))){       /* 下行的AFN和数据单元标识一样造成冲突 */
                         logger.info("READ_METER: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new ReadMeterReHandler(sc, result));
                     }
