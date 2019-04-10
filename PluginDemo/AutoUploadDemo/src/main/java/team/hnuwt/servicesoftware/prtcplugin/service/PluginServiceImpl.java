@@ -33,7 +33,7 @@ public class PluginServiceImpl implements PluginService {
 
     @Override
     public void translate(ByteBuilder pkg) {
-        /* 读取包结构 AFN+ID 共同决定业务类型 */
+        /* 读取包结构 AFN + 数据标识符 共同决定业务类型 */
         long id = pkg.BINToLong(12, 13) + (pkg.BINToLong(14, 18) << 8);
         if (PkgExpUtil.getBusiName(id)==null){
             logger.warn("NOT SUPPORTED BUSINESS TYPE @#@pkg:" + pkg + " @#@id:" + id);
