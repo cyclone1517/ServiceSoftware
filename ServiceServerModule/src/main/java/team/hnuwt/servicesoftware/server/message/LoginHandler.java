@@ -31,7 +31,7 @@ public class LoginHandler implements Runnable {
     @Override
     public void run()
     {
-        long id = message.BINToLong(7, 12);
+        long id = FieldPacker.getId(message);
 
 //        // 重复集中器ID判断相关，暂不启用
 //        if (ConcentratorUtil.containsDuplicate(id, sc)){
@@ -92,7 +92,7 @@ public class LoginHandler implements Runnable {
             sc.write(ByteBuffer.wrap(b));
             logger.info("reply:" + PkgPackUtil.bytes2hex(b));
         } catch (IOException e) {
-            logger.error("", e);
+            logger.error("cannot reply for sc invalid", e);
         }
     }
 

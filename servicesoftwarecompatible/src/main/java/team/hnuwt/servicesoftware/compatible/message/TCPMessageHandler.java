@@ -12,7 +12,6 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -25,24 +24,7 @@ public class TCPMessageHandler {
 
     private static Map<SocketAddress, Remainder> map = new ConcurrentHashMap<>();
 
-    private static final String APPLICATION_FILE = "application.properties";
-    private static boolean ignoreDistrict = true;       /* 默认屏蔽，设置false启动区号 */
-
-    static {
-        try {
-            Properties props = new Properties();
-            props.load(DataProcessThreadUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
-            try {
-                ignoreDistrict = Boolean.valueOf(props.getProperty("district.code.ignore"));
-            }catch (NumberFormatException e){
-                logger.warn("cant get district.code.ignore from application.properties", e);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-        /**
+    /**
      * 读消息处理
      * @param sc
      * @param pkg
@@ -67,12 +49,6 @@ public class TCPMessageHandler {
             map.remove(sa);
         }
 
-        /*
-         * 为了兼容测试软件，需要忽略区号
-         */
-        if (ignoreDistrict) {
-            pkg = pkg.ignoreDistCode();
-        }
         remainder = translate(pkg, state, result, sc);
 
         if (!"".equals(remainder.getResult().toString()))
@@ -152,7 +128,7 @@ public class TCPMessageHandler {
                 if (c == 0x16)
                 {
                     boolean upstream = CompatibleUtil.isUpstream(result.getByte(6));    /* 获取上下行 */
-                    long id = result.BINToLong(7,12);
+                    long id = result.BINToLong(9,12);
 
                     /*
                      * 如果收到上行报文，就注册来自前置机的代理链接

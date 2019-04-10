@@ -60,6 +60,10 @@ public class ProtocolUtil {
         Map<String, Object> map = new HashMap<>();
         for (int i = begin; i < end; i++)
         {
+            if (i == 5) {        /* 对行政码的读取做修正 */
+                locate += 2;     /* 舍弃行政码 */
+                length[i] -=2;   /* 本字段总长度应该不变 */
+            }
             long l = (encodeFormat[i] == EncodeFormat.BIN) ? pkg.BINToLong(locate, locate + length[i])
                     : pkg.BCDToLong(locate, locate + length[i]);    //分解报文的数字，并转换为十进制
             locate += length[i];
@@ -80,6 +84,10 @@ public class ProtocolUtil {
         Map<String, Object> map = new HashMap<>();
         for (int i = begin, j = 0; i < end; i++)
         {
+            if (i == 5) {        /* 对行政码的读取做修正 */
+                locate += 2;     /* 舍弃行政码 */
+                length[i] -=2;   /* 本字段总长度应该不变 */
+            }
             long l = (encodeFormat[i] == EncodeFormat.BIN) ? pkg.BINToLong(locate, locate + length[i])
                     : pkg.BCDToLong(locate, locate + length[i]);    //把报文数据转换为long
             locate += length[i];

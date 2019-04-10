@@ -12,7 +12,7 @@ public class SendHanlderTest {
                 "33000010010000000401000000000800080104151101330000100100000004010000000036353433323139383736353433323130CE16";
 
         ByteBuilder b = new ByteBuilder(pkg);
-        long id = b.BINToLong(7, 12);
+        long id = FieldPacker.getId(b);
         System.out.println(id);
     }
 }

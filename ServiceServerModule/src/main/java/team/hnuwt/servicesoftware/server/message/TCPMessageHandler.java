@@ -5,7 +5,6 @@ import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,23 +36,6 @@ public class TCPMessageHandler {
         fortendAgency = new FortendAgency();
     }
 
-    private static final String APPLICATION_FILE = "application.properties";
-    private static boolean ignoreDistrict = true;       /* 默认屏蔽，设置false启动区号 */
-
-    static {
-        try {
-            Properties props = new Properties();
-            props.load(DataProcessThreadUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
-            try {
-                ignoreDistrict = Boolean.valueOf(props.getProperty("district.code.ignore"));
-            }catch (NumberFormatException e){
-                logger.warn("cant get district.code.ignore from application.properties", e);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * 读消息处理
      * @param sc
@@ -79,12 +61,6 @@ public class TCPMessageHandler {
             map.remove(sa);
         }
 
-        /*
-         * 为了兼容测试软件，需要忽略区号
-         */
-        if (ignoreDistrict) {
-            pkg = pkg.ignoreDistCode();
-        }
         remainder = translate(pkg, state, result, sc);
 
         if (!"".equals(remainder.getResult().toString()))

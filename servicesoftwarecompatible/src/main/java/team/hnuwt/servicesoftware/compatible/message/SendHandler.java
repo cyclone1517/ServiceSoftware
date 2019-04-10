@@ -32,7 +32,7 @@ public class SendHandler implements Runnable {
     public void run()
     {
         ByteBuilder b = new ByteBuilder(pkg);
-        long id = b.BINToLong(7, 12);
+        long id = b.BINToLong(9, 12);
         SocketChannel sc = null;
         if (upstream){
             sc = CompatibleUtil.get(id);

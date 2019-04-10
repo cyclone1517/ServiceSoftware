@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.CompatibleUtil;
 import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
+import team.hnuwt.servicesoftware.server.util.FieldPacker;
 
 /**
  * 消息发送类
@@ -40,7 +41,7 @@ public class SendHandler implements Runnable {
     public void run()
     {
         ByteBuilder b = new ByteBuilder(pkg);
-        long id = b.BINToLong(7, 12);
+        long id = FieldPacker.getId(b);
         SocketChannel sc = null;
         if (upstream){
             sc = agenSocket;
@@ -51,6 +52,7 @@ public class SendHandler implements Runnable {
             sc = ConcentratorUtil.get(id);       // 下行获取集中器链接
             if (sc == null || !sc.isConnected())
             {
+                logger.info("no socket" + sc + "id: " + id);
                 ConcentratorUtil.remove(id);
                 return;
             }

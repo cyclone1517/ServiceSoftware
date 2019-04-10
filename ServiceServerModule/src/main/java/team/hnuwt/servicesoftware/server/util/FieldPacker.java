@@ -186,9 +186,21 @@ public class FieldPacker {
         return result.toString();
     }
 
+    /**
+     * 当连接标识为行政编码+集中器ID时，得到能读懂的日志需要重新计算，截断行政码（区号）
+     */
+    @Deprecated
     public static int getRealId(Long id){
         String rstStr = Long.toHexString(id);
         rstStr = rstStr.substring(0, rstStr.length()-4);        /* 舍弃区号 */
         return Integer.parseInt(rstStr,16);
+    }
+
+    /* 集中器ID字节范围 */
+    private static final int startId = 9;
+    private static final int end = 12;
+
+    public static long getId(ByteBuilder message){
+        return message.BINToLong(startId, end);
     }
 }

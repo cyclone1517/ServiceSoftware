@@ -13,6 +13,7 @@ import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.constant.down.TOPIC;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
+import team.hnuwt.servicesoftware.server.util.FieldPacker;
 import team.hnuwt.servicesoftware.server.util.InnerProduceUtil;
 
 /**
@@ -34,7 +35,7 @@ public class HeartBeatHandler implements Runnable {
     @Override
     public void run()
     {
-        long id = heartBeat.BINToLong(7, 12);
+        long id = FieldPacker.getId(heartBeat);
         SocketChannel currSc = ConcentratorUtil.get(id);
         if (currSc == null){
             return;       /* 若没有登录，不予理会 */
