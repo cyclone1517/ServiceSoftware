@@ -15,33 +15,17 @@ public class HeartBeatDao {
 
     public void insert(HeartBeat data)
     {
-        DBUtil dbUtil = new DBUtil();
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = dbUtil.getSqlSession();
-            sqlSession.insert("HeartBeat.add", data);
-            sqlSession.commit();
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            if (sqlSession != null)
-                sqlSession.close();
-        }
+        SqlSession sqlSession = DBUtil.getSqlSession();
+        sqlSession.insert("HeartBeat.add", data);
+        sqlSession.commit();
+        sqlSession.close();
     }
 
     public void insertBatch(List<HeartBeat> datas)
     {
-        DBUtil dbUtil = new DBUtil();
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = dbUtil.getSqlSession();
-            sqlSession.insert("HeartBeat.addBatch", datas);
-            sqlSession.commit();
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            if (sqlSession != null)
-                sqlSession.close();
-        }
+        SqlSession sqlSession = DBUtil.getSqlSession();
+        sqlSession.insert("HeartBeat.addBatch", datas);
+        sqlSession.commit();
+        sqlSession.close();
     }
 }

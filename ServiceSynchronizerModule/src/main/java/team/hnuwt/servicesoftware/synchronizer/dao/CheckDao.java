@@ -24,20 +24,14 @@ public class CheckDao {
     public List<String> check(int checkTime)
     {
         int currTime = checkTime;
-        DBUtil dbUtil = new DBUtil();
-        SqlSession sqlSession = null;
-        List<String> offList = null;
-        try {
-            sqlSession = dbUtil.getSqlSession();
-            currTime = (checkTime == -1)? Integer.MAX_VALUE : currTime;
-            offList = sqlSession.selectList("Check.offline", currTime);
-            sqlSession.commit();
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            if (sqlSession != null)
-                sqlSession.close();
-        }
+        List<String> offList;
+
+        SqlSession sqlSession = DBUtil.getSqlSession();
+        currTime = (checkTime == -1)? Integer.MAX_VALUE : currTime;
+        offList = sqlSession.selectList("Check.offline", currTime);
+        sqlSession.commit();
+        sqlSession.close();
+
         return (offList==null)? new ArrayList<>(): offList;
     }
 
@@ -48,18 +42,11 @@ public class CheckDao {
      */
     public void resetOffline(List<String> offlineList)
     {
-        DBUtil dbUtil = new DBUtil();
-        SqlSession sqlSession = null;
-        try{
-            sqlSession = dbUtil.getSqlSession();
-            sqlSession.update("Check.resetOffline", offlineList);
-            sqlSession.commit();
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            if (sqlSession != null)
-                sqlSession.close();
-        }
+        SqlSession sqlSession = DBUtil.getSqlSession();
+        sqlSession.update("Check.resetOffline", offlineList);
+        sqlSession.commit();
+        sqlSession.close();
+
         logger.info("FINISHED OFFLINE DEVICE RESET");
     }
 }
