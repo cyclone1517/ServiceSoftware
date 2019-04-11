@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.constant.down.TOPIC;
-import team.hnuwt.servicesoftware.server.util.ByteBuilder;
-import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
-import team.hnuwt.servicesoftware.server.util.PkgPackUtil;
-import team.hnuwt.servicesoftware.server.util.ProduceUtil;
+import team.hnuwt.servicesoftware.server.util.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -33,7 +30,7 @@ public class AutoUploadHandler implements Runnable {
     @Override
     public void run()
     {
-        ProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.AUTO_UPLOAD.getStr(), message.toString());
+        InnerProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.AUTO_UPLOAD.getStr(), message.toString());
     }
 
 }

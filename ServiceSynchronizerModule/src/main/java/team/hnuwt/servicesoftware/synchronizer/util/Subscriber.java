@@ -14,7 +14,6 @@ import java.util.Properties;
 
 public class Subscriber extends JedisPubSub {
 
-    DataProcessThreadUtil dptu = new DataProcessThreadUtil();
     private int batchNum;
 
     private final static String APPLICATION_FILE = "application.properties";
@@ -36,22 +35,22 @@ public class Subscriber extends JedisPubSub {
         System.out.println(String.format("receive redis published message, @#@ channel: %s, @#@ message: %s", channel, message));
         MESSAGE msg = MESSAGE.getMSG(message.toUpperCase());
         if (msg == MESSAGE.DATA){
-            dptu.getExecutor().execute(new DataHandler(batchNum));
+            DataProcessThreadUtil.getExecutor().execute(new DataHandler(batchNum));
         }
         else if (msg == MESSAGE.AUTOUPLOAD){
-            dptu.getExecutor().execute(new DataHandler(batchNum));
+            DataProcessThreadUtil.getExecutor().execute(new DataHandler(batchNum));
         }
         else if (msg == MESSAGE.HEARTBEAT) {
-            dptu.getExecutor().execute(new HeartBeatHandler(batchNum));
+            DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(batchNum));
         }
         else if (msg == MESSAGE.LOGIN) {
-            dptu.getExecutor().execute(new LoginHandler(batchNum, 1));  // state: 1-登录 0-掉线 2-登出
+            DataProcessThreadUtil.getExecutor().execute(new LoginHandler(batchNum, 1));  // state: 1-登录 0-掉线 2-登出
         }
         else if (msg == MESSAGE.LOGOUT){
-            dptu.getExecutor().execute(new LoginHandler(batchNum, 2));
+            DataProcessThreadUtil.getExecutor().execute(new LoginHandler(batchNum, 2));
         }
         else if (msg == MESSAGE.OFFLINE_RE) {
-            dptu.getExecutor().execute(new OfflineReHandler(batchNum));
+            DataProcessThreadUtil.getExecutor().execute(new OfflineReHandler(batchNum));
         }
     }
     @Override

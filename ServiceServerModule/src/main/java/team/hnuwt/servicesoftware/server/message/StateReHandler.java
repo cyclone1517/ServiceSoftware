@@ -20,15 +20,14 @@ import java.nio.channels.SocketChannel;
 public class StateReHandler implements Runnable{
 
     private ByteBuilder meterData;
-    private SocketChannel sc;
+    private TAG tag;
     private boolean success;
     private Logger logger = LoggerFactory.getLogger(StateReHandler.class);
-    private static final int[] fieldlen = {4, 8};       /* 数据域单元每个域的长度，表序号4位，表读数8位，阀门状态2位 */
 
-    public StateReHandler(SocketChannel sc, ByteBuilder meterData, boolean success){
-        this.sc = sc;
+    public StateReHandler(ByteBuilder meterData, TAG tag, boolean success){
         this.meterData = meterData;
         this.success = success;
+        this.tag = tag;
     }
 
     @Override
@@ -41,8 +40,9 @@ public class StateReHandler implements Runnable{
         String addrId = FieldPacker.toIntAddrId(addr);
 
 
-        root.put("addr", addrId);
-        root.put("success", success);
+        root.put("addr", addrId);       // 集中器编号
+        root.put("bustype", tag.getStr());  // 业务类型
+        root.put("success", success);   // 操作结果
 
         ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), TAG.OPER_RE.getStr(), root.toString());
 

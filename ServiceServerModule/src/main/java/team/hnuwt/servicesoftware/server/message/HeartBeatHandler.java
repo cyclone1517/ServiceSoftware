@@ -13,7 +13,8 @@ import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.constant.down.TOPIC;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
 import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
-import team.hnuwt.servicesoftware.server.util.ProduceUtil;
+import team.hnuwt.servicesoftware.server.util.FieldPacker;
+import team.hnuwt.servicesoftware.server.util.InnerProduceUtil;
 
 /**
  * 心跳包处理类
@@ -34,7 +35,7 @@ public class HeartBeatHandler implements Runnable {
     @Override
     public void run()
     {
-        long id = heartBeat.BINToLong(7, 12);
+        long id = FieldPacker.getId(heartBeat);
         SocketChannel currSc = ConcentratorUtil.get(id);
         if (currSc == null){
             return;       /* 若没有登录，不予理会 */
@@ -47,7 +48,7 @@ public class HeartBeatHandler implements Runnable {
                 e.printStackTrace();
             }
         }
-        ProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.HEARTBEAT.getStr(), heartBeat.toString());
+        InnerProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.HEARTBEAT.getStr(), heartBeat.toString());
 
         // 收到报文，发确认帧到集中器
         Calendar cas = Calendar.getInstance();

@@ -41,8 +41,6 @@ public class LoginHandler implements Runnable {
 
     @Override
     public void run() {
-        DataProcessThreadUtil dptu = new DataProcessThreadUtil();
-
         List<String> list = new ArrayList<>();
         for (int i = 0; i < batchNum; i++)      /* 连续取batchNum条 */
         {
@@ -80,7 +78,7 @@ public class LoginHandler implements Runnable {
                 loginList.add(new Login(cdId, cdPort, state));
                 loginIds.add(HandlerUtil.packAddrToHex(cdId));
             });
-            dptu.getExecutor().execute(new LoginService(loginList));
+            DataProcessThreadUtil.getExecutor().execute(new LoginService(loginList, state==1));
 
             // 推送到消息队列
             String data = HandlerUtil.geneMsg(loginIds, state);

@@ -5,69 +5,35 @@ import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import team.hnuwt.servicesoftware.server.compatible.FortendAgency;
+import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.model.Logout;
 import team.hnuwt.servicesoftware.server.constant.up.FUNID;
-import team.hnuwt.servicesoftware.server.service.MainReactor;
 import team.hnuwt.servicesoftware.server.util.ByteBuilder;
+import team.hnuwt.servicesoftware.server.util.CompatibleUtil;
 import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;
+import team.hnuwt.servicesoftware.server.util.RedisUtil;
 
 /**
  * TCP消息处理工具类
  */
 public class TCPMessageHandler {
 
-    private final static String APPLICATION_FILE = "application.properties";
-
     private static Logger logger = LoggerFactory.getLogger(TCPMessageHandler.class);
 
     private static Map<SocketAddress, Remainder> map = new ConcurrentHashMap<>();
 
-    private static FortendAgency[] agencyList;
     private static boolean compatible = false;
 
-    private static int agenCurr = 0;
-    private static int angenNum;
+    private static FortendAgency fortendAgency;
 
-    private static MainReactor mRec;
-
-    static {
-        Properties prop = new Properties();
-        try {
-            prop.load(TCPMessageHandler.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        angenNum = Integer.parseInt(prop.getProperty("angenNum"));
-        if (angenNum > 1){
-            logger.warn("NOT SUPPORT MULTIPLE AGENCY, PLEASE SET angenNum to '1' / 暂不支持多个代理，请设置angenNum为1");
-        }
-        agencyList = new FortendAgency[angenNum];
-        for (int i=0; i< angenNum; i++){
-            agencyList[i] = new FortendAgency();
-        }
-    }
-
-    public static void openTCPCompatible(MainReactor mainReactor){
+    public static void openTCPCompatible(){
         compatible = true;
-        mRec = mainReactor;
-        registAgency();
-    }
-
-    public static void closeTCPCompatible(){
-        compatible = false;
-    }
-
-    private static void registAgency(){
-        for (FortendAgency agency: agencyList){
-            mRec.registerRead(agency.getSocketChannel());
-        }
+        fortendAgency = new FortendAgency();
     }
 
     /**
@@ -108,7 +74,30 @@ public class TCPMessageHandler {
      * @param logoutList
      */
     public static void handleLogout(List<Logout> logoutList){
+        /*
+         * 通知数据库和中间服务
+         */
         DataProcessThreadUtil.getExecutor().execute(new LogoutHandler(logoutList));
+
+        /*
+         * 通知兼容模块
+         */
+        RedisUtil.publishData("agency", geneLogoutStr(logoutList));
+    }
+
+    private static String geneLogoutStr(List<Logout> logoutList){
+        StringBuilder sb = new StringBuilder();
+
+        int size = logoutList.size();
+        if (size > 0) {
+            sb.append(logoutList.get(0).getId());
+        }
+        if (size > 1){
+            for (int i=1; i<size; i++){
+                sb.append("||").append(logoutList.get(i).getId());
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -173,13 +162,26 @@ public class TCPMessageHandler {
                 if (c == 0x16)
                 {
                     if (compatible){
-//                        agencyList[agenCurr].directSend("AGENCY @#@ NO:" + agenCurr, result.toString());
-//                        if (++agenCurr == angenNum){
-//                            agenCurr = 0;
-//                        }
 
-                        // 暂时不支持分流代理
-                        agencyList[0].directSend("AGENCY @#@ NO:" + agenCurr, result.toString());
+                        // 如果上行，往兼容模块发
+                        if (CompatibleUtil.isUpstream(result.getByte(6))){
+                            SocketChannel agenSocket = fortendAgency.getAlivedCompatibleLink();
+                            if (agenSocket != null) {
+                                DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), true, agenSocket));
+                            }
+                            else {
+                                logger.warn("AGENCY WARN: No available agency link!!");
+                            }
+                        }
+
+                        // 如果下行，往集中器发
+                        else {
+                            DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), false));
+
+                            result = new ByteBuilder();
+                            state = 0;
+                            return new Remainder(result, state);    /* 本地不必解析下行报文了 */
+                        }
                     }
 
                     /* 心跳：走协议栈单线 */
@@ -192,12 +194,13 @@ public class TCPMessageHandler {
                     /* 登录：走协议栈单线 */
                     else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)
                     {
-                        logger.info("LOGIN: " + result.toString());
+                        logger.info("LOGIN: " + sc + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));
                     }
 
                     /* 抄表：中间服务单线 */
-                    else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER){
+                    else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER
+                        && CompatibleUtil.isUpstream(result.getByte(6))){       /* 下行的AFN和数据单元标识一样造成冲突 */
                         logger.info("READ_METER: " + result.toString());
                         DataProcessThreadUtil.getExecutor().execute(new ReadMeterReHandler(sc, result));
                     }
@@ -208,22 +211,40 @@ public class TCPMessageHandler {
                         DataProcessThreadUtil.getExecutor().execute(new AutoUploadHandler(sc, result));
                     }
 
-                    /* 操作确认：走中间服务单线 */
-                    else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.SUCCESS){
-                        logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
-                        DataProcessThreadUtil.getExecutor().execute(new StateReHandler(sc, result, true));
+                    /* 开关阀操作反馈：走中间服务单线 */
+                    else if (result.getByte(12) == (byte) 0x85){
+                            if (result.BINToLong(14, 18) == FUNID.GATE_SUCCESS) {
+                                logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
+                                DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.CTRL_ONOFF, true));
+                            }
+                            if (result.BINToLong(14, 18) == FUNID.GATE_FAIL){
+                                logger.info("DEVICE ON/OFF FAIL: " + result.toString());
+                                DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.CTRL_ONOFF, false));
+                            }
                     }
 
-                    /* 操作失败：走中间服务单线 */
-                    else if (result.getByte(12) == (byte) 0x85 && result.BINToLong(14, 18) == FUNID.FAIL){
-                        logger.info("DEVICE ON/OFF FAIL: " + result.toString());
-                        DataProcessThreadUtil.getExecutor().execute(new StateReHandler(sc, result, false));
+                    /* 下载档案操作反馈：走中间服务单线 */
+                    else if (result.getByte(12) == (byte) 0x84){
+                        if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_SUCCESS) {
+                            logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
+                            DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD,true));
+                        }
+                        if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_FAIL){
+                            logger.info("DEVICE ON/OFF FAIL: " + result.toString());
+                            DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD,false));
+                        }
                     }
 
                     /* 其余数据包：设置自动上报回复0x84还没处理 */
                     else {
-                        logger.info("OTHERS: " + result.toString());
-//                        DataProcessThreadUtil.getExecutor().execute(new OrderHandler(result.toString()));
+                        /* 转发的心跳回复不打印 */
+                        if (result.getByte(12) == (byte) 0x00 && result.BINToLong(14, 18) == FUNID.HEART_LOGIN_RE){
+                            // do nothing
+                        }
+
+                        else {
+                            logger.info("OTHERS: " + result.toString());
+                        }
                     }
 
                     /*

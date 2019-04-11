@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * 线程池管理类
  */
 public class DataProcessThreadUtil {
-    private volatile ThreadPoolExecutor executor;
+    private static volatile ThreadPoolExecutor executor;
 
     private final static String APPLICATION_FILE = "application.properties";
 
@@ -22,12 +22,30 @@ public class DataProcessThreadUtil {
 
     private static Logger logger = LoggerFactory.getLogger(DataProcessThreadUtil.class);
 
-    public DataProcessThreadUtil()
-    {
+//    public DataProcessThreadUtil()
+//    {
+//        try {
+//            props = new Properties();
+//            InputStream is = DataProcessThreadUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE);
+//            props.load(is);
+//        } catch (IOException e) {
+//            logger.error("", e);
+//        }
+//        executor = new ThreadPoolExecutor(Integer.parseInt(props.getProperty("thread.corePoolSize")),
+//                Integer.parseInt(props.getProperty("thread.maximumPoolSize")),
+//                Integer.parseInt(props.getProperty("thread.keepAliveTime")), TimeUnit.MICROSECONDS,
+//                new ArrayBlockingQueue<>(10000));
+//    }
+//
+//    public ThreadPoolExecutor getExecutor()
+//    {
+//        return executor;
+//    }
+
+    static {
         try {
             props = new Properties();
-            InputStream is = DataProcessThreadUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE);
-            props.load(is);
+            props.load(DataProcessThreadUtil.class.getClassLoader().getResourceAsStream(APPLICATION_FILE));
         } catch (IOException e) {
             logger.error("", e);
         }
@@ -37,8 +55,9 @@ public class DataProcessThreadUtil {
                 new ArrayBlockingQueue<>(10000));
     }
 
-    public ThreadPoolExecutor getExecutor()
+    public static ThreadPoolExecutor getExecutor()
     {
         return executor;
     }
+
 }

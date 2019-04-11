@@ -34,6 +34,9 @@ public class DATACODE {
         DataId.put("UPLOAD_ON", "00004003");    /* 上报允许 */
         DataId.put("UPLOAD_OFF", "00004003");   /* 上报停止 */
         DataId.put("READ_UPLOAD", "00004003");   /* 读取上报是否允许 */
+        DataId.put("ARCHIVE_DOWNLOAD", "11000100"); /* 档案下载 */
+        DataId.put("ARCHIVE_CLOSE", "00008002"); /* 档案下载 */
+
 
         // 控制码
         ctrlCode.put("READ_METER", "70");
@@ -42,6 +45,8 @@ public class DATACODE {
         ctrlCode.put("UPLOAD_ON", "70");
         ctrlCode.put("UPLOAD_OFF", "70");
         ctrlCode.put("READ_UPLOAD", "70");
+        ctrlCode.put("ARCHIVE_DOWNLOAD", "70");
+        ctrlCode.put("ARCHIVE_CLOSE", "70");
 
         //功能码
         afnCode.put("READ_METER", "8C");
@@ -50,6 +55,8 @@ public class DATACODE {
         afnCode.put("UPLOAD_ON", "84");
         afnCode.put("UPLOAD_OFF", "84");
         afnCode.put("READ_UPLOAD", "8A");
+        afnCode.put("ARCHIVE_DOWNLOAD", "84");
+        afnCode.put("ARCHIVE_CLOSE", "84");
 
 
         //抄读方式
@@ -63,6 +70,8 @@ public class DATACODE {
         serial.put("UPLOAD_ON", "70");
         serial.put("UPLOAD_OFF", "7F");
         serial.put("READ_UPLOAD", "70");
+        serial.put("ARCHIVE_DOWNLOAD", "7B");
+        serial.put("ARCHIVE_CLOSE", "7B");
 
     }
 

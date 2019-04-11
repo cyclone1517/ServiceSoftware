@@ -21,9 +21,9 @@ public class PkgPackUtil {
         // get num of meters
         int meterNum = FieldPacker.getMeterNum(root);
         String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
-        String L = FieldPacker.getReadMeterPkgLen(15, meterNum, 2);
-        List<String> ids = FieldPacker.getMeterIds(root.path("id"));
-        int addr = root.path("addr").asInt();
+        String L = FieldPacker.getMultiMeterPkgLen(15, meterNum, 2);
+        List<String> ids = FieldPacker.getMeterIds(root.path("meter"));
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
 
         result.append("68");
@@ -53,8 +53,8 @@ public class PkgPackUtil {
 
         // get num of meters
         int meterNum = FieldPacker.getMeterNum(root);
-        String L = FieldPacker.getReadMeterPkgLen(20, meterNum, 2);
-        int addr = root.path("addr").asInt();
+        String L = FieldPacker.getMultiMeterPkgLen(20, meterNum, 2);
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
 
         result.append("68");
@@ -73,20 +73,12 @@ public class PkgPackUtil {
         return result.toString();
     }
 
-    public static String geneReadVersionPkg(JsonNode root, String FUN){
-        return geneReadTimePkg(root, FUN);
-    }
-
-    public static String geneCtrlTimePkg(JsonNode root, String FUN){
-        return "";
-    }
-
     public static String geneCtrlOnOffPkg(JsonNode root, String FUN, boolean on){
         StringBuilder result = new StringBuilder();
 
         // get len of pkg
         String L = FieldPacker.genePkgLen(33);  /* 用户字段长33字节 */
-        int addr = root.path("addr").asInt();
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
         List<String> ids = FieldPacker.getMeterIds(root.path("id"));
 
@@ -116,7 +108,7 @@ public class PkgPackUtil {
 
         // get len of pkg
         String L = FieldPacker.genePkgLen(29);      /* 用户字段长29字节 */
-        int addr = root.path("addr").asInt();
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
         //List<String> ids = FieldPacker.getMeterIds(root.path("id"));
 
@@ -142,7 +134,7 @@ public class PkgPackUtil {
 
         // get len of pkg
         String L = FieldPacker.genePkgLen(12);      /* 用户字段长12字节 */
-        int addr = root.path("addr").asInt();
+        int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
 
         result.append("68");
@@ -156,6 +148,79 @@ public class PkgPackUtil {
         result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
         result.append(FieldPacker.calcuCs(result)); /* 校验位 */
         result.append("16");                        /* 结束符 */
+
+        return result.toString();
+    }
+
+    /**
+     * 下载档案报文生成
+     * @return
+     */
+    public static String geneArchive(JsonNode root, String FUN){
+        StringBuilder result = new StringBuilder();
+
+        // get num of meters
+        int meterNum = FieldPacker.getMeterNum(root);
+        String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
+        String L = FieldPacker.getMultiMeterPkgLen(14, meterNum, 22);
+        JsonNode archive = root.get("archive");
+        int addr = root.path("termAddr").asInt();
+        String addrId = FieldPacker.toHexAddrId(addr);
+
+        result.append("68");
+        result.append(L);
+        result.append(L);
+        result.append("68");
+        result.append(DATACODE.getCtrlCode(FUN));   /* 控制符 */
+        result.append(addrId);                      /* 地址域 */
+        result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
+        result.append(DATACODE.getSerial(FUN));     /* 序列号，7单帧需回复，0保留 */
+        result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
+        result.append(numStr);                      /* 表数量 */
+        if (archive != null){
+            result.append(FieldPacker.geneArchive(archive));    /* 生成档案 */
+        } else {
+            logger.error("No archive msg in ROCKETMQ order");
+            return null;
+        }
+        result.append("36353433323139383736353433323130");
+        result.append(FieldPacker.calcuCs(result)); /* 校验位 */
+        result.append("16");                        /* 结束符 */
+
+        if (!nullFiledCheck(result.toString())) return null;
+
+        return result.toString();
+    }
+
+    /**
+     * 关闭档案报文生成
+     */
+    public static String geneCloseArchive(JsonNode root, String FUN){
+        StringBuilder result = new StringBuilder();
+
+        // get num of meters
+        int meterNum = FieldPacker.getMeterNum(root);
+        String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
+        String L = FieldPacker.getMultiMeterPkgLen(14, meterNum, 2);
+        List<String> ids = FieldPacker.getMeterIds(root.path("id"));
+        int addr = root.path("termAddr").asInt();
+        String addrId = FieldPacker.toHexAddrId(addr);
+
+        result.append("68");
+        result.append(L);
+        result.append(L);
+        result.append("68");
+        result.append("70");                        /* 控制符 */
+        result.append(addrId);                      /* 地址域 */
+        result.append(DATACODE.getAfnCode(FUN));    /* AFN功能码 */
+        result.append(DATACODE.getSerial(FUN));     /* 序列号，7单帧需回复，0保留 */
+        result.append(DATACODE.getDataId(FUN));     /* 数据单元标识 */
+        result.append(numStr);                      /* 表数量 */
+        ids.forEach(result::append);                /* 表序号 */
+        result.append(FieldPacker.calcuCs(result)); /* 校验位 */
+        result.append("16");                        /* 结束符 */
+
+        if (!nullFiledCheck(result.toString())) return null;
 
         return result.toString();
     }
@@ -178,5 +243,17 @@ public class PkgPackUtil {
         }
         return sb.toString();
 
+    }
+
+    private static boolean nullFiledCheck(String toCheck){
+        if (toCheck.contains("null")){
+            try {
+                throw new Exception("package pack failed!!!");
+            } catch (Exception e) {
+                logger.error("Error pkg packing!!" + toCheck);
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.constant.down.TOPIC;
-import team.hnuwt.servicesoftware.server.util.ByteBuilder;
-import team.hnuwt.servicesoftware.server.util.ConcentratorUtil;
-import team.hnuwt.servicesoftware.server.util.PkgPackUtil;
-import team.hnuwt.servicesoftware.server.util.ProduceUtil;
+import team.hnuwt.servicesoftware.server.util.*;
 
 /**
  * 登录包处理类
@@ -34,9 +31,20 @@ public class LoginHandler implements Runnable {
     @Override
     public void run()
     {
-        long id = message.BINToLong(7, 12);
+        long id = FieldPacker.getId(message);
+
+//        // 重复集中器ID判断相关，暂不启用
+//        if (ConcentratorUtil.containsDuplicate(id, sc)){
+//            try {
+//                logger.info("REFUSE CONN for duplicate link from @#@ id:" + id + " at " + sc);
+//                sc.close();
+//            } catch (IOException e) {
+//                logger.error("Failed to close duplicate link from different collectors" ,e);
+//            }
+//            return;
+//        }
         ConcentratorUtil.add(id, sc);
-        ProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.LOGIN.getStr(), message.toString());
+        InnerProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.LOGIN.getStr(), message.toString());
 
         Calendar cas = Calendar.getInstance();
         int year = cas.get(Calendar.YEAR);
@@ -84,7 +92,7 @@ public class LoginHandler implements Runnable {
             sc.write(ByteBuffer.wrap(b));
             logger.info("reply:" + PkgPackUtil.bytes2hex(b));
         } catch (IOException e) {
-            logger.error("", e);
+            logger.error("cannot reply for sc invalid", e);
         }
     }
 

@@ -205,7 +205,7 @@ public class PkgExpUtil {
             Class clazz = Class.forName(clazzName);
             return (Packet) clazz.newInstance();
         } catch (ClassNotFoundException e) {
-            logger.error("This Packet Model dose not exist, Please check configuration or the class path");
+            logger.warn("This Packet Model dose not exist, Please check configuration or the class path");
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.model.Logout;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
@@ -22,16 +23,45 @@ public class ConcentratorUtil {
 
     public static void add(Long id, SocketChannel sc)
     {
-        // 建立新连接前删去旧连接
+        // 建立新连接前删去旧连接引用
         SocketChannel old = map.remove(id);
-        if (old != null && old.isConnected()) {
-            try {
-                old.close();
-            } catch (IOException e) {
-                logger.error("DUPLICATE LINK FORM SAME COLLECTOR! AND CANNOT CLOSE", e);
+        if (old != null) {
+            if (old.isConnected() && sc.isConnected() && diffPort(old, sc)) {    /* 如果两个连接都在连接中，且来自不同端口 */
+                try {
+                    old.close();    /* 切断旧连接 */
+                } catch (IOException e) {
+                    logger.error("DUPLICATE LINK FORM SAME COLLECTOR! AND CANNOT CLOSE", e);
+                }
             }
         }
         map.put(id, sc);
+    }
+
+    /**
+     * 检测不同IP的集中器是否配置了相同ID，暂不启用
+     */
+    public static boolean containsDuplicate(Long id, SocketChannel sc){
+        SocketChannel old = map.get(id);
+        if (old == null || !old.isConnected()) return false;  /* 不存在该ID的连接 */
+        else {
+            try {
+                InetAddress newAddr = ((InetSocketAddress) sc.getRemoteAddress()).getAddress();
+                InetAddress oldAddr = ((InetSocketAddress) old.getRemoteAddress()).getAddress();
+                return newAddr != oldAddr;
+            } catch (IOException e) {
+                logger.error("CANNOT GET DUPLICATE JUDGEMENT", e);
+                return false;
+            }
+        }
+    }
+
+    private static boolean diffPort(SocketChannel old, SocketChannel req){
+        try {
+            return old.getRemoteAddress() != req.getRemoteAddress();
+        } catch (IOException e) {
+            logger.error("cannot get remote address",e);
+            return false;
+        }
     }
 
     public static SocketChannel get(Long id)
@@ -45,14 +75,13 @@ public class ConcentratorUtil {
         try {
             if (sk != null && sk.isConnected()) {
                 sk.close();
-                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + id );
+                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + id  + "\n" + DebugUtil.getMapKeys(map));
                 return true;
             }
-            logger.info("NO INVALID SOCKET YET @#@ id: " + id);
-            return false;
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            logger.info("FAILED CLOSED AN INVALID SOCKET! @#@ id: " +id);
+            logger.info("FAILED CLOSED AN INVALID SOCKET! @#@ id: " + id);
             return false;
         }
     }
@@ -67,7 +96,7 @@ public class ConcentratorUtil {
         for (Map.Entry<Long, SocketChannel> entry: map.entrySet())
         {
             try {
-                if (sAddr == entry.getValue().getRemoteAddress()){
+                if (entry.getValue().isConnected() && sAddr == entry.getValue().getRemoteAddress()){
                     result.add(new Logout(entry.getKey(), ((InetSocketAddress)sAddr).getPort()));
                 }
             } catch (IOException e) {
