@@ -29,6 +29,11 @@ public class LoginService implements Runnable {
     public void run()
     {
         new LoginDao().insertBatch(addrList);
+
+        /*
+         *  登录的同时更新心跳时间，以免在登陆后第一次心跳上传之前的心跳空窗期被检查程序剔除
+         */
+        new HeartBeatDao().update2LoginTime(addrList);
         logger.info(addrList.size() + " collectors have " + ((login)?"LOGIN":"OFFLINE") + " state updated.");
     }
 

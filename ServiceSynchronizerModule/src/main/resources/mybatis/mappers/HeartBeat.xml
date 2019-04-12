@@ -17,5 +17,15 @@
             (#{heartbeat.collectorId},#{heartbeat.port},#{heartbeat.time})
         </foreach>
     </insert>
+    
+    <update id="update2LoginTime" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index">
+        update tb_HeartBeat
+        <set>
+            time = #{item.time}
+        </set>
+        where collectorId = #{item.collectorId}
+        </foreach>
+    </update>
 
 </mapper>
