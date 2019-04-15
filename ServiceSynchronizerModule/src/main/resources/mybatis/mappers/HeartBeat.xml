@@ -4,23 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="HeartBeat">
-
-    <insert id="add" parameterType="team.hnuwt.servicesoftware.synchronizer.model.HeartBeat">
-        replace into tb_HeartBeat(collectorId,port,time)
-        values(#{collectorId},#{port},#{time})
-    </insert>
-
-    <insert id="addBatch">
-        replace into tb_HeartBeat(collectorId,port,time)
-        values
-        <foreach collection="list" item="heartbeat" separator=",">
-            (#{heartbeat.collectorId},#{heartbeat.port},#{heartbeat.time})
-        </foreach>
-    </insert>
     
-    <update id="update2LoginTime" parameterType="java.util.List">
-        <foreach collection="list" item="item" index="index">
-        update tb_HeartBeat
+    <update id="updateRespTime" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+        update tb_Login
         <set>
             time = #{item.time}
         </set>

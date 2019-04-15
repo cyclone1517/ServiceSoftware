@@ -2,6 +2,8 @@ package team.hnuwt.servicesoftware.synchronizer.handler;
 
 import com.alibaba.fastjson.JSON;
 import team.hnuwt.servicesoftware.synchronizer.constant.TAG;
+import team.hnuwt.servicesoftware.synchronizer.model.Login;
+import team.hnuwt.servicesoftware.synchronizer.service.DetailService;
 import team.hnuwt.servicesoftware.synchronizer.service.OfflineReService;
 import team.hnuwt.servicesoftware.synchronizer.util.DataProcessThreadUtil;
 import team.hnuwt.servicesoftware.synchronizer.util.HandlerUtil;
@@ -39,7 +41,16 @@ public class OfflineReHandler implements Runnable{
                 List<String> tempList = JSON.parseArray(l, String.class);
                 offlineOKList.addAll(tempList);
             });
+
+            // 更新登陆表
             DataProcessThreadUtil.getExecutor().execute(new OfflineReService(offlineOKList));
+
+            // 更新登录详情表
+            List<Login> loginList = new ArrayList<>();
+            for (String addr: offlineOKList){
+                loginList.add(new Login(Long.parseLong(addr), 2));
+            }
+            DataProcessThreadUtil.getExecutor().execute(new DetailService(loginList, false));
 
             // 推送到消息队列
             String data = HandlerUtil.geneMsg(offlineOKList, 0);

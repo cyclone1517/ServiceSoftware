@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Detail">
+
+    <insert id="login">
+        replace into tb_Detail(collectorId,loginTime)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.collectorId},#{item.time})
+        </foreach>
+    </insert>
+
+    <insert id="loginBatch">
+        insert into tb_Detail(collectorId,loginTime)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.collectorId},#{item.time})
+        </foreach>
+    </insert>
+
+    <update id="logoutBatch">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update tb_Detail
+            <set>
+                logoutTime = #{item.time}
+            </set>
+            where id = (
+                select MAX(id) from (
+                    select id from tb_Detail
+                    where collectorId = #{item.collectorId}
+                ) tempDetail
+            )
+        </foreach>
+    </update>
+
+</mapper>

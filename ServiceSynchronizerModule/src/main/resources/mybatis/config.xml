@@ -4,9 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-    <!--<settings>-->
-        <!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
-    <!--</settings>-->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+    </settings>
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC">
@@ -14,7 +14,7 @@
             </transactionManager>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/servicesoftware?useSSL=false"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/servicesoftware?useSSL=false&amp;allowMultiQueries=true"/>
                 <property name="username" value="root"/>
                 <property name="password" value="123456"/>
             </dataSource>
@@ -26,6 +26,7 @@
         <mapper resource="mybatis/mappers/HeartBeat.xml"/>
         <mapper resource="mybatis/mappers/Login.xml"/>
         <mapper resource="mybatis/mappers/Check.xml"/>
+        <mapper resource="mybatis/mappers/Detail.xml"/>
     </mappers>
 
 </configuration>

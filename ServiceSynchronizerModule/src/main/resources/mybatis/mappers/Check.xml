@@ -10,16 +10,7 @@
         where
             tb_Login.state = 1
         and
-        (
-            tb_Login.collectorId in (
-                select collectorId from tb_HeartBeat
-                where current_timestamp - tb_HeartBeat.time &gt; #{checkTime}
-            )
-            or
-            tb_Login.collectorId not in (
-                select collectorId from tb_HeartBeat
-            )
-        )
+            current_timestamp - tb_Login.time &gt; #{checkTime}
     </select>
 
     <update id="resetOffline" parameterType="java.util.List">
