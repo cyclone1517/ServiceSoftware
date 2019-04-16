@@ -54,24 +54,51 @@ CREATE TABLE `tb_login`  (
 
 SET FOREIGN_KEY_CHECKS = 1;
 
+
+-- ---------------------------------
+-- 存储过程：插入登录详情
+-- 调用示例
+-- call insertLoginDetail(4006, "2019-04-16 23:55:03");
+-- ---------------------------------
+/*
+	逻辑分析：
+	1. 若该集中器无记录 -> 插入记录
+	2. 若该集中器有记录
+		2.1 且登出为空 -> 更新登录时间
+		2.2 且登出不为空 -> 上一条记录已经完整，创建新记录
+
+	参数：
+	@currId 待插入集中器id
+	@newTime 最新登录包抵达时间
+
+	@maxLoginId 当前集中器的最新记录号
+	@maxIdOutState 最新记录号对应的登出时间填入状况
+*/
+delimiter ;
+drop procedure if exists insertLoginDetail;
 delimiter $$
-REPLACE PROCEDURE insertLoginDetail(IN currId int, IN time TIMESTAMP)
-BEGIN
-    SET @maxLoginId = SELECT MAX(id) from tb_detail;
-    (
-        SELECT id from tb_detail WHERE collectorId = currId
-    ) tempDetail;
+create PROCEDURE insertLoginDetail(IN currId int, IN newTime TIMESTAMP)
+begin
+	declare maxLoginId int;
+	declare maxIdOutState timestamp;
+	SELECT MAX(id) FROM (
+		SELECT id FROM tb_detail WHERE collectorId = currId
+	) tmpDetail INTO maxLoginId;
 
-    SELECT logoutTime from tb_detail
-    where id = @maxLoginId
-    INTO @newlyOut;
+	SELECT logoutTime FROM tb_detail
+	WHERE id = maxLoginId
+	INTO maxIdOutState;
 
-    IF @newlyOut = null
-    THEN
-        update tb_detail loginTime = time where id = @maxLoginId;
-    ELSE
-        insert into tb_detail(collectorId, loginTime) values (currId, time);
-    END IF;
-END;
-$$
+	IF maxLoginId is null
+	THEN
+		INSERT INTO tb_detail(collectorId, loginTime) VALUES (currId, newTime);
+	ELSE
+		IF maxIdOutState is null
+		THEN
+			UPDATE tb_detail SET loginTime = newTime WHERE id = maxLoginId;
+		ELSE
+			INSERT INTO tb_detail(collectorId, loginTime) VALUES (currId, newTime);
+		END IF;
+	END IF;
+end $$
 delimiter ;

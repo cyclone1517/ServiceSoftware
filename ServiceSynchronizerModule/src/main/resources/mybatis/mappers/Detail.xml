@@ -5,19 +5,9 @@
 
 <mapper namespace="Detail">
 
-    <insert id="login">
-        replace into tb_Detail(collectorId,loginTime)
-        values
-        <foreach collection="list" item="item" separator=",">
-            (#{item.collectorId},#{item.time})
-        </foreach>
-    </insert>
-
-    <insert id="loginBatch">
-        insert into tb_Detail(collectorId,loginTime)
-        values
-        <foreach collection="list" item="item" separator=",">
-            (#{item.collectorId},#{item.time})
+    <insert id="loginBatch" parameterType="java.util.List" statementType="CALLABLE">
+        <foreach collection="list" item="item" separator=";">
+            CALL insertLoginDetail(#{item.collectorId}, #{item.time})
         </foreach>
     </insert>
 
