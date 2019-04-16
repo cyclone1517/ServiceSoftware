@@ -180,7 +180,7 @@ public class TCPMessageHandler {
 
                             result = new ByteBuilder();
                             state = 0;
-                            return new Remainder(result, state);    /* 本地不必解析下行报文了 */
+                            continue;    /* 本地不必解析下行报文了，但是可能粘包，则继续处理 */
                         }
                     }
 
