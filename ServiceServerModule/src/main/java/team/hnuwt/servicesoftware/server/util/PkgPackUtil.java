@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.constant.down.DATACODE;
+import team.hnuwt.servicesoftware.server.constant.down.TAG;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class PkgPackUtil {
         int meterNum = FieldPacker.getMeterNum(root);
         String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
         String L = FieldPacker.getMultiMeterPkgLen(15, meterNum, 2);
-        List<String> ids = FieldPacker.getMeterIds(root.path("meter"));
+        List<String> ids = FieldPacker.getMeterIds(root.path("meterAddr"));
         int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
 
@@ -74,13 +75,23 @@ public class PkgPackUtil {
     }
 
     public static String geneCtrlOnOffPkg(JsonNode root, String FUN, boolean on){
+
+        // 根据报文体选择开关阀业务类型
+        String ctrl = root.path("ctrl").asText();
+        if (ctrl.equals("on")){
+            FUN = TAG.CTRL_ON.getStr();
+        }
+        else if (ctrl.equals("off")){
+            FUN = TAG.CTRL_OFF.getStr();
+        }
+
         StringBuilder result = new StringBuilder();
 
         // get len of pkg
         String L = FieldPacker.genePkgLen(33);  /* 用户字段长33字节 */
         int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
-        List<String> ids = FieldPacker.getMeterIds(root.path("id"));
+        List<String> ids = FieldPacker.getMeterIds(root.path("meterAddr"));
 
         result.append("68");
         result.append(L);
