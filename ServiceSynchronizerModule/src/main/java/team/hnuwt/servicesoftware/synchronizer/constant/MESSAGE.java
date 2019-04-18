@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public enum MESSAGE {
 
-    DATA, HEARTBEAT, LOGIN, LOGOUT, OFFLINE_RE, AUTOUPLOAD;
+    DATA, HEARTBEAT, LOGIN, LOGOUT, OFFLINE_RE, AUTOUPLOAD, DUPLICATE;
 
     private static HashMap<String, MESSAGE> msgs;
 
@@ -16,6 +16,7 @@ public enum MESSAGE {
         msgs.put("LOGOUT", LOGOUT);
         msgs.put("OFFLINE_RE", OFFLINE_RE);
         msgs.put("AUTO_UPLOAD", AUTOUPLOAD);
+        msgs.put("DUPLICATE", DUPLICATE);
     }
 
     public static MESSAGE getMSG(String key){

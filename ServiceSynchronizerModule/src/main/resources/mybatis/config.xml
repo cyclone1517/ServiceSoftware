@@ -27,6 +27,7 @@
         <mapper resource="mybatis/mappers/Login.xml"/>
         <mapper resource="mybatis/mappers/Check.xml"/>
         <mapper resource="mybatis/mappers/Detail.xml"/>
+        <mapper resource="mybatis/mappers/Duplicate.xml"/>
     </mappers>
 
 </configuration>
