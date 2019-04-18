@@ -74,15 +74,18 @@ public class PkgPackUtil {
         return result.toString();
     }
 
-    public static String geneCtrlOnOffPkg(JsonNode root, String FUN, boolean on){
+    public static String geneCtrlOnOffPkg(JsonNode root, String FUN){
 
         // 根据报文体选择开关阀业务类型
+        boolean on = false;
         String ctrl = root.path("ctrl").asText();
         if (ctrl.equals("on")){
             FUN = TAG.CTRL_ON.getStr();
+            on = true;
         }
         else if (ctrl.equals("off")){
             FUN = TAG.CTRL_OFF.getStr();
+            on = false;
         }
 
         StringBuilder result = new StringBuilder();

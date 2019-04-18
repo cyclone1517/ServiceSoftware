@@ -39,14 +39,8 @@ public class HeartBeatHandler implements Runnable {
         SocketChannel currSc = ConcentratorUtil.get(id);
         if (currSc == null){
             return;       /* 若没有登录，不予理会 */
-        } else {
-            try {
-                 if (((InetSocketAddress)currSc.getRemoteAddress()).getPort() != ((InetSocketAddress)sc.getRemoteAddress()).getPort()){
-                     ConcentratorUtil.add(id, sc);     /* 若登录却端口过期，应更换 */
-                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } else if (ConcentratorUtil.diffPortInSameIP(currSc, sc)){
+            ConcentratorUtil.add(id, sc);     /* 若来自不同的端口（包括同IP不同端口和不同IP同端口），应更换 */
         }
         InnerProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.HEARTBEAT.getStr(), heartBeat.toString());
 

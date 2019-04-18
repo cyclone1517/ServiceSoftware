@@ -13,10 +13,7 @@ import team.hnuwt.servicesoftware.server.compatible.FortendAgency;
 import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.model.Logout;
 import team.hnuwt.servicesoftware.server.constant.up.FUNID;
-import team.hnuwt.servicesoftware.server.util.ByteBuilder;
-import team.hnuwt.servicesoftware.server.util.CompatibleUtil;
-import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;
-import team.hnuwt.servicesoftware.server.util.RedisUtil;
+import team.hnuwt.servicesoftware.server.util.*;
 
 /**
  * TCP消息处理工具类
@@ -161,10 +158,23 @@ public class TCPMessageHandler {
             {
                 if (c == 0x16)
                 {
-                    if (compatible){
+                    /* 初始化伪登录标志和集中器id */
+                    boolean fake = false;
+                    long id = FieldPacker.getId(result);
+
+                    if (compatible){    /* 兼容老系统和重复集中器ID的预处理代码段 */
 
                         // 如果上行，往兼容模块发
                         if (CompatibleUtil.isUpstream(result.getByte(6))){
+
+                            // 重复集中器的登录报文不能转发
+                            SocketChannel oldSc = ConcentratorUtil.getOriginDuplicateSocket(id, sc);    /* 获取和重复ID相同且正在登录的集中器，只有在IP不同时才返回 */
+                            if (oldSc != null){
+                                DataProcessThreadUtil.getExecutor().execute(new DuplicateHandler(id, oldSc, sc));   /* 通知数据库，有重复ID的集中器 */
+                                fake = true;   /* 本地需要做心跳和登录处理，忽略其他业务，并且不做透明转发 */
+                            }
+
+                            // 其余数据通过代理链接发给兼容模块
                             SocketChannel agenSocket = fortendAgency.getAlivedCompatibleLink();
                             if (agenSocket != null) {
                                 DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), true, agenSocket));
@@ -180,23 +190,34 @@ public class TCPMessageHandler {
 
                             result = new ByteBuilder();
                             state = 0;
-                            continue;    /* 本地不必解析下行报文了，但是可能粘包，则继续处理 */
+                            continue;       /* 本地不必解析下行报文，但是可能粘包，则继续处理 */
                         }
                     }
 
                     /* 心跳：走协议栈单线 */
                     if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR)   /* 获取功能码和数字单元标识 */
                     {
-                        logger.info("HEARTBEAT: " + result.toString());
+                        logger.info(((fake)?"FAKE ":"") + "HEARTBEAT: " + result.toString() + " @#@id: " + id);
                         DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(sc, result));
                     }
 
                     /* 登录：走协议栈单线 */
                     else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)
                     {
-                        logger.info("LOGIN: " + sc + result.toString());
-                        DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));
+                        if (fake){
+                            logger.info("FAKE LOGIN: " + sc + result.toString() + " @#@id: " + id);
+                            DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result, fake));    /* 冗余ID集中器伪登录 */
+                        } else {
+                            logger.info("LOGIN: " + sc + result.toString());
+                            DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));  /* 正常登录 */
+                        }
                     }
+
+                    /*
+                     * 伪登录只有登录和心跳权限，continue 忽略所有其他业务
+                     * 注意不能将 else if 改为 if, 会让上下两段变为并行逻辑
+                     */
+                    else if (fake) continue;
 
                     /* 抄表：中间服务单线 */
                     else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER

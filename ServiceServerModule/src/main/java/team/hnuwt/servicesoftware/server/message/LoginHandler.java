@@ -17,6 +17,7 @@ import team.hnuwt.servicesoftware.server.util.*;
  */
 public class LoginHandler implements Runnable {
     private ByteBuilder message;
+    private boolean fake = false;
 
     private SocketChannel sc;
 
@@ -28,12 +29,21 @@ public class LoginHandler implements Runnable {
         this.sc = sc;
     }
 
+    /*
+     * 这个构造方法用于回复伪登录的集中器
+     */
+    public LoginHandler(SocketChannel sc, ByteBuilder message, boolean fake){
+        this.message = message;
+        this.sc = sc;
+        this.fake = fake;
+    }
+
     @Override
     public void run()
     {
         long id = FieldPacker.getId(message);
 
-//        // 重复集中器ID判断相关，暂不启用
+        // 重复集中器ID判断相关，相关逻辑挪到TCPMessageHandler
 //        if (ConcentratorUtil.containsDuplicate(id, sc)){
 //            try {
 //                logger.info("REFUSE CONN for duplicate link from @#@ id:" + id + " at " + sc);
@@ -43,8 +53,11 @@ public class LoginHandler implements Runnable {
 //            }
 //            return;
 //        }
-        ConcentratorUtil.add(id, sc);
-        InnerProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.LOGIN.getStr(), message.toString());
+
+        if (!fake) {        /* 如果不是伪登录，才为其注册引用和放入数据库 */
+            ConcentratorUtil.add(id, sc);
+            InnerProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.LOGIN.getStr(), message.toString());
+        }
 
         Calendar cas = Calendar.getInstance();
         int year = cas.get(Calendar.YEAR);
@@ -90,9 +103,9 @@ public class LoginHandler implements Runnable {
         b[cnt++] = (byte) 0x16;
         try {
             sc.write(ByteBuffer.wrap(b));
-            logger.info("reply:" + PkgPackUtil.bytes2hex(b));
+            logger.info((fake?"FAKE ":"") + "reply:" + PkgPackUtil.bytes2hex(b));
         } catch (IOException e) {
-            logger.error("cannot reply for sc invalid", e);
+            logger.error("CANNOT REPLY INVALID SOCKET(if caused by multiple login from 1 device, never mind, it will be okay soon)", e);
         }
     }
 
