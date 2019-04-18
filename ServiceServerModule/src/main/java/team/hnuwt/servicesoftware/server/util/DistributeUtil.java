@@ -43,7 +43,7 @@ public class DistributeUtil {
 
         /* 开关阀 */
         else if (tag == TAG.CTRL_ONOFF){
-            runTask(PkgPackUtil.geneCtrlOnOffPkg(root, tag.getStr(), true));
+            runTask(PkgPackUtil.geneCtrlOnOffPkg(root, tag.getStr()));
         }
 
         /* 关阀 */

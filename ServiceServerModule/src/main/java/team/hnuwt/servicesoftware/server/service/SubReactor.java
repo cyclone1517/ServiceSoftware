@@ -73,7 +73,7 @@ public class SubReactor implements Runnable {
                     result.append(buffer.get());
                 num = sc.read(buffer);
             }
-            logger.info("read: " + result.toString());
+            logger.info("read: " + sc.toString().substring(31) + result.toString());
             TCPMessageHandler.handler(sc, result);
             if (num == -1)
             {

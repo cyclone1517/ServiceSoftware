@@ -103,7 +103,10 @@ public class RedisUtil {
     }
 
     /**
-     * 通过订阅机制
+     * 通过订阅机制通知数据已经抵达
+     * channel 用于指定推送的目的模块
+     *      "notifier": 数据同步模块（默认）
+     *      "agency": 兼容模块
      */
     public static void publishData(String dataType){
         Jedis jedis = getJedis();

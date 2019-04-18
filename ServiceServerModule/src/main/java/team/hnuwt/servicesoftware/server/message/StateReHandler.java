@@ -36,8 +36,8 @@ public class StateReHandler implements Runnable{
         ObjectNode root = mapper.createObjectNode();
         long addr = FieldPacker.getId(data);
 
-        root.put("addr", addr);       // 集中器编号
-        root.put("success", success);   // 操作结果
+        root.put("termAddr", addr);       // 集中器编号
+        root.put("success", success);       // 操作结果
 
         ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), tag.getStr(), root.toString());
 
