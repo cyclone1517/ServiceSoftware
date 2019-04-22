@@ -119,7 +119,7 @@ public class Collector implements Runnable{
                 logger.info("HeartBeat: " + hearbeat);
             }
             try {
-                Thread.sleep(delay * 1000);
+                Thread.sleep(interval * 1000 + delay);
             } catch (InterruptedException e) {
                 logger.info("", e);
             }
