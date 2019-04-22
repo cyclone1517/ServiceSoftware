@@ -29,7 +29,7 @@ public class Subscriber extends JedisPubSub {
 
     @Override
     public void onMessage(String channel, String message) {       //收到消息会调用
-        System.out.println(String.format("receive redis published message, @#@ channel: %s, @#@ message: %s", channel, message));
+        //System.out.println(String.format("receive redis published message, @#@ channel: %s, @#@ message: %s", channel, message));
         MESSAGE msg = MESSAGE.getMSG(message.toUpperCase());
         if (msg == MESSAGE.DATA){
             DataProcessThreadUtil.getExecutor().execute(new DataHandler(batchNum));

@@ -28,6 +28,7 @@ public class DuplicateService implements Runnable {
     public void run()
     {
         new DuplicateDao().insertBatch(dupList);
+        logger.info(dupList.size() + " DUPLICATE PUT INTO MYSQL");
     }
 
 }

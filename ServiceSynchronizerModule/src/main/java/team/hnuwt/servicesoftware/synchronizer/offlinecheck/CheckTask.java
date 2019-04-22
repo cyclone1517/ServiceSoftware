@@ -32,7 +32,7 @@ public class CheckTask extends TimerTask {
             InnerProduceUtil.addQueue(TOPIC, TAG, offListStr);
         }
         else {
-            logger.info("no newly offline collectors in @#@ %d seconds", checkTime);
+            logger.info("no newly offline collectors in @#@" + checkTime + " seconds");
         }
     }
 }
