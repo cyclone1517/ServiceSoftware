@@ -11,7 +11,9 @@ public class LogFilter extends Filter<ILoggingEvent> {
 
     @Override
     public FilterReply decide(ILoggingEvent event) {
-        if (event.getFormattedMessage().contains("PROTOCOL")) {
+        String formattedMessage = event.getFormattedMessage();
+        if (formattedMessage.contains("PROTOCOL")               /* 忽略协议栈日志 */
+            ||formattedMessage.contains("supplementary")) {     /* 忽略补偿心跳日志 */
             return FilterReply.DENY;
         }
         else {
