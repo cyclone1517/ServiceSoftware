@@ -11,7 +11,7 @@
  Target Server Version : 50724
  File Encoding         : 65001
 
- Date: 15/04/2019 13:43:04
+ Date: 22/04/2019 11:28:31
 */
 
 SET NAMES utf8mb4;
@@ -42,6 +42,18 @@ CREATE TABLE `tb_detail`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for tb_duplicate
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_duplicate`;
+CREATE TABLE `tb_duplicate`  (
+  `collectorId` int(11) NOT NULL,
+  `oldScInfo` varchar(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `newScInfo` varchar(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `date` date NOT NULL,
+  PRIMARY KEY (`collectorId`, `oldScInfo`, `newScInfo`, `date`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for tb_login
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_login`;
@@ -51,9 +63,6 @@ CREATE TABLE `tb_login`  (
   `time` timestamp(0) NOT NULL,
   PRIMARY KEY (`collectorId`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
 
 -- ---------------------------------
 -- 存储过程：插入登录详情
