@@ -229,7 +229,7 @@ public class TCPMessageHandler {
                             DataProcessThreadUtil.getExecutor().execute(new ReadMeterReHandler(sc, result));
                         }
 
-                        /* 自动上传：走协议栈单线 */
+                        /* 自动上传：走协议栈 + 中间服务双线 */
                         else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.AUTOUPLOAD) {
                             logger.info("AUTO_UPLOAD: " + result.toString());
                             DataProcessThreadUtil.getExecutor().execute(new AutoUploadHandler(sc, result));

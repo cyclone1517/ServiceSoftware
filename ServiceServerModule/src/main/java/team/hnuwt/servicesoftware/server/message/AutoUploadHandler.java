@@ -30,7 +30,11 @@ public class AutoUploadHandler implements Runnable {
     @Override
     public void run()
     {
+        /* 走协议栈 */
         InnerProduceUtil.addQueue(TOPIC.PROTOCOL.getStr(), TAG.AUTO_UPLOAD.getStr(), message.toString());
+
+        /* 走中间服务 */
+        // 相关代码放到协议栈
     }
 
 }
