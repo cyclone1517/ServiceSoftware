@@ -18,10 +18,11 @@ public class DataUtil {
     //private static final String DATA = "Data";
     private static final Logger logger = LoggerFactory.getLogger(DataUtil.class);
 
-    public static void putDataToRedis(Packet pkg){
+    public static void distributeData(Packet pkg){
         if (pkg instanceof PacketAutoUpload){
-            processAutoUpload(TAG.AUTO_UPLOAD.getStr(), (PacketAutoUpload) pkg);
-            RedisUtil.publishData(TAG.AUTO_UPLOAD.getStr());
+            processAutoUpload(TAG.AUTO_UPLOAD.getStr(), (PacketAutoUpload) pkg);    /* 存入Redis */
+            RedisUtil.publishData(TAG.AUTO_UPLOAD.getStr());            /* 通知Redis */
+            PublishUtil.publishAutoUpload((PacketAutoUpload) pkg);      /* 通知中间服务 */
         }
         else if (pkg instanceof PacketReadMeter){
             processReadMeter(TAG.READ_METER.getStr(), (PacketReadMeter) pkg);

@@ -49,6 +49,10 @@ public class PluginServiceImpl implements PluginService {
         ProtocolUtil pu = new ProtocolUtil(FIELD_NAME, LENGTH, ENCODEFORMAT, LIST_IMFORMATION);     /* LIST_IMFORMATION可以为空 */
         pu.translate(pkg, p, PkgExpUtil.isBulk(id));    /* 把报文数据解析为明文 */
 
-        DataUtil.putDataToRedis(p);     /* 把数据包装好放入中转Redis库 */
+        /**
+         * 版本修改：
+         * DataUtil 将数据传入数据库，也做判断是否传递到中间服务
+         */
+        DataUtil.distributeData(p);
     }
 }
