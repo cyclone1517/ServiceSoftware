@@ -71,22 +71,30 @@ public class ProduceTest {
 
         List<Archive> archives = new ArrayList<>();
         Archive ac1 = new Archive();
-        ac1.setId("0800");
-        ac1.setMadd("201607249928");
+        ac1.setId("0100");
+        ac1.setMadd("080104151101");
+        ac1.setPort("04");
         ac1.setPrtc("01");
         ac1.setCadd("00000000");
-        ac1.setPort("03");
         archives.add(ac1);
 
-//        Archive ac2 = new Archive();
-//        ac2.setId("0100");
-//        ac2.setMadd("080104151101");
-//        ac2.setPrtc("01");
-//        ac2.setCadd("00000000");
-//        ac2.setPort("04");
-//        archives.add(ac2);
+        Archive ac2 = new Archive();
+        ac2.setId("0200");
+        ac2.setMadd("630006090000");
+        ac2.setPort("04");
+        ac2.setPrtc("01");
+        ac2.setCadd("00000000");
+        archives.add(ac2);
 
-        String msg = ProduceTestUtil.geneArchive("1020", archives.size(), archives);
+        Archive ac3 = new Archive();
+        ac3.setId("0300");
+        ac3.setMadd("010000000000");
+        ac3.setPort("04");
+        ac3.setPrtc("01");
+        ac3.setCadd("00000000");
+        archives.add(ac3);
+
+        String msg = ProduceTestUtil.geneArchive("4004", archives.size(), archives);
         ProduceUtil.addQueue(topic, tag, msg);
 
     }
