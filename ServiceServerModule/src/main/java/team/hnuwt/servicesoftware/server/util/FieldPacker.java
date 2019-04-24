@@ -87,7 +87,7 @@ public class FieldPacker {
             sum += Integer.parseInt(csStr.substring(i, i + 2), 16);
         }
 
-        return Integer.toHexString(sum % 256);
+        return getNBitHexNumNoRvs(sum % 256, 2);
     }
 
     public static List<String> getMeterIds(JsonNode ids){
@@ -108,6 +108,13 @@ public class FieldPacker {
         result.append(Integer.toHexString(num));
         while (result.length() < bit) result.insert(0, "0");
         return reverseEnd(result.toString());
+    }
+
+    private static String getNBitHexNumNoRvs(int num, int bit){   /* 无反转 */
+        StringBuilder result = new StringBuilder();
+        result.append(Integer.toHexString(num));
+        while (result.length() < bit) result.insert(0, "0");
+        return result.toString();
     }
 
     public static String reverseEnd(String code){

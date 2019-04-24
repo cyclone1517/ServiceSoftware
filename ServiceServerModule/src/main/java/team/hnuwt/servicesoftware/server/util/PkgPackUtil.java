@@ -176,7 +176,7 @@ public class PkgPackUtil {
         // get num of meters
         int meterNum = FieldPacker.getMeterNum(root);
         String numStr = FieldPacker.getNBitHexNum(meterNum, 4);
-        String L = FieldPacker.getMultiMeterPkgLen(14, meterNum, 22);
+        String L = FieldPacker.getMultiMeterPkgLen(30, meterNum, 22);
         JsonNode archive = root.get("archive");
         int addr = root.path("termAddr").asInt();
         String addrId = FieldPacker.toHexAddrId(addr);
