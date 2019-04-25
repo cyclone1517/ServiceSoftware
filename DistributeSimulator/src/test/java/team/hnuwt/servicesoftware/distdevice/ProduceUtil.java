@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.distdevice.test;
+package team.hnuwt.servicesoftware.distdevice;
 
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;

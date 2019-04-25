@@ -1,4 +1,4 @@
-package team.hnuwt.servicesoftware.distdevice.test;
+package team.hnuwt.servicesoftware.distdevice;
 
 import com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;

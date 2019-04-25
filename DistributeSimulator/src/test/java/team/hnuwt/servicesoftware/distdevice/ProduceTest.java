@@ -1,6 +1,5 @@
-package team.hnuwt.servicesoftware.distdevice.test;
+package team.hnuwt.servicesoftware.distdevice;
 
-import javafx.scene.shape.Arc;
 import org.junit.Test;
 import team.hnuwt.servicesoftware.disdevice.mode.Archive;
 
@@ -66,35 +65,36 @@ public class ProduceTest {
 
     @Test
     public void sendArchive(){
+//        String topic = "TEST";
         String topic = "DOWNSTREAM";
         String tag = "ARCHIVE_DOWNLOAD";
 
         List<Archive> archives = new ArrayList<>();
         Archive ac1 = new Archive();
-        ac1.setId("0100");
-        ac1.setMadd("080104151101");
-        ac1.setPort("04");
-        ac1.setPrtc("01");
-        ac1.setCadd("00000000");
+        ac1.setId("0300");
+        ac1.setMadd("180910810100");
+        ac1.setPort("00");
+        ac1.setPrtc("00");
+        ac1.setCadd("00000304");
         archives.add(ac1);
 
-        Archive ac2 = new Archive();
-        ac2.setId("0200");
-        ac2.setMadd("630006090000");
-        ac2.setPort("04");
-        ac2.setPrtc("01");
-        ac2.setCadd("00000000");
-        archives.add(ac2);
+//        Archive ac2 = new Archive();
+//        ac2.setId("0200");
+//        ac2.setMadd("630006090000");
+//        ac2.setPort("04");
+//        ac2.setPrtc("01");
+//        ac2.setCadd("00000000");
+//        archives.add(ac2);
+//
+//        Archive ac3 = new Archive();
+//        ac3.setId("0300");
+//        ac3.setMadd("010000000000");
+//        ac3.setPort("04");
+//        ac3.setPrtc("01");
+//        ac3.setCadd("00000000");
+//        archives.add(ac3);
 
-        Archive ac3 = new Archive();
-        ac3.setId("0300");
-        ac3.setMadd("010000000000");
-        ac3.setPort("04");
-        ac3.setPrtc("01");
-        ac3.setCadd("00000000");
-        archives.add(ac3);
-
-        String msg = ProduceTestUtil.geneArchive("4004", archives.size(), archives);
+        String msg = ProduceTestUtil.geneArchive("1004", archives.size(), archives);
         ProduceUtil.addQueue(topic, tag, msg);
 
     }
