@@ -238,11 +238,11 @@ public class TCPMessageHandler {
                         /* 开关阀操作反馈：走中间服务单线 */
                         else if (result.getByte(12) == (byte) 0x85) {
                             if (result.BINToLong(14, 18) == FUNID.GATE_SUCCESS) {
-                                logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
+                                logger.info("DEVICE_ON/OFF SUCCESS: " + result.toString());
                                 DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.CTRL_ONOFF, true));
                             }
                             if (result.BINToLong(14, 18) == FUNID.GATE_FAIL) {
-                                logger.info("DEVICE ON/OFF FAIL: " + result.toString());
+                                logger.info("DEVICE_ON/OFF FAIL: " + result.toString());
                                 DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.CTRL_ONOFF, false));
                             }
                         }
@@ -250,11 +250,11 @@ public class TCPMessageHandler {
                         /* 下载档案操作反馈：走中间服务单线 */
                         else if (result.getByte(12) == (byte) 0x84) {
                             if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_SUCCESS) {
-                                logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
+                                logger.info("ARCHIVE_DOWNLOAD SUCCESS: " + result.toString());
                                 DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD, true));
                             }
                             if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_FAIL) {
-                                logger.info("DEVICE ON/OFF FAIL: " + result.toString());
+                                logger.info("ARCHIVE_DOWNLOAD FAIL: " + result.toString());
                                 DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD, false));
                             }
                         }

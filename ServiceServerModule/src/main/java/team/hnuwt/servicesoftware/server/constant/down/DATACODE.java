@@ -34,7 +34,7 @@ public class DATACODE {
         DataId.put("UPLOAD_ON", "00004003");    /* 上报允许 */
         DataId.put("UPLOAD_OFF", "00004003");   /* 上报停止 */
         DataId.put("READ_UPLOAD", "00004003");   /* 读取上报是否允许 */
-        DataId.put("ARCHIVE_DOWNLOAD", "11000100"); /* 档案下载 */
+        DataId.put("ARCHIVE_DOWNLOAD", "00000100"); /* 档案下载 */
         DataId.put("ARCHIVE_CLOSE", "00008002"); /* 档案下载 */
 
 
@@ -70,8 +70,8 @@ public class DATACODE {
         serial.put("UPLOAD_ON", "70");
         serial.put("UPLOAD_OFF", "7F");
         serial.put("READ_UPLOAD", "70");
-        serial.put("ARCHIVE_DOWNLOAD", "7B");
-        serial.put("ARCHIVE_CLOSE", "7B");
+        serial.put("ARCHIVE_DOWNLOAD", "74");
+        serial.put("ARCHIVE_CLOSE", "74");
 
     }
 
