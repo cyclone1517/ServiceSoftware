@@ -110,7 +110,7 @@ public class ConcentratorUtil {
         try {
             if (sk != null && sk.isConnected()) {
                 sk.close();
-                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + id  + "\n" + DebugUtil.getMapKeys(map));
+                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + id/*  + "\n" + DebugUtil.getMapKeys(map)*/);
                 return true;
             }
             return true;
