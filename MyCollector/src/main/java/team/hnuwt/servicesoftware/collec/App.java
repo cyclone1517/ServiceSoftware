@@ -32,6 +32,7 @@ public class App {
         int loop = Integer.parseInt(prop.getProperty("simu.thread.loop"));
         int interval = Integer.parseInt(prop.getProperty("simu.thread.interval"));
         int delayVary = Integer.parseInt(prop.getProperty("simu.delay.vary"));
+        int baseAddr = Integer.parseInt(prop.getProperty("simu.start.id"));
         Random random = new Random();
 
         System.out.println("Parameters-------\nnum: " + num + "\nloop:" + loop + "\ninterval:" + interval +
@@ -41,9 +42,8 @@ public class App {
         String loginProp = "02701000010012";
         String heartProp = "02701000040012";
         String tail = "16";
-        int baseAddr = 1020;
 
-        for (int i=1; i<num+1; i++){        // 增量从1开始记，共num个表
+        for (int i=0; i<num; i++){        // 增量从1开始记，共num个表
 
             // 生成登录报文
             String loginPrev = head + toHexAddrId(baseAddr + i) + loginProp;
