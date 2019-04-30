@@ -18,10 +18,8 @@
                 logoutTime = #{item.time}
             </set>
             where id = (
-                select MAX(id) from (
-                    select id from tb_Detail
-                    where collectorId = #{item.collectorId}
-                ) tempDetail
+                select maxId from maxid
+                where collectorId = #{item.collectorId}
             )
         </foreach>
     </update>

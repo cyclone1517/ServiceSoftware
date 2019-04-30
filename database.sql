@@ -64,6 +64,16 @@ CREATE TABLE `tb_login`  (
   PRIMARY KEY (`collectorId`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
+-- ----------------------------
+-- View structure for maxid
+-- ----------------------------
+DROP VIEW IF EXISTS `maxid`;
+CREATE VIEW MAXID
+AS
+SELECT MAX(id) AS maxId, collectorId
+FROM tb_Detail
+GROUP BY collectorId;
+
 -- ---------------------------------
 -- 存储过程：插入登录详情
 -- 调用示例
