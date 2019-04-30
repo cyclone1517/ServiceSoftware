@@ -26,11 +26,8 @@ public class HeartBeatService implements Runnable {
     @Override
     public void run()
     {
-        // 更新响应时间
+        // 更新响应时间和登录状态
         new HeartBeatDao().insertBatch(addrList);
-
-        // 更新登录状态（避免有心跳，但登录状态不为1的情况）
-        new LoginDao().resetOnline(addrList);
         logger.info(addrList.size() + " HEARTBEAT PUT INTO MYSQL");
     }
 

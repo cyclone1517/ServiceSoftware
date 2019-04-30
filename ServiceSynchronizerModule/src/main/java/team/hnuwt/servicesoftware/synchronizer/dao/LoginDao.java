@@ -32,6 +32,7 @@ public class LoginDao {
 
     }
 
+    @Deprecated
     public void resetOnline(List<HeartBeat> datas)
     {
         Set<Long> updateSet = new HashSet<>();

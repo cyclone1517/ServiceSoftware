@@ -5,11 +5,12 @@
 
 <mapper namespace="HeartBeat">
     
-    <update id="updateRespTime" parameterType="java.util.List">
+    <update id="updateRespAndStat" parameterType="java.util.List">
         <foreach collection="list" item="item" index="index" open="" close="" separator=";">
         update tb_Login
         <set>
-            time = #{item.time}
+            time = #{item.time},
+            state = ${1}
         </set>
         where collectorId = #{item.collectorId}
         </foreach>

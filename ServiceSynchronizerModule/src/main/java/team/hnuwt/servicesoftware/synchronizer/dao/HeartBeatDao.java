@@ -17,7 +17,7 @@ public class HeartBeatDao {
     public void insertBatch(List<HeartBeat> datas)
     {
         SqlSession sqlSession = DBUtil.getSqlSession();
-        sqlSession.insert("HeartBeat.updateRespTime", datas);
+        sqlSession.insert("HeartBeat.updateRespAndStat", datas);    /* 因为表合并了，所以更新的是登录表 */
         sqlSession.commit();
         sqlSession.close();
     }
