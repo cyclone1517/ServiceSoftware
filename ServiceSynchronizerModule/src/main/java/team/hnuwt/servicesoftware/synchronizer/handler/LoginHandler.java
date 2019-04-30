@@ -23,6 +23,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 一类两用，批量读取登录或批量读取登出
+ * 每次只执行其一，根据读取的TAG决定业务类型
+ */
 public class LoginHandler implements Runnable {
 
     private String DATA = "LOGIN";
@@ -77,9 +81,7 @@ public class LoginHandler implements Runnable {
             // 更新登录详情表
             DataProcessThreadUtil.getExecutor().execute(new DetailService(loginList, state==1));
 
-            // 推送到消息队列
-            String data = HandlerUtil.geneMsg(loginIds, state);
-            ProduceUtil.addQueue("UPSTREAM", TAG.COLC_STATE.getStr(), data);
+            // 推送到消息队列（现取消：登录和离线不再推送）
         }
 
     }

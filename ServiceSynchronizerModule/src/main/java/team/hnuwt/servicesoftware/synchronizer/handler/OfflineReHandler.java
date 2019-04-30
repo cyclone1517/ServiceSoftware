@@ -52,9 +52,7 @@ public class OfflineReHandler implements Runnable{
             }
             DataProcessThreadUtil.getExecutor().execute(new DetailService(loginList, false));
 
-            // 推送到消息队列
-            String data = HandlerUtil.geneMsg(offlineOKList, 0);
-            ProduceUtil.addQueue("UPSTREAM", TAG.COLC_STATE.getStr(), data);
+            // 推送到消息队列（现取消：登录和离线不再推送）
         }
 
     }
