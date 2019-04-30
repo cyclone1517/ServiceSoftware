@@ -5,21 +5,28 @@ package team.hnuwt.servicesoftware.prtcplugin.model.publish;
  */
 public class MeterInfo {
 
-    private int meterAddr; // 表序号
+    private String meterAddr; // 表序号
     private long readValue; // 表读数
     private String state; // 阀门状态(只有单抄表才回复)
 
-    public MeterInfo(int meterAddr, long readValue, String state) {
-        this.meterAddr = meterAddr;
+    public MeterInfo(int addr, long readValue, String state) {
+        this.meterAddr = toNBitStr(4, addr);
         this.readValue = readValue;
         this.state = state;
     }
 
-    public int getMeterAddr() {
+    private String toNBitStr(int bit, int addr){
+        StringBuilder sb = new StringBuilder();
+        sb.append(addr);
+        while (sb.length() < bit)sb.insert(0, "0");
+        return sb.toString();
+    }
+
+    public String getMeterAddr() {
         return meterAddr;
     }
 
-    public void setMeterAddr(int meterAddr) {
+    public void setMeterAddr(String meterAddr) {
         this.meterAddr = meterAddr;
     }
 
