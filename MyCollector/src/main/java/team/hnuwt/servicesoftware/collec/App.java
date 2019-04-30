@@ -33,6 +33,7 @@ public class App {
         int interval = Integer.parseInt(prop.getProperty("simu.thread.interval"));
         int delayVary = Integer.parseInt(prop.getProperty("simu.delay.vary"));
         int baseAddr = Integer.parseInt(prop.getProperty("simu.start.id"));
+        boolean openLogger = Boolean.valueOf(prop.getProperty("logger.open"));
         Random random = new Random();
 
         System.out.println("Parameters-------\nnum: " + num + "\nloop:" + loop + "\ninterval:" + interval +
@@ -55,7 +56,7 @@ public class App {
             String heartCs = calcuCs(heartPrev);
             String heart = heartPrev + heartCs + tail;
 
-            Collector collector = new Collector(login, heart, loop, interval, random.nextInt(delayVary));
+            Collector collector = new Collector(login, heart, loop, interval, random.nextInt(delayVary), openLogger, baseAddr + i);
             new Thread(collector).start();
         }
     }
@@ -67,7 +68,9 @@ public class App {
     private static String getNBitHexNum(int num, int bit){   /* 自带反转 */
         StringBuilder result = new StringBuilder();
         result.append(Integer.toHexString(num));
-        while (result.length() < bit) result.insert(0, "0");
+        while (result.length() < bit) {
+            result.insert(0, "0");
+        }
         return reverseEnd(result.toString());
     }
 
@@ -91,7 +94,7 @@ public class App {
             sum += Integer.parseInt(csStr.substring(i, i + 2), 16);
         }
 
-        return Integer.toHexString(sum % 256);
+        return getNBitHexNum(sum%256, 2);
     }
 
 }
