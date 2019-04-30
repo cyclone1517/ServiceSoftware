@@ -43,15 +43,12 @@ public class ProduceTestUtil {
         return root.toString();
     }
 
-    public static String geneUploadOnOffJson(String onOffID){
+    public static String geneUploadOnOffJson(String cllecId, String onOffID){
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.createObjectNode();
 
-        String addr = "1021";
-        String id = onOffID;
-
-        root.put("addr", addr);
-        root.put("id", id);
+        root.put("addr", cllecId);
+        root.put("id", onOffID);
 
         return root.toString();
     }

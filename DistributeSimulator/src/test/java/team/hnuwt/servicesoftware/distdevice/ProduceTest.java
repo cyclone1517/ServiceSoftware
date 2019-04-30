@@ -126,7 +126,7 @@ public class ProduceTest {
     public void setUploadOn(){
         String topic = "DOWNSTREAM";
         String tag = "UPLOAD_ON";
-        String msg = ProduceTestUtil.geneUploadOnOffJson("0008");
+        String msg = ProduceTestUtil.geneUploadOnOffJson("1004","0001");
         ProduceUtil.addQueue(topic, tag, msg);
     }
 
@@ -134,7 +134,7 @@ public class ProduceTest {
     public void setUploadOff(){
         String topic = "DOWNSTREAM";
         String tag = "UPLOAD_OFF";
-        String msg = ProduceTestUtil.geneUploadOnOffJson("0008");
+        String msg = ProduceTestUtil.geneUploadOnOffJson("1004", "0001");
         ProduceUtil.addQueue(topic, tag, msg);
     }
 
