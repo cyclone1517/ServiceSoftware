@@ -13,10 +13,7 @@ import team.hnuwt.servicesoftware.server.compatible.FortendAgency;
 import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.model.Logout;
 import team.hnuwt.servicesoftware.server.constant.up.FUNID;
-import team.hnuwt.servicesoftware.server.util.ByteBuilder;
-import team.hnuwt.servicesoftware.server.util.CompatibleUtil;
-import team.hnuwt.servicesoftware.server.util.DataProcessThreadUtil;
-import team.hnuwt.servicesoftware.server.util.RedisUtil;
+import team.hnuwt.servicesoftware.server.util.*;
 
 /**
  * TCP消息处理工具类
@@ -102,11 +99,6 @@ public class TCPMessageHandler {
 
     /**
      * 将多条命令拆分，解决粘包问题，同时分离命令和心跳包
-     * @param pkg
-     * @param state
-     * @param result
-     * @param sc
-     * @return
      */
     public static Remainder translate(ByteBuilder pkg, int state, ByteBuilder result, SocketChannel sc)
     {
@@ -157,22 +149,36 @@ public class TCPMessageHandler {
                     }
                 }
             }
-            if (state == -1)
+            if (state == -1)        /* 这里逻辑复杂，详细说明参考 resource/processLogic.png */
             {
                 if (c == 0x16)
                 {
-                    if (compatible){
+                    /* 初始化伪登录标志和集中器id */
+                    boolean fake = false;
+                    long id = FieldPacker.getId(result);
+
+                    /* 初始化集中器冲突信息 */
+                    SocketChannel oldSc = ConcentratorUtil.getOriginDuplicateSocket(id, sc);    /* 获取和重复ID相同且正在登录的集中器，只有在IP不同时才返回 */
+                    if (CompatibleUtil.isUpstream(result.getByte(6)) && oldSc != null){     /* 如果报文上行且重复 */
+                        DataProcessThreadUtil.getExecutor().execute(new DuplicateHandler(id, oldSc, sc));   /* 通知数据库，有重复ID的集中器 */
+                        fake = true;   /* 本地需要做心跳和登录处理，忽略其他业务，并且不做透明转发 */
+                    }
+
+                    if (compatible){    /* 兼容老系统 */
 
                         // 如果上行，往兼容模块发
-                        if (CompatibleUtil.isUpstream(result.getByte(6))){
-                            SocketChannel agenSocket = fortendAgency.getAlivedCompatibleLink();
-                            if (agenSocket != null) {
-                                DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), true, agenSocket));
-                            }
-                            else {
-                                logger.warn("AGENCY WARN: No available agency link!!");
+                        if (CompatibleUtil.isUpstream(result.getByte(6))) {
+
+                            // 如果集中器ID未冲突，往上转发
+                            if (!fake) {
+                                if (fortendAgency.getAlivedCompatibleLink() != null) {
+                                    DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), true, fortendAgency.getAlivedCompatibleLink()));
+                                } else {
+                                    logger.warn("AGENCY WARN: No available agency link!!");
+                                }
                             }
                         }
+
 
                         // 如果下行，往集中器发
                         else {
@@ -180,76 +186,93 @@ public class TCPMessageHandler {
 
                             result = new ByteBuilder();
                             state = 0;
-                            return new Remainder(result, state);    /* 本地不必解析下行报文了 */
+                            continue;       /* 本地不必解析下行报文，但是可能粘包，则继续处理 */
                         }
                     }
 
                     /* 心跳：走协议栈单线 */
                     if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR)   /* 获取功能码和数字单元标识 */
                     {
-                        logger.info("HEARTBEAT: " + result.toString());
+                        logger.info(((fake)?"FAKE ":"") + "HEARTBEAT: " + result.toString() + " @#@id: " + id);
                         DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(sc, result));
                     }
 
                     /* 登录：走协议栈单线 */
                     else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)
                     {
-                        logger.info("LOGIN: " + sc + result.toString());
-                        DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));
-                    }
-
-                    /* 抄表：中间服务单线 */
-                    else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER
-                        && CompatibleUtil.isUpstream(result.getByte(6))){       /* 下行的AFN和数据单元标识一样造成冲突 */
-                        logger.info("READ_METER: " + result.toString());
-                        DataProcessThreadUtil.getExecutor().execute(new ReadMeterReHandler(sc, result));
-                    }
-
-                    /* 自动上传：走协议栈单线 */
-                    else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.AUTOUPLOAD){
-                        logger.info("AUTO_UPLOAD: " + result.toString());
-                        DataProcessThreadUtil.getExecutor().execute(new AutoUploadHandler(sc, result));
-                    }
-
-                    /* 开关阀操作反馈：走中间服务单线 */
-                    else if (result.getByte(12) == (byte) 0x85){
-                            if (result.BINToLong(14, 18) == FUNID.GATE_SUCCESS) {
-                                logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
-                                DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.CTRL_ONOFF, true));
-                            }
-                            if (result.BINToLong(14, 18) == FUNID.GATE_FAIL){
-                                logger.info("DEVICE ON/OFF FAIL: " + result.toString());
-                                DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.CTRL_ONOFF, false));
-                            }
-                    }
-
-                    /* 下载档案操作反馈：走中间服务单线 */
-                    else if (result.getByte(12) == (byte) 0x84){
-                        if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_SUCCESS) {
-                            logger.info("DEVICE ON/OFF SUCCESS: " + result.toString());
-                            DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD,true));
-                        }
-                        if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_FAIL){
-                            logger.info("DEVICE ON/OFF FAIL: " + result.toString());
-                            DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD,false));
-                        }
-                    }
-
-                    /* 其余数据包：设置自动上报回复0x84还没处理 */
-                    else {
-                        /* 转发的心跳回复不打印 */
-                        if (result.getByte(12) == (byte) 0x00 && result.BINToLong(14, 18) == FUNID.HEART_LOGIN_RE){
-                            // do nothing
-                        }
-
-                        else {
-                            logger.info("OTHERS: " + result.toString());
+                        if (fake){
+                            logger.info("FAKE LOGIN: " + sc + result.toString() + " @#@id: " + id);
+                            DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result, fake));    /* 冗余ID集中器伪登录 */
+                        } else {
+                            logger.info("LOGIN: " + sc + result.toString());
+                            DataProcessThreadUtil.getExecutor().execute(new LoginHandler(sc, result));  /* 正常登录 */
                         }
                     }
 
                     /*
-                     * 登出没有报文，见上文 handleLogout 方法
+                     * 伪登录只有登录和心跳权限，continue 忽略所有其他业务
+                     * 注意不能将 else if 改为 if, 会让上下两段变为并行逻辑
                      */
+                    else if (fake) continue;
+
+                    else {
+
+                        /*
+                         * 但凡有数据响应，就通知数据库更新响应时间，由于没有真实心跳报文，直接通过Redis通知数据库即可
+                         */
+                        DataProcessThreadUtil.getExecutor().execute(new SubHeartBeatHandler(id));
+
+                        /* 抄表：中间服务单线 */
+                        if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.READ_METER
+                                && CompatibleUtil.isUpstream(result.getByte(6))) {       /* 下行的AFN和数据单元标识一样造成冲突 */
+                            logger.info("READ_METER: " + result.toString());
+                            DataProcessThreadUtil.getExecutor().execute(new ReadMeterReHandler(sc, result));
+                        }
+
+                        /* 自动上传：走协议栈 + 中间服务双线 */
+                        else if (result.getByte(12) == (byte) 0x8C && result.BINToLong(14, 18) == FUNID.AUTOUPLOAD) {
+                            logger.info("AUTO_UPLOAD: " + result.toString());
+                            DataProcessThreadUtil.getExecutor().execute(new AutoUploadHandler(sc, result));
+                        }
+
+                        /* 开关阀操作反馈：走中间服务单线 */
+                        else if (result.getByte(12) == (byte) 0x85) {
+                            if (result.BINToLong(14, 18) == FUNID.GATE_SUCCESS) {
+                                logger.info("DEVICE_ON/OFF SUCCESS: " + result.toString());
+                                DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.CTRL_ONOFF, true));
+                            }
+                            if (result.BINToLong(14, 18) == FUNID.GATE_FAIL) {
+                                logger.info("DEVICE_ON/OFF FAIL: " + result.toString());
+                                DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.CTRL_ONOFF, false));
+                            }
+                        }
+
+                        /* 下载档案操作反馈：走中间服务单线 */
+                        else if (result.getByte(12) == (byte) 0x00 || result.getByte(12) == (byte) 0x84) {   /* 未按功能码回复 */
+                            if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_SUCCESS) {
+                                logger.info("ARCHIVE_DOWNLOAD SUCCESS: " + result.toString());
+                                DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD, true));
+                            }
+                            if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_FAIL) {
+                                logger.info("ARCHIVE_DOWNLOAD FAIL: " + result.toString());
+                                DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD, false));
+                            }
+                        }
+
+                        /* 其余数据包：设置自动上报回复0x84还没处理 */
+                        else {
+                            /* 转发的心跳回复不打印 */
+                            if (result.getByte(12) == (byte) 0x00 && result.BINToLong(14, 18) == FUNID.HEART_LOGIN_RE) {
+                                // do nothing
+                            } else {
+                                logger.info("OTHERS: " + result.toString());
+                            }
+                        }
+
+                        /*
+                         * 登出没有报文，见上文 handleLogout 方法
+                         */
+                    }
                 }
                 result = new ByteBuilder();
                 state = 0;

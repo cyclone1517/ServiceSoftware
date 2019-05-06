@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisPubSub;
 import team.hnuwt.servicesoftware.synchronizer.constant.MESSAGE;
-import team.hnuwt.servicesoftware.synchronizer.handler.DataHandler;
-import team.hnuwt.servicesoftware.synchronizer.handler.HeartBeatHandler;
-import team.hnuwt.servicesoftware.synchronizer.handler.LoginHandler;
-import team.hnuwt.servicesoftware.synchronizer.handler.OfflineReHandler;
+import team.hnuwt.servicesoftware.synchronizer.handler.*;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -32,7 +29,7 @@ public class Subscriber extends JedisPubSub {
 
     @Override
     public void onMessage(String channel, String message) {       //收到消息会调用
-        System.out.println(String.format("receive redis published message, @#@ channel: %s, @#@ message: %s", channel, message));
+        //System.out.println(String.format("receive redis published message, @#@ channel: %s, @#@ message: %s", channel, message));
         MESSAGE msg = MESSAGE.getMSG(message.toUpperCase());
         if (msg == MESSAGE.DATA){
             DataProcessThreadUtil.getExecutor().execute(new DataHandler(batchNum));
@@ -51,6 +48,9 @@ public class Subscriber extends JedisPubSub {
         }
         else if (msg == MESSAGE.OFFLINE_RE) {
             DataProcessThreadUtil.getExecutor().execute(new OfflineReHandler(batchNum));
+        }
+        else if (msg == MESSAGE.DUPLICATE) {
+            DataProcessThreadUtil.getExecutor().execute(new DuplicateHandler(batchNum));
         }
     }
     @Override

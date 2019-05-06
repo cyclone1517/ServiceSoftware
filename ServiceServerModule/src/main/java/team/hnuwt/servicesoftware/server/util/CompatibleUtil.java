@@ -32,6 +32,7 @@ public class CompatibleUtil {
         mainReactor = mr;
     }
 
+    // 取出控制码，判断上下行方向
     public static boolean isUpstream(byte ctrl){
         int v = ctrl & 0xFF;
         int high = Integer.parseInt(hexArray[v>>>4]+"", 16);   /* 取高位 */

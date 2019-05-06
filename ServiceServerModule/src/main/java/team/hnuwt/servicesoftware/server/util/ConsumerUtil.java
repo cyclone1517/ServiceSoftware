@@ -46,6 +46,7 @@ public class ConsumerUtil implements Runnable {
             consumer.setInstanceName(props.getProperty("rocketmq.consumer.consumerName"));
             consumer.setVipChannelEnabled(false);
             consumer.subscribe(DOWNSTREAM, "*");
+            //consumer.subscribe("TEST", "*");
             consumer.registerMessageListener(new MessageListenerConcurrently()
             {
 
@@ -62,7 +63,7 @@ public class ConsumerUtil implements Runnable {
                         if (topic == TOPIC.DIRECT){
                             DistributeUtil.directDistribute(msgBody);   /* 透明转发 */
                         }
-                        else if (topic == TOPIC.DOWNSTREAM){
+                        else if (topic == TOPIC.DOWNSTREAM || topic == TOPIC.TEST /*允许测试*/ ){
                             try {
                                 DistributeUtil.plainDistribute(msgBody, tag);   /* 明文转发 + 命令下发(踢走集中器) */
                             } catch (Exception e) {

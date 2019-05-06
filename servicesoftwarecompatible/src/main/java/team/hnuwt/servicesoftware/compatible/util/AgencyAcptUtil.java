@@ -41,7 +41,7 @@ public class AgencyAcptUtil {
                 logger.info("CLOSED AN INVALID SOCKET @#@ id: " + id );
                 return true;
             }
-            logger.info("NO INVALID SOCKET YET @#@ id: " + id);
+//            logger.info("NO INVALID SOCKET YET @#@ id: " + id);
             return true;
         } catch (IOException e) {
             e.printStackTrace();

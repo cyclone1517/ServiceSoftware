@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Detail">
+
+    <insert id="loginBatch" parameterType="java.util.List" statementType="CALLABLE">
+        <foreach collection="list" item="item" separator=";">
+            CALL insertLoginDetail(#{item.collectorId}, #{item.time})
+        </foreach>
+    </insert>
+
+    <update id="logoutBatch">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update tb_Detail
+            <set>
+                logoutTime = #{item.time}
+            </set>
+            where id = (
+                select maxId from maxid
+                where collectorId = #{item.collectorId}
+            )
+        </foreach>
+    </update>
+
+</mapper>

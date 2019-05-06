@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.synchronizer.constant.TAG;
 import team.hnuwt.servicesoftware.synchronizer.model.HeartBeat;
 import team.hnuwt.servicesoftware.synchronizer.model.Login;
+import team.hnuwt.servicesoftware.synchronizer.service.DetailService;
 import team.hnuwt.servicesoftware.synchronizer.service.HeartBeatService;
 import team.hnuwt.servicesoftware.synchronizer.service.LoginService;
 import team.hnuwt.servicesoftware.synchronizer.util.DataProcessThreadUtil;
@@ -22,6 +23,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 一类两用，批量读取登录或批量读取登出
+ * 每次只执行其一，根据读取的TAG决定业务类型
+ */
 public class LoginHandler implements Runnable {
 
     private String DATA = "LOGIN";
@@ -58,9 +63,7 @@ public class LoginHandler implements Runnable {
             list.forEach(loginStateNode -> {
                 JsonNode root = HandlerHelper.getJsonNodeRoot(loginStateNode);
                 long cdId;
-                int cdPort;
                 JsonNode cdIdNode = root.get("addr");
-                JsonNode cdPortNode = root.get("port");
                 try {
                     if (cdIdNode != null) cdId = Long.parseLong(cdIdNode.asText());
                     else return;
@@ -68,21 +71,17 @@ public class LoginHandler implements Runnable {
                     logger.error("Id packed failed, @#@ id: " + cdIdNode.asText());
                     return;
                 }
-                try {
-                    if (cdPortNode != null) cdPort = Integer.parseInt(cdPortNode.asText());
-                    else cdPort = 0;
-                } catch (NumberFormatException e){
-                    logger.error("Port packed failed, @#@ port: " + cdPortNode.asText());
-                    return;
-                }
-                loginList.add(new Login(cdId, cdPort, state));
+                loginList.add(new Login(cdId, state));
                 loginIds.add(HandlerUtil.packAddrToHex(cdId));
             });
+
+            // 更新登录表
             DataProcessThreadUtil.getExecutor().execute(new LoginService(loginList, state==1));
 
-            // 推送到消息队列
-            String data = HandlerUtil.geneMsg(loginIds, state);
-            ProduceUtil.addQueue("UPSTREAM", TAG.COLC_STATE.getStr(), data);
+            // 更新登录详情表
+            DataProcessThreadUtil.getExecutor().execute(new DetailService(loginList, state==1));
+
+            // 推送到消息队列（现取消：登录和离线不再推送）
         }
 
     }

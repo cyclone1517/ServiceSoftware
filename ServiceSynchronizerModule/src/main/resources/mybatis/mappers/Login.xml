@@ -6,16 +6,27 @@
 <mapper namespace="Login">
 
     <insert id="add" parameterType="team.hnuwt.servicesoftware.synchronizer.model.Login">
-        replace into tb_Login(collectorId,port,state,time)
-        values(#{collectorId},#{port},#{state}, #{time})
+        replace into tb_Login(collectorId,state,time)
+        values(#{collectorId},#{state}, #{time})
     </insert>
 
     <insert id="addBatch">
-        replace into tb_Login(collectorId,port,state,time)
+        replace into tb_Login(collectorId,state,time)
         values
         <foreach collection="list" item="login" separator=",">
-            (#{login.collectorId},#{login.port},#{login.state}, #{login.time})
+            (#{login.collectorId},#{login.state}, #{login.time})
         </foreach>
     </insert>
+
+    <update id="resetOnline">
+        update tb_Login
+        <set>
+            state = ${1}
+        </set>
+        where collectorId in
+        <foreach collection="collection" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </update>
 
 </mapper>

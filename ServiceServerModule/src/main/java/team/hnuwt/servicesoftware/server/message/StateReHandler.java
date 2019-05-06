@@ -15,17 +15,17 @@ import team.hnuwt.servicesoftware.server.util.ProduceUtil;
 import java.nio.channels.SocketChannel;
 
 /**
- * 抄表回复处理类
+ * 操作成败回复处理类
  */
 public class StateReHandler implements Runnable{
 
-    private ByteBuilder meterData;
+    private ByteBuilder data;
     private TAG tag;
     private boolean success;
     private Logger logger = LoggerFactory.getLogger(StateReHandler.class);
 
-    public StateReHandler(ByteBuilder meterData, TAG tag, boolean success){
-        this.meterData = meterData;
+    public StateReHandler(ByteBuilder data, TAG tag, boolean success){
+        this.data = data;
         this.success = success;
         this.tag = tag;
     }
@@ -34,17 +34,12 @@ public class StateReHandler implements Runnable{
     public void run() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.createObjectNode();
-        String result = meterData.toString();
+        long addr = FieldPacker.getId(data);
 
-        String addr = result.substring(CONSTANT.ADD_START, CONSTANT.ADD_END);
-        String addrId = FieldPacker.toIntAddrId(addr);
+        root.put("termAddr", addr);       // 集中器编号
+        root.put("success", success);       // 操作结果
 
-
-        root.put("addr", addrId);       // 集中器编号
-        root.put("bustype", tag.getStr());  // 业务类型
-        root.put("success", success);   // 操作结果
-
-        ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), TAG.OPER_RE.getStr(), root.toString());
+        ProduceUtil.addQueue(TOPIC.UPSTREAM.getStr(), tag.getStr(), root.toString());
 
     }
 }

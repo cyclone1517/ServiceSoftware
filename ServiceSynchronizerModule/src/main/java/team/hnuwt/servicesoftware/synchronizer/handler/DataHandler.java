@@ -39,9 +39,7 @@ public class DataHandler implements Runnable {
         {
             DataProcessThreadUtil.getExecutor().execute(new DataService(list));
 
-            // 推送到消息队列
-            String pubData = JSON.toJSONString(list);
-            ProduceUtil.addQueue("UPSTREAM", TAG.AUTO_UPLOAD.getStr(), pubData);
+            // 推送到消息队列(现移交协议栈去做)
         }
     }
 }

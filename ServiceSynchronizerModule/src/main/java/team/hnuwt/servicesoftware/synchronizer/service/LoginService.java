@@ -16,6 +16,11 @@ public class LoginService implements Runnable {
     private List<Login> addrList;
     private boolean login;
 
+    /**
+     * 登录服务
+     * @param addrList 登录的集中器编号
+     * @param login 因为登录登出用同一个服务，为方便打印日志，true时为登录，false时为登出
+     */
     public LoginService(List<Login> addrList, boolean login)
     {
         this.addrList = addrList;

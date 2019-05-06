@@ -28,6 +28,8 @@ public class Collector implements Runnable{
     private int loop;
     private int interval;
     private int delay;
+    private boolean openLogger;
+    private int currId;
 
     /* 加载类变量的静态代码块 */
     static {
@@ -41,15 +43,6 @@ public class Collector implements Runnable{
         originPort = Integer.parseInt(prop.getProperty("server.port"));
     }
 
-    /**
-     * 基础集中器
-     * @param login
-     * @param hearbeat
-     * @param loop
-     */
-    public Collector(String login, String hearbeat, int loop, int interval){
-        this(login, hearbeat, loop, interval, 0);
-    }
 
     /**
      * 带不同延时的集中器
@@ -58,13 +51,15 @@ public class Collector implements Runnable{
      * @param loop
      * @param delay 延时参数
      */
-    public Collector(String login, String hearbeat, int loop, int interval, int delay){
+    public Collector(String login, String hearbeat, int loop, int interval, int delay, boolean openLogger, int currId){
         init();
         this.login = login;
         this.hearbeat = hearbeat;
         this.loop = loop;
         this.interval = interval;
         this.delay = delay;
+        this.openLogger = openLogger;
+        this.currId = currId;
     }
 
     private void init() {
@@ -101,7 +96,7 @@ public class Collector implements Runnable{
 
     private void sendMsg(String msg){
         try {
-            socketChannel.write(ByteBuffer.wrap(new ByteBuilder(msg).getBytes()));
+            socketChannel.write(ByteBuffer.wrap(new ByteBuilder(msg, currId).getBytes()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,13 +108,16 @@ public class Collector implements Runnable{
             if (!isLogin){
                 sendMsg(login);
                 isLogin = true;
-                logger.info("Login: " + login);
+                if (openLogger)logger.info("Login: " + login);
             } else {
                 sendMsg(hearbeat);
-                logger.info("HeartBeat: " + hearbeat);
+                if (openLogger)logger.info("HeartBeat: " + hearbeat);
+//
+//                sendMsg("685500550068880000EE03008C60100001070100010010080000861D16");
+//                if (openLogger)logger.info("AutoUpload: " + hearbeat);
             }
             try {
-                Thread.sleep(delay * 1000);
+                Thread.sleep(interval * 1000 + delay);
             } catch (InterruptedException e) {
                 logger.info("", e);
             }

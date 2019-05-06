@@ -16,33 +16,17 @@ public class DataDao {
 
     public void insert(Data data)
     {
-        DBUtil dbUtil = new DBUtil();
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = dbUtil.getSqlSession();
-            sqlSession.insert("Data.add", data);
-            sqlSession.commit();
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            if (sqlSession != null)
-                sqlSession.close();
-        }
+        SqlSession sqlSession = DBUtil.getSqlSession();
+        sqlSession.insert("Data.add", data);
+        sqlSession.commit();
+        sqlSession.close();
     }
 
     public void insertBatch(List<Data> datas)
     {
-        DBUtil dbUtil = new DBUtil();
-        SqlSession sqlSession = null;
-        try {
-            sqlSession = dbUtil.getSqlSession();
-            sqlSession.insert("Data.addBatch", datas);
-            sqlSession.commit();
-        } catch (IOException e) {
-            logger.error("", e);
-        } finally {
-            if (sqlSession != null)
-                sqlSession.close();
-        }
+        SqlSession sqlSession = DBUtil.getSqlSession();
+        sqlSession.insert("Data.addBatch", datas);
+        sqlSession.commit();
+        sqlSession.close();
     }
 }

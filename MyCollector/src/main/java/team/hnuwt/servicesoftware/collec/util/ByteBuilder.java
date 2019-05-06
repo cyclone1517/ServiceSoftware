@@ -1,5 +1,8 @@
 package team.hnuwt.servicesoftware.collec.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 
 /**
@@ -8,6 +11,8 @@ import java.util.Arrays;
 public class ByteBuilder {
     private byte[] value;
     private int count;
+
+    private static final Logger logger = LoggerFactory.getLogger(ByteBuilder.class);
 
     public ByteBuilder()
     {
@@ -28,15 +33,23 @@ public class ByteBuilder {
         value[count++] = b;
     }
 
-    public ByteBuilder(String s)
+    public ByteBuilder(String s){
+        this(s, 0);
+    }
+
+    public ByteBuilder(String s, int currId)
     {
         int len = s.length();
         value = new byte[len / 2 + 16];
         count = 0;
         for (int i = 0; i < len; i += 2)
         {
-            int x = Integer.parseInt(s.substring(i, i + 2), 16);
-            value[count++] = (byte) x;
+            try {
+                int x = Integer.parseInt(s.substring(i, i + 2), 16);
+                value[count++] = (byte) x;
+            } catch (StringIndexOutOfBoundsException e){
+                logger.error("currId: " + currId, e);
+            }
         }
     }
 

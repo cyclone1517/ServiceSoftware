@@ -21,6 +21,12 @@ public class ConcentratorUtil {
     private static ConcurrentHashMap<Long, SocketChannel> map = new ConcurrentHashMap<>();
     private static Logger logger = LoggerFactory.getLogger(ConcentratorUtil.class);
 
+    /**
+     * 1. 如果第一次登录（old == null）直接登录
+     * 2. 如果新来自不同的端口（包括同IP不同Port，或不同IP相同Port）
+     *      先切断旧连接，允许登录
+     * 3. 来自新同一地址，同一IP不允许重复登录
+     */
     public static void add(Long id, SocketChannel sc)
     {
         // 建立新连接前删去旧连接引用
@@ -38,26 +44,55 @@ public class ConcentratorUtil {
     }
 
     /**
-     * 检测不同IP的集中器是否配置了相同ID，暂不启用
+     * 获取正在登录的重复ID集中器
+     * @return 已经登录，被重复的老集中器套接字
      */
-    public static boolean containsDuplicate(Long id, SocketChannel sc){
+    public static SocketChannel getOriginDuplicateSocket(Long id, SocketChannel sc){
         SocketChannel old = map.get(id);
-        if (old == null || !old.isConnected()) return false;  /* 不存在该ID的连接 */
-        else {
-            try {
-                InetAddress newAddr = ((InetSocketAddress) sc.getRemoteAddress()).getAddress();
-                InetAddress oldAddr = ((InetSocketAddress) old.getRemoteAddress()).getAddress();
-                return newAddr != oldAddr;
-            } catch (IOException e) {
-                logger.error("CANNOT GET DUPLICATE JUDGEMENT", e);
-                return false;
-            }
+        if (old != null && old.isConnected() && sc.isConnected() && diffAddress(old, sc)){  /* 如果两个链接都在连接中，且来自不同IP */
+            return old;
         }
+        return null;
     }
 
+    /**
+     *
+     * 只要 RemoteAddress 不同，端口一定不同
+     * @param old 老连接
+     * @param req 新连接
+     * @return 当不同时返回 true
+     */
     private static boolean diffPort(SocketChannel old, SocketChannel req){
         try {
             return old.getRemoteAddress() != req.getRemoteAddress();
+        } catch (IOException e) {
+            logger.error("cannot get remote address", e);
+            return false;
+        }
+    }
+
+    private static boolean diffPortNo(SocketChannel old, SocketChannel req){
+        try{
+            int oldLink = ((InetSocketAddress)old.getRemoteAddress()).getPort();
+            int reqLink = ((InetSocketAddress)req.getRemoteAddress()).getPort();
+            return oldLink != reqLink;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean diffPortInSameIP(SocketChannel old, SocketChannel req){
+        return old.isConnected() && req.isConnected()
+                &&!diffAddress(old, req)       /* IP相同 */
+                && diffPortNo(old, req);    /* Port数字不同 */
+    }
+
+    private static boolean diffAddress(SocketChannel old, SocketChannel req){
+        try {
+            InetAddress oldLink = ((InetSocketAddress)old.getRemoteAddress()).getAddress();
+            InetAddress reqLink = ((InetSocketAddress)req.getRemoteAddress()).getAddress();
+            return !oldLink.equals(reqLink);
         } catch (IOException e) {
             logger.error("cannot get remote address",e);
             return false;
@@ -75,7 +110,7 @@ public class ConcentratorUtil {
         try {
             if (sk != null && sk.isConnected()) {
                 sk.close();
-                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + id  + "\n" + DebugUtil.getMapKeys(map));
+                logger.info("CLOSED AN INVALID SOCKET @#@ id: " + id/*  + "\n" + DebugUtil.getMapKeys(map)*/);
                 return true;
             }
             return true;

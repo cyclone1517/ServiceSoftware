@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import team.hnuwt.servicesoftware.server.constant.down.FUNTYPE;
 import team.hnuwt.servicesoftware.server.constant.down.TAG;
 import team.hnuwt.servicesoftware.server.message.CloseOfflineHandler;
 import team.hnuwt.servicesoftware.server.message.SendHandler;
@@ -39,18 +38,18 @@ public class DistributeUtil {
 
         /* 读表 */
         if (tag == TAG.READ_METER){
-            runTask(PkgPackUtil.geneReadMeterPkg(root, TAG.READ_METER.getStr()));
+            runTask(PkgPackUtil.geneReadMeterPkg(root, tag.getStr()));
         }
 
-        /* 开阀 */
-        else if (tag == TAG.CTRL_ON){
-            runTask(PkgPackUtil.geneCtrlOnOffPkg(root, TAG.CTRL_ON.getStr(), true));
+        /* 开关阀 */
+        else if (tag == TAG.CTRL_ONOFF){
+            runTask(PkgPackUtil.geneCtrlOnOffPkg(root, tag.getStr()));
         }
 
         /* 关阀 */
-        else if (tag == TAG.CTRL_OFF){
-            runTask(PkgPackUtil.geneCtrlOnOffPkg(root, TAG.CTRL_ON.getStr(), false));
-        }
+//        else if (tag == TAG.CTRL_OFF){
+//            runTask(PkgPackUtil.geneCtrlOnOffPkg(root, TAG.CTRL_ON.getStr(), false));
+//        }
 
         /* 清除离线集中器连接资源 */
         else if (tag == TAG.OFFLINE){
@@ -60,29 +59,30 @@ public class DistributeUtil {
 
         /* 上报开启 */
         else if (tag == TAG.UPLOAD_ON){
-            runTask(PkgPackUtil.geneUploadOnOffPkg(root, TAG.UPLOAD_ON.getStr(), true));
+            runTask(PkgPackUtil.geneUploadOnOffPkg(root, tag.getStr(), true));
         }
 
         /* 上报关闭 */
         else if (tag == TAG.UPLOAD_OFF){
-            runTask(PkgPackUtil.geneUploadOnOffPkg(root, TAG.UPLOAD_OFF.getStr(), false));
+            runTask(PkgPackUtil.geneUploadOnOffPkg(root, tag.getStr(), false));
         }
 
         /* 读取上报允许 */
         else if (tag == TAG.READ_UPLOAD){
-            runTask(PkgPackUtil.geneReadUploadPkg(root, TAG.READ_UPLOAD.getStr()));
+            runTask(PkgPackUtil.geneReadUploadPkg(root, tag.getStr()));
         }
 
         /* 下载档案 */
         else if (tag == TAG.ARCHIVE_DOWNLOAD){
-            String torun = PkgPackUtil.geneArchive(root, TAG.ARCHIVE_DOWNLOAD.getStr());
+            String torun = PkgPackUtil.geneArchive(root, tag.getStr());
+//            String torun = "68D100D10068703607EC030084740000010001000300180910810100330000100100000000000000030436353433323139383736353433323130D916";
             runTask(torun);
-            logger.info("SENDED ARCHIVE_DOWNLOAD");
+//            logger.info("SENDED ARCHIVE_DOWNLOAD");
         }
 
         /* 关闭档案 */
         else if (tag == TAG.ARCHIVE_CLOSE){
-            String torun = PkgPackUtil.geneCloseArchive(root, TAG.ARCHIVE_CLOSE.getStr());
+            String torun = PkgPackUtil.geneCloseArchive(root, tag.getStr());
             runTask(torun);
         }
 

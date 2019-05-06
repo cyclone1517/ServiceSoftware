@@ -73,13 +73,13 @@ public class SubReactor implements Runnable {
                     result.append(buffer.get());
                 num = sc.read(buffer);
             }
-            logger.info("read: " + result.toString());
+            logger.info("read: " + sc.toString().substring(31) + result.toString());
             TCPMessageHandler.handler(sc, result);
             if (num == -1)
             {
                 logger.info("CLOSE: " + sk.channel());
                 SocketAddress saddr = ((SocketChannel) sk.channel()).getRemoteAddress();
-                TCPMessageHandler.handleLogout(ConcentratorUtil.findLogout(saddr));
+                TCPMessageHandler.handleLogout(ConcentratorUtil.findLogout(saddr)); /* 正常关闭(远程通讯端申请关闭连接) */
                 sk.cancel();
                 if (sk.channel() != null)
                 {
@@ -93,7 +93,16 @@ public class SubReactor implements Runnable {
                 sk.interestOps(SelectionKey.OP_READ);
         } catch (IOException e) {
             logger.error("", e);
-            logger.info("Close: " + sk.channel());
+            logger.info("CLOSE: " + sk.channel());
+
+            try {   // 离线通知数据库
+                SocketAddress saddr = null;
+                saddr = ((SocketChannel) sk.channel()).getRemoteAddress();
+                TCPMessageHandler.handleLogout(ConcentratorUtil.findLogout(saddr)); /* 强迫关闭(直接断开连接) */
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
             sk.cancel();
             if (sk.channel() != null)
             {
