@@ -100,9 +100,10 @@ create PROCEDURE insertLoginDetail(IN currId int, IN newTime TIMESTAMP)
 begin
 	declare maxLoginId int;
 	declare maxIdOutState timestamp;
-	SELECT MAX(id) FROM (
-		SELECT id FROM tb_detail WHERE collectorId = currId
-	) tmpDetail INTO maxLoginId;
+
+	SELECT maxId FROM maxid
+  WHERE collectorId = currId
+  INTO maxLoginId;
 
 	SELECT logoutTime FROM tb_detail
 	WHERE id = maxLoginId
