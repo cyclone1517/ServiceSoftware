@@ -248,7 +248,7 @@ public class TCPMessageHandler {
                         }
 
                         /* 下载档案操作反馈：走中间服务单线 */
-                        else if (result.getByte(12) == (byte) 0x84) {
+                        else if (result.getByte(12) == (byte) 0x00 || result.getByte(12) == (byte) 0x84) {   /* 未按功能码回复 */
                             if (result.BINToLong(14, 18) == FUNID.ARCHIVE_DOWNLOAD_SUCCESS) {
                                 logger.info("ARCHIVE_DOWNLOAD SUCCESS: " + result.toString());
                                 DataProcessThreadUtil.getExecutor().execute(new StateReHandler(result, TAG.ARCHIVE_DOWNLOAD, true));
