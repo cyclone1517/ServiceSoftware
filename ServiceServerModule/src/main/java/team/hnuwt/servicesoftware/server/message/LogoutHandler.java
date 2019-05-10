@@ -1,11 +1,14 @@
 package team.hnuwt.servicesoftware.server.message;
 
+import com.alibaba.rocketmq.shade.com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.server.model.Logout;
 import team.hnuwt.servicesoftware.server.util.RedisUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,20 +22,19 @@ public class LogoutHandler implements Runnable {
 
     private static Logger logger = LoggerFactory.getLogger(LogoutHandler.class);
 
-    public LogoutHandler(List<Logout> logoutAddr) {
+    public LogoutHandler(List<Logout> logoutAddr) { /* 元素含有端口 */
         this.logoutAddr = logoutAddr;
     }
 
     @Override
-    public void run()
-    {
+    public void run(){
+        List<String> logoutList = new ArrayList<>();    /* 元素不含端口 */
         for (Logout i: logoutAddr) {
-            ObjectNode node = mapper.createObjectNode();
-            node.put("addr", i.getId());
-            node.put("port", 0);
-            RedisUtil.pushQueue("LOGOUT", node.toString());
-            logger.info("SEND LOGOUT TO REDIS DIRECTLT @#@ id: " + i.getId() + " @#@ port: " + i.getPort());
+            logoutList.add(i.getId()+"");
         }
+        String toSend = JSON.toJSONString(logoutList);
+        RedisUtil.pushQueue("LOGOUT", toSend);
+        logger.info("SEND LOGOUT TO REDIS DIRECTLT @#@" + toSend);
         RedisUtil.publishData("LOGOUT");
     }
 }
