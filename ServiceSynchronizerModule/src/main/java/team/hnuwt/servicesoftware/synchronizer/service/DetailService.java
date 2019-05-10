@@ -3,7 +3,6 @@ package team.hnuwt.servicesoftware.synchronizer.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.hnuwt.servicesoftware.synchronizer.dao.DetailDao;
-import team.hnuwt.servicesoftware.synchronizer.dao.LoginDao;
 import team.hnuwt.servicesoftware.synchronizer.model.Login;
 
 import java.util.List;
@@ -39,11 +38,13 @@ public class DetailService implements Runnable {
         // 如果登录，添加新详情
         if (login) {
             new DetailDao().insertBatch(addrList);
+            logger.info("add " + addrList.size() + " DETAILED LOGIN");
         }
 
         // 如果离线或登出，为该集中器最大id号的数据添加
         else {
             new DetailDao().fillLogout(addrList);
+            logger.info("add " + addrList.size() + " DETAILED LOGOUT");
         }
     }
 
