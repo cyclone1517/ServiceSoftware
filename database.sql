@@ -54,17 +54,6 @@ CREATE TABLE `tb_duplicate`  (
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for tb_login
--- ----------------------------
-DROP TABLE IF EXISTS `tb_login`;
-CREATE TABLE `tb_login`  (
-  `collectorId` int(11) NOT NULL,
-  `state` tinyint(4) NOT NULL,
-  `time` timestamp(0) NOT NULL,
-  PRIMARY KEY (`collectorId`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
 -- View structure for maxid
 -- ----------------------------
 DROP VIEW IF EXISTS `maxid`;
