@@ -10,6 +10,7 @@ import redis.clients.jedis.Pipeline;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Redis操作工具类
@@ -118,5 +119,45 @@ public class RedisUtil {
         Jedis jedis = getJedis();
         jedis.publish(topic, dataType);
         returnJedis(jedis);
+    }
+
+    /**
+     * Map相关，用于存心跳时间
+     * @param key
+     * @param data
+     */
+    public static void putHash(String key, String field, String data){
+        Jedis jedis = getJedis();
+        jedis.hset(key, field, data);
+        returnJedis(jedis);
+    }
+
+    public static String getHash(String key, String field){
+        String result;
+
+        Jedis jedis = getJedis();
+        result = jedis.hget(key, field);
+        returnJedis(jedis);
+
+        return result;
+    }
+
+    /**
+     * Set相关
+     */
+    public static void putSet(String key, String data){
+        Jedis jedis = getJedis();
+        jedis.sadd(key, data);
+        returnJedis(jedis);
+    }
+
+    public static Set<String> getSet(String key){
+        Set<String> result;
+
+        Jedis jedis = getJedis();
+        result = jedis.smembers(key);
+        returnJedis(jedis);
+
+        return result;
     }
 }
