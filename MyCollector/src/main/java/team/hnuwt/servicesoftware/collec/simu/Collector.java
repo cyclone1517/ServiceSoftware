@@ -112,9 +112,9 @@ public class Collector implements Runnable{
             } else {
                 sendMsg(hearbeat);
                 if (openLogger)logger.info("HeartBeat: " + hearbeat);
-//
-//                sendMsg("685500550068880000EE03008C60100001070100010010080000861D16");
-//                if (openLogger)logger.info("AutoUpload: " + hearbeat);
+
+                sendMsg("685500550068880000EE03008C60100001070100010010080000861D16");
+                if (openLogger)logger.info("AutoUpload: " + hearbeat);
             }
             try {
                 Thread.sleep(interval * 1000 + delay);
