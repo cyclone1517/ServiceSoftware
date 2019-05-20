@@ -111,3 +111,26 @@ begin
 	END IF;
 end $$
 delimiter ;
+
+-- ---------------------------------
+-- 存储过程：插入登出详情
+-- 调用示例
+-- call insertLogoutDetail(4006, "2019-04-16 23:55:03");
+-- ---------------------------------
+delimiter ;
+drop procedure if exists insertLogoutDetail;
+delimiter $$
+create PROCEDURE insertLogoutDetail(IN currId int, IN newTime TIMESTAMP)
+begin
+	declare maxLogoutId int;
+
+	select maxId from maxid
+  where collectorId = currId
+  INTO maxLogoutId;
+
+	UPDATE tb_Detail
+  SET logoutTime = newTime
+  WHERE id = maxLogoutId;
+
+end $$
+delimiter ;

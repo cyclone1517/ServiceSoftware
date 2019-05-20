@@ -11,16 +11,9 @@
         </foreach>
     </insert>
 
-    <update id="logoutBatch">
-        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
-            update tb_Detail
-            <set>
-                logoutTime = #{item.time}
-            </set>
-            where id = (
-                select maxId from maxid
-                where collectorId = #{item.collectorId}
-            )
+    <update id="logoutBatch" parameterType="java.util.List" statementType="CALLABLE">
+        <foreach collection="list" item="item" separator=";">
+            CALL insertLogoutDetail(#{item.collectorId}, #{item.time})
         </foreach>
     </update>
 
