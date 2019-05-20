@@ -33,8 +33,8 @@ public class LogoutHandler implements Runnable {
             logoutList.add(i.getId()+"");
         }
         String toSend = JSON.toJSONString(logoutList);
-        RedisUtil.pushQueue("LOGOUT", toSend);
+        RedisUtil.pushQueue("OFFLINE_RE", toSend);
         logger.info("SEND LOGOUT TO REDIS DIRECTLT @#@" + toSend);
-        RedisUtil.publishData("LOGOUT");
+        RedisUtil.publishData("OFFLINE_RE");
     }
 }

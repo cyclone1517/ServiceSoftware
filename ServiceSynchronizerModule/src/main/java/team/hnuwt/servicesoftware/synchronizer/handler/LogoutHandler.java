@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class LogoutHandler implements Runnable {
 
-    private String DATA = "LOGOUT";
+    private String DATA = "OFFLINE_RE";
     private int batchNum;
     private int state;      // 1-登录 0-掉线 2-登出
     private static ObjectMapper mapper = new ObjectMapper();

@@ -13,7 +13,7 @@ import java.util.Scanner;
  */
 public class ProduceTest {
 
-    @Test
+    @Deprecated
     public void choseOrder(){
         Scanner s = new Scanner(System.in);
         boolean out = false;
