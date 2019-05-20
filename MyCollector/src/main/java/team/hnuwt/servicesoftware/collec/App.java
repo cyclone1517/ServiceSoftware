@@ -56,7 +56,9 @@ public class App {
             String heartCs = calcuCs(heartPrev);
             String heart = heartPrev + heartCs + tail;
 
-            Collector collector = new Collector(login, heart, loop, interval, random.nextInt(delayVary), openLogger, baseAddr + i);
+            boolean offTest = false;
+            if (i > num / 2) offTest = true;
+            Collector collector = new Collector(login, heart, loop, interval, random.nextInt(delayVary), openLogger, baseAddr + i, offTest);
             new Thread(collector).start();
         }
     }
