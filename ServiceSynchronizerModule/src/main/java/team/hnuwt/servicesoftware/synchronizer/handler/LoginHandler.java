@@ -61,7 +61,7 @@ public class LoginHandler implements Runnable {
             // 在协议栈把登录状态存入过Redis，这里无需重复存
 
             // 更新Mysql登录详情表
-            DataProcessThreadUtil.getExecutor().execute(new DetailService(loginList, state==1));
+            //DataProcessThreadUtil.getExecutor().execute(new DetailService(loginList, state==1));
         }
 
     }

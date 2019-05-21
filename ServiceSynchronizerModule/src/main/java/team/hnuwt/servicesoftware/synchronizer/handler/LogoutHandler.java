@@ -65,7 +65,7 @@ public class LogoutHandler implements Runnable {
             DataProcessThreadUtil.getExecutor().execute(new RedisLogoutService(logoutIds));
 
             // 更新登录详情表
-            DataProcessThreadUtil.getExecutor().execute(new DetailService(logoutList, state==1));
+            //DataProcessThreadUtil.getExecutor().execute(new DetailService(logoutList, state==1));
         }
 
     }
