@@ -30,6 +30,7 @@ public class Collector implements Runnable{
     private int delay;
     private boolean openLogger;
     private int currId;
+    private boolean offTest = false;
 
     /* 加载类变量的静态代码块 */
     static {
@@ -51,7 +52,7 @@ public class Collector implements Runnable{
      * @param loop
      * @param delay 延时参数
      */
-    public Collector(String login, String hearbeat, int loop, int interval, int delay, boolean openLogger, int currId){
+    public Collector(String login, String hearbeat, int loop, int interval, int delay, boolean openLogger, int currId, boolean offTest){
         init();
         this.login = login;
         this.hearbeat = hearbeat;
@@ -60,6 +61,7 @@ public class Collector implements Runnable{
         this.delay = delay;
         this.openLogger = openLogger;
         this.currId = currId;
+        this.offTest = offTest;
     }
 
     private void init() {
@@ -110,11 +112,13 @@ public class Collector implements Runnable{
                 isLogin = true;
                 if (openLogger)logger.info("Login: " + login);
             } else {
-                sendMsg(hearbeat);
-                if (openLogger)logger.info("HeartBeat: " + hearbeat);
-//
-//                sendMsg("685500550068880000EE03008C60100001070100010010080000861D16");
-//                if (openLogger)logger.info("AutoUpload: " + hearbeat);
+                if (!offTest) {
+                    sendMsg(hearbeat);
+                    if (openLogger) logger.info("HeartBeat: " + hearbeat);
+
+//                    sendMsg("685500550068880000EE03008C60100001070100010010080000861D16");
+//                    if (openLogger)logger.info("AutoUpload: " + hearbeat);
+                }
             }
             try {
                 Thread.sleep(interval * 1000 + delay);

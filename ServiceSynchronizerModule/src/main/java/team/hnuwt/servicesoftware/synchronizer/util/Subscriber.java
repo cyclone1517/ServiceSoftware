@@ -40,14 +40,14 @@ public class Subscriber extends JedisPubSub {
         else if (msg == MESSAGE.HEARTBEAT) {
             DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(batchNum));
         }
-        else if (msg == MESSAGE.LOGIN) {
+        else if (msg == MESSAGE.LOGIN_PIPE) {   /* 和Redis存的Login Set 做出区别，叫做LOGIN_PIPE */
             DataProcessThreadUtil.getExecutor().execute(new LoginHandler(batchNum, 1));  // state: 1-登录 0-掉线 2-登出
         }
-        else if (msg == MESSAGE.LOGOUT){
-            DataProcessThreadUtil.getExecutor().execute(new LoginHandler(batchNum, 2));
-        }
-        else if (msg == MESSAGE.OFFLINE_RE) {
-            DataProcessThreadUtil.getExecutor().execute(new OfflineReHandler(batchNum));
+//        else if (msg == MESSAGE.LOGOUT){
+//            DataProcessThreadUtil.getExecutor().execute(new LogoutHandler(batchNum, 2));
+//        }
+        else if (msg == MESSAGE.OFFLINE_RE || msg == MESSAGE.LOGOUT) {
+            DataProcessThreadUtil.getExecutor().execute(new LogoutHandler(batchNum, 2));
         }
         else if (msg == MESSAGE.DUPLICATE) {
             DataProcessThreadUtil.getExecutor().execute(new DuplicateHandler(batchNum));

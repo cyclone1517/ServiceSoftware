@@ -54,17 +54,6 @@ CREATE TABLE `tb_duplicate`  (
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for tb_login
--- ----------------------------
-DROP TABLE IF EXISTS `tb_login`;
-CREATE TABLE `tb_login`  (
-  `collectorId` int(11) NOT NULL,
-  `state` tinyint(4) NOT NULL,
-  `time` timestamp(0) NOT NULL,
-  PRIMARY KEY (`collectorId`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
 -- View structure for maxid
 -- ----------------------------
 DROP VIEW IF EXISTS `maxid`;
@@ -120,5 +109,28 @@ begin
 			INSERT INTO tb_detail(collectorId, loginTime) VALUES (currId, newTime);
 		END IF;
 	END IF;
+end $$
+delimiter ;
+
+-- ---------------------------------
+-- 存储过程：插入登出详情
+-- 调用示例
+-- call insertLogoutDetail(4006, "2019-04-16 23:55:03");
+-- ---------------------------------
+delimiter ;
+drop procedure if exists insertLogoutDetail;
+delimiter $$
+create PROCEDURE insertLogoutDetail(IN currId int, IN newTime TIMESTAMP)
+begin
+	declare maxLogoutId int;
+
+	select maxId from maxid
+  where collectorId = currId
+  INTO maxLogoutId;
+
+	UPDATE tb_Detail
+  SET logoutTime = newTime
+  WHERE id = maxLogoutId;
+
 end $$
 delimiter ;

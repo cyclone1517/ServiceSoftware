@@ -26,7 +26,7 @@ public class DataService implements Runnable {
     public void run()
     {
         new DataDao().insertBatch(list);
-        logger.info("the number of data : " + list.size());
+        logger.info("UPLOADED " + list.size() + " data");
     }
 
 }

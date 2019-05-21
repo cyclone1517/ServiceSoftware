@@ -3,6 +3,7 @@ package team.hnuwt.servicesoftware.synchronizer.util;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,6 +102,68 @@ public class RedisUtil {
         }
         returnJedis(jedis);
         return data;
+    }
+
+    /**
+     * Map相关，用于存心跳时间
+     * @param key
+     * @param data
+     */
+    public static void putHash(String key, String field, String data){
+        Jedis jedis = getJedis();
+        jedis.hset(key, field, data);
+        returnJedis(jedis);
+    }
+
+    public static String getHash(String key, String field){
+        String result;
+
+        Jedis jedis = getJedis();
+        result = jedis.hget(key, field);
+        returnJedis(jedis);
+
+        return result;
+    }
+
+    /**
+     * Set相关
+     */
+    public static void putSet(String key, String data){
+        Jedis jedis = getJedis();
+        jedis.sadd(key, data);
+        returnJedis(jedis);
+    }
+
+    public static void putSetBulk(String key, List<String> data){
+        Jedis jedis = getJedis();
+        for (String toPut: data) {
+            jedis.sadd(key, toPut);
+        }
+        returnJedis(jedis);
+    }
+
+    public static void removeSet(String key, String data){
+        Jedis jedis = getJedis();
+        jedis.srem(key, data);
+        returnJedis(jedis);
+    }
+
+    public static void removeSetBulk(String key, List<String> data){
+        Jedis jedis = getJedis();
+        for (String toRmv: data) {
+            jedis.srem(key, toRmv);
+        }
+        returnJedis(jedis);
+    }
+
+    public static Set<String> getSet(String key){
+        Set<String> result;
+
+        Jedis jedis = getJedis();
+        result = jedis.smembers(key);
+        returnJedis(jedis);
+
+        return result;
     }
 
     /**

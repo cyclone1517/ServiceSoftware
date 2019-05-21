@@ -58,6 +58,7 @@ public enum TAG {
 	 */
 	HEARTBEAT("HEARTBEAT"),						/* 心跳 */
 	LOGIN("LOGIN"),								/* 登录 */
+	LOGIN_PIPE("LOGIN_PIPE"),					/* 登录管道，将登录设备传递到mysql存储登录详情 */
 	TIME_UPLOAD_STATE("TIME_UPLOAD_STATE"),		/* 上报定时开关阀门后阀门状态 */
 	AUTO_UPLOAD("AUTO_UPLOAD"),					/* 定时自动上传 */
 
@@ -108,6 +109,7 @@ public enum TAG {
 		tags.put("READ_UPLOAD", READ_UPLOAD);
 		tags.put("ARCHIVE_DOWNLOAD", ARCHIVE_DOWNLOAD);
 		tags.put("ARCHIVE_CLOSE", ARCHIVE_CLOSE);
+		tags.put("LOGIN_PIPE", LOGIN_PIPE);
 	}
 
 	@Override

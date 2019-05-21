@@ -22,21 +22,19 @@ public class NewProtocolTest {
 
     @Test
     public void test() {
-        Long id = new Long("30081548684");
-        //Long id = new Long("67112962");
+        String pkg = "685500550068880000EC03008C60100001070100080000000015FF9816";
+        Long id = new Long("30081552524");
 
         String fieldName[] = PkgExpUtil.getFiledName(id);
         Integer length[] = PkgExpUtil.getFiledLen(id);
         EncodeFormat encodeFormat[] = PkgExpUtil.getFiledCode(id);
-        ListInformation listInformation[] = new ListInformation[] {
-                new ListInformation(9, 13, "Meter", "meter") };
-        String pkg = "6881008100688803130100008C60010001070300010000629900D1D002000000000000D1D00300000901D1D0F616";
-        //String pkg = "683500350068C90313010000027010000400221616";
+        ListInformation listInformation[] = PkgExpUtil.getReptedListInfo(id);
+
         ProtocolUtil pu = new ProtocolUtil(fieldName, length, encodeFormat, listInformation);
         Packet p = PkgExpUtil.getPacketModel(id);
         if (null != p){
             pu.translate(new ByteBuilder(pkg), p, PkgExpUtil.isBulk(id));
-            DataUtil.putDataToRedis(p);
+            System.out.println("finished");
         } else {
             logger.info("Such kind of packet is not supported: " + pkg);
         }

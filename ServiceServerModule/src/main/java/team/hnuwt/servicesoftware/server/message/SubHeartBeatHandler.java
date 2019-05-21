@@ -22,9 +22,10 @@ public class SubHeartBeatHandler implements Runnable {
         HeartData data = new HeartData();
         data.setAddr(id);
 
-        String temp = JSON.toJSONString(data);
-        RedisUtil.pushQueue(TAG.HEARTBEAT.getStr(), temp);
-        RedisUtil.publishData(TAG.HEARTBEAT.getStr());
+        long currTime = System.currentTimeMillis();
+        //String temp = JSON.toJSONString(data);
+        RedisUtil.putHash(TAG.HEARTBEAT.getStr(), id+"", currTime+"");
+        RedisUtil.putSet(TAG.LOGIN.getStr(), id+"");  /* 有心跳也看作登录 */
         logger.info("SEND supplementary HEARTBEAT from:" + id);
     }
 }

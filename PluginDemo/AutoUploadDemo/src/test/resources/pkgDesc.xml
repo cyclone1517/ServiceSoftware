@@ -1,4 +1,3 @@
-<!--in the field encode, '0' means using BINARY code, '1' means using BCD code-->
 <PackageInfos>
     <headProp>
         <prop>
@@ -17,8 +16,9 @@
     </headProp>
     <userProp>
         <prop>
-            <id>30081548684</id>
+            <id>30081552524</id>
             <function>AutoUpload</function>
+            <isBulk>true</isBulk>
             <fieldNames>
                 <fn>number</fn>
                 <fn>id</fn>
@@ -27,29 +27,58 @@
                 <fn>cs</fn>
                 <fn>endChar</fn>
             </fieldNames>
-            <fldlen>224211</fldlen>
+            <fldlen>224111</fldlen>
             <encode>001000</encode>
-            <RptField>
-                <rpf>
-                    <start>9</start>
-                    <end>13</end>
-                    <className>Meter</className>
-                    <classFld>meter</classFld>
-                </rpf>
-            </RptField>
+            <rptfld>
+                <start>9</start>
+                <end>13</end>
+                <className>Meter</className>
+                <classFld>meter</classFld>
+            </rptfld>
+        </prop>
+        <prop>
+            <id>30081548428</id>
+            <function>ReadMeter</function>
             <isBulk>true</isBulk>
+            <fieldNames>
+                <fn>number</fn>
+                <fn>id</fn>
+                <fn>data</fn>
+                <fn>cs</fn>
+                <fn>endChar</fn>
+            </fieldNames>
+            <fldlen>22411</fldlen>
+            <encode>00100</encode>
+            <rptfld>
+                <start>9</start>
+                <end>12</end>
+                <className>Meter</className>
+                <classFld>meter</classFld>
+            </rptfld>
         </prop>
         <prop>
             <id>67112962</id>
             <function>HeartBeat</function>
+            <isBulk>false</isBulk>
             <fieldNames>
-                <fn>sigBCD</fn>
+                <fn>signal</fn>
                 <fn>cs</fn>
                 <fn>endChar</fn>
             </fieldNames>
             <fldlen>111</fldlen>
             <encode>100</encode>
+        </prop>
+        <prop>
+            <id>16781314</id>
+            <function>Login</function>
             <isBulk>false</isBulk>
+            <fieldNames>
+                <fn>signal</fn>
+                <fn>cs</fn>
+                <fn>endChar</fn>
+            </fieldNames>
+            <fldlen>111</fldlen>
+            <encode>100</encode>
         </prop>
     </userProp>
 </PackageInfos>
