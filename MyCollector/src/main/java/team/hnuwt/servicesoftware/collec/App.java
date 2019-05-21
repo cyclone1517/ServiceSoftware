@@ -34,6 +34,8 @@ public class App {
         int delayVary = Integer.parseInt(prop.getProperty("simu.delay.vary"));
         int baseAddr = Integer.parseInt(prop.getProperty("simu.start.id"));
         boolean openLogger = Boolean.valueOf(prop.getProperty("logger.open"));
+        boolean startDelay = Boolean.valueOf(prop.getProperty("device.start.delay"));
+        int startDelayTime = Integer.parseInt(prop.getProperty("device.start.delay.time"));
         Random random = new Random();
 
         System.out.println("Parameters-------\nnum: " + num + "\nloop:" + loop + "\ninterval:" + interval +
@@ -60,6 +62,15 @@ public class App {
             if (i > num / 2) offTest = true;
             Collector collector = new Collector(login, heart, loop, interval, random.nextInt(delayVary), openLogger, baseAddr + i, offTest);
             new Thread(collector).start();
+
+            if (startDelay) {
+                try {
+                    Thread.sleep(startDelayTime);
+                    System.out.println(baseAddr + i + " has been started");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
