@@ -2,9 +2,11 @@ package team.hnuwt.servicesoftware.server.message;
 
 import java.io.IOException;
 import java.net.SocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,7 @@ public class TCPMessageHandler {
     private static Map<SocketAddress, Remainder> map = new ConcurrentHashMap<>();
 
     private static boolean compatible = false;
+    private static boolean agency = true;
 
     private static FortendAgency fortendAgency;
 
@@ -105,6 +108,29 @@ public class TCPMessageHandler {
         int len = pkg.length();
         for (int i = 0; i < len; i++)
         {
+            /*
+             * 添加代理连接
+             * 后加的代理判断逻辑没法加半包处理，否则会导致逻辑混乱，所以一次处理15个字节，但是要做粘包
+             */
+            if (AgencyUtil.isAgencyRequest(pkg)){
+
+                long id = AgencyUtil.getId(pkg);
+                AgencyUtil.add(id, sc);
+
+                /* 回复报文 */
+                DataProcessThreadUtil.getExecutor().execute(new AgencyLoginHandler(sc, id));
+
+
+                /* 解析完初始化参数 */
+                i += 15;
+                result = new ByteBuilder();
+                state = 0;
+                continue;
+            }
+
+            /*
+             * 原先的通讯协议报文处理
+             */
             byte c = pkg.getByte(i);
             if (state == 0)
             {
@@ -164,7 +190,10 @@ public class TCPMessageHandler {
                         fake = true;   /* 本地需要做心跳和登录处理，忽略其他业务，并且不做透明转发 */
                     }
 
-                    if (compatible){    /* 兼容老系统 */
+                    /*
+                     * 兼容老系统
+                     */
+                    if (compatible){
 
                         // 如果上行，往兼容模块发
                         if (CompatibleUtil.isUpstream(result.getByte(6))) {
@@ -179,6 +208,29 @@ public class TCPMessageHandler {
                             }
                         }
 
+                        // 如果下行，往集中器发
+                        else {
+                            DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), false));
+
+                            result = new ByteBuilder();
+                            state = 0;
+                            continue;       /* 本地不必解析下行报文，但是可能粘包，则继续处理 */
+                        }
+                    }
+
+                    /*
+                     * 兼容代理
+                     */
+                    if (agency){
+                        // 如果上行，往代理发
+                        if (CompatibleUtil.isUpstream(result.getByte(6))) {
+                            Set<SocketChannel> agencies = AgencyUtil.getAgency(id);
+                            if (agencies != null){
+                                for (SocketChannel agency: agencies){
+                                    DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), true, agency));
+                                }
+                            }
+                        }
 
                         // 如果下行，往集中器发
                         else {
@@ -281,5 +333,4 @@ public class TCPMessageHandler {
 
         return new Remainder(result, state);
     }
-
 }

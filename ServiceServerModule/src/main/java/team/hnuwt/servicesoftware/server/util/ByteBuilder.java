@@ -173,7 +173,7 @@ public class ByteBuilder {
     /*
      * 为了兼容测试软件，需要忽略区号
      */
-    public ByteBuilder ignoreDistCode() {
+/*    public ByteBuilder ignoreDistCode() {
 
         if (length() < 2) return this;
 
@@ -191,7 +191,7 @@ public class ByteBuilder {
         }
         value[length() - 2] = sum;
         return this;
-    }
+    }*/
 
         @Override
     public String toString()

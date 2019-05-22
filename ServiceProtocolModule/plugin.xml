@@ -2,7 +2,7 @@
 <plugins>
     <plugin>
         <id>30081548684</id>
-        <jar>D:/CylWorkFile/WorkSpace/IDEA/ServiceSoftwareSyncOpt/PluginDemo/AutoUploadDemo/target/servicesoftware-auto-upload-demo-1.0.0.jar</jar>
+        <jar>D:/CylWorkFile/WorkSpace/IDEA/ServiceSoftwareAgency/PluginDemo/AutoUploadDemo/target/servicesoftware-auto-upload-demo-1.0.0.jar</jar>
         <class>team.hnuwt.servicesoftware.prtcplugin.service.PluginServiceImpl</class>
     </plugin>
 </plugins>

@@ -78,6 +78,11 @@ public class FieldPacker {
         }
     }
 
+    /**
+     * 计算校验和（为组装下发报文用）
+     * @param sb
+     * @return
+     */
     public static String calcuCs(StringBuilder sb){
         String csStr = sb.toString().substring(12);
 
@@ -88,6 +93,22 @@ public class FieldPacker {
         }
 
         return getNBitHexNumNoRvs(sum % 256, 2);
+    }
+
+    /**
+     * 计算校验和（为检测收到的消息用）
+     * @param pkg
+     * @return
+     */
+    public static boolean isCorrectAgencyCs(ByteBuilder pkg){
+        byte sum = 0;
+        int len = pkg.length();
+        for (int i = 0; i < 13; i++)
+        {
+            byte b = pkg.getByte(i);
+            sum += b;
+        }
+        return sum == pkg.getByte(13);
     }
 
     public static List<String> getMeterIds(JsonNode ids){
@@ -209,5 +230,25 @@ public class FieldPacker {
 
     public static long getId(ByteBuilder message){
         return message.BINToLong(startId, end);
+    }
+
+    /**
+     * 把16进制字符串转换成字节数组
+     * @return byte[]
+     */
+    public static byte[] hexStringToByte(String hex) {
+        int len = (hex.length() / 2);
+        byte[] result = new byte[len];
+        char[] achar = hex.toCharArray();
+        for (int i = 0; i < len; i++) {
+            int pos = i * 2;
+            result[i] = (byte) (toByte(achar[pos]) << 4 | toByte(achar[pos + 1]));
+        }
+        return result;
+    }
+
+    private static int toByte(char c) {
+        byte b = (byte) "0123456789ABCDEF".indexOf(c);
+        return b;
     }
 }
