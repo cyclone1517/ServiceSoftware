@@ -106,7 +106,9 @@ public class PluginUtil {
             Class<?> clazz = urlClassLoader.loadClass(className);
             instance = (PluginService) clazz.newInstance();
         } catch (ClassNotFoundException e) {
-            logger.error("", e);
+            logger.error("未找到类，可能原因有:\n" +
+                    "1.application.properties或plugin.xml路径未修改\n" +
+                    "2.被引用的插件模块PluginDemo/AutoUploadDemo还未用maven编译", e);
         } catch (InstantiationException e) {
             logger.error("", e);
         } catch (IllegalAccessException e) {
