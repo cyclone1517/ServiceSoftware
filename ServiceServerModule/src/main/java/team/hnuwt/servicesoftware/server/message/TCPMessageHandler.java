@@ -115,8 +115,9 @@ public class TCPMessageHandler {
             if (AgencyUtil.isAgencyRequest(pkg)){
 
                 long id = AgencyUtil.getId(pkg);
-                AgencyUtil.add(id, sc);
 
+                logger.info("Agency: " + sc + result.toString() + " @#@id: " + id);
+                AgencyUtil.add(id, sc);
                 /* 回复报文 */
                 DataProcessThreadUtil.getExecutor().execute(new AgencyLoginHandler(sc, id));
 
@@ -220,12 +221,16 @@ public class TCPMessageHandler {
 
                     /*
                      * 兼容代理
+                     *
+                     * 20190612  by lizhimin  屏蔽心跳报文
                      */
                     if (agency){
                         // 如果上行，往代理发
                         if (CompatibleUtil.isUpstream(result.getByte(6))) {
                             Set<SocketChannel> agencies = AgencyUtil.getAgency(id);
-                            if (agencies != null){
+                            //过滤心跳包
+                            if ( (agencies != null)  &&  (result.getByte(12) != (byte) 0x02 && result.BINToLong(14, 18) != FUNID.HEARTBEAR ) ) {
+
                                 for (SocketChannel agency: agencies){
                                     DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), true, agency));
                                 }
@@ -235,7 +240,6 @@ public class TCPMessageHandler {
                         // 如果下行，往集中器发
                         else {
                             DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), false));
-
                             result = new ByteBuilder();
                             state = 0;
                             continue;       /* 本地不必解析下行报文，但是可能粘包，则继续处理 */
@@ -243,14 +247,14 @@ public class TCPMessageHandler {
                     }
 
                     /* 心跳：走协议栈单线 */
-                    if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR)   /* 获取功能码和数字单元标识 */
+                    if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.HEARTBEAR )   /* 获取功能码和数字单元标识 */
                     {
                         logger.info(((fake)?"FAKE ":"") + "HEARTBEAT: " + result.toString() + " @#@id: " + id);
                         DataProcessThreadUtil.getExecutor().execute(new HeartBeatHandler(sc, result));
                     }
 
                     /* 登录：走协议栈单线 */
-                    else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN)
+                    else if (result.getByte(12) == (byte) 0x02 && result.BINToLong(14, 18) == FUNID.LOGIN  )
                     {
                         if (fake){
                             logger.info("FAKE LOGIN: " + sc + result.toString() + " @#@id: " + id);
