@@ -112,14 +112,17 @@ public class TCPMessageHandler {
              * 添加代理连接
              * 后加的代理判断逻辑没法加半包处理，否则会导致逻辑混乱，所以一次处理15个字节，但是要做粘包
              */
-            if (AgencyUtil.isAgencyRequest(pkg)){
+            if (AgencyUtil.isAgencyRequest(pkg) ){
 
                 long id = AgencyUtil.getId(pkg);
 
                 logger.info("Agency: " + sc + result.toString() + " @#@id: " + id);
                 AgencyUtil.add(id, sc);
-                /* 回复报文 */
-                DataProcessThreadUtil.getExecutor().execute(new AgencyLoginHandler(sc, id));
+                //TODO
+               //如果集中在线才能注册成功
+              // if  (ConcentratorUtil.get(id)!=null && ConcentratorUtil.get(id).isConnected() )
+                   /* 回复报文 */
+                   DataProcessThreadUtil.getExecutor().execute(new AgencyLoginHandler(sc, id));
 
 
                 /* 解析完初始化参数 */
@@ -128,6 +131,25 @@ public class TCPMessageHandler {
                 state = 0;
                 continue;
             }
+            if ( AgencyUtil.isAgencyRequest2(pkg)) {
+
+            long id = AgencyUtil.getId(pkg);
+
+            logger.info("Agency2: " + sc + result.toString() + " @#@id: " + id);
+            AgencyUtil.add(id, sc);
+            //TODO
+            //如果集中在线才能注册成功
+            // if  (ConcentratorUtil.get(id)!=null && ConcentratorUtil.get(id).isConnected() )
+            /* 回复报文 */
+            DataProcessThreadUtil.getExecutor().execute(new AgencyLoginHandler(sc, id));
+
+
+            /* 解析完初始化参数 */
+            i += 13;
+            result = new ByteBuilder();
+            state = 0;
+            continue;
+        }
 
             /*
              * 原先的通讯协议报文处理
@@ -185,11 +207,13 @@ public class TCPMessageHandler {
                     long id = FieldPacker.getId(result);
 
                     /* 初始化集中器冲突信息 */
-                    SocketChannel oldSc = ConcentratorUtil.getOriginDuplicateSocket(id, sc);    /* 获取和重复ID相同且正在登录的集中器，只有在IP不同时才返回 */
-                    if (CompatibleUtil.isUpstream(result.getByte(6)) && oldSc != null){     /* 如果报文上行且重复 */
-                        DataProcessThreadUtil.getExecutor().execute(new DuplicateHandler(id, oldSc, sc));   /* 通知数据库，有重复ID的集中器 */
-                        fake = true;   /* 本地需要做心跳和登录处理，忽略其他业务，并且不做透明转发 */
-                    }
+                    //SocketChannel oldSc = ConcentratorUtil.getOriginDuplicateSocket(id, sc);    /* 获取和重复ID相同且正在登录的集中器，只有在IP不同时才返回 */
+
+                     //if (CompatibleUtil.isUpstream(result.getByte(6)) && oldSc != null){     /* 如果报文上行且重复 */
+                    //    DataProcessThreadUtil.getExecutor().execute(new DuplicateHandler(id, oldSc, sc));   /* 通知数据库，有重复ID的集中器 */
+                    //    fake = true;   /* 本地需要做心跳和登录处理，忽略其他业务，并且不做透明转发 */
+                    // }
+
 
                     /*
                      * 兼容老系统
@@ -229,12 +253,13 @@ public class TCPMessageHandler {
                         if (CompatibleUtil.isUpstream(result.getByte(6))) {
                             Set<SocketChannel> agencies = AgencyUtil.getAgency(id);
                             //过滤心跳包
-                            if ( (agencies != null)  &&  (result.getByte(12) != (byte) 0x02 && result.BINToLong(14, 18) != FUNID.HEARTBEAR ) ) {
+                              if ( (agencies != null)  &&  (result.getByte(12) != (byte) 0x02 && result.BINToLong(14, 18) != FUNID.HEARTBEAR ) ) {
 
                                 for (SocketChannel agency: agencies){
                                     DataProcessThreadUtil.getExecutor().execute(new SendHandler(result.toString(), true, agency));
                                 }
                             }
+
                         }
 
                         // 如果下行，往集中器发
