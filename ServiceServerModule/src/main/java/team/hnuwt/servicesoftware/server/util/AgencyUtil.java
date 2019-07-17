@@ -20,14 +20,25 @@ public class AgencyUtil {
     private static Logger logger = LoggerFactory.getLogger(AgencyUtil.class);
 
     /**
-     * 判断是否为兼容请求
+     * 判断是否为兼容请求（12表号代理软件）
      * @param request
      * @return
      */
     public static boolean isAgencyRequest(ByteBuilder request){
-        return request.toString().startsWith("AA585808005A00");
-//                && FieldPacker.isCorrectAgencyCs(request);
+        return request.toString().startsWith("AA585808005A00") && FieldPacker.isCorrectAgencyCs(request);
     }
+
+    /**
+     * 判断是否为兼容请求 （14代理工具）
+     * @param request
+     * @return
+     */
+    public static boolean isAgencyRequest2(ByteBuilder request){
+
+
+        return request.toString().startsWith("AA585808005A00")  && request.toString().endsWith("000000FF");
+    }
+
 
     public static long getId(ByteBuilder request){
         return request.BINToLong(7, 9);
