@@ -32,12 +32,18 @@ public class AgencyLoginHandler implements Runnable {
     {
         try {
             byte[] result;
-            if (ConcentratorUtil.get(id) != null) {
-                result = FieldPacker.hexStringToByte("AA5858FF035B004F4B00");
+
+            if ( (ConcentratorUtil.get(id) != null) && sc.isConnected() ){
+                result = FieldPacker.hexStringToByte("AA5858FF035B004F4B00000000"+String.format("%010d", id ));
+
                 sc.write(ByteBuffer.wrap(result));
             }
             else {
                 /* 注册失败报文回复 */
+
+                result = FieldPacker.hexStringToByte("FFFF");
+                sc.write(ByteBuffer.wrap(result));
+
             }
         } catch (IOException e) {
             logger.error("REPLY AGENCY ERROR", e);
