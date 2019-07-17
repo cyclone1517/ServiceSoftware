@@ -46,6 +46,7 @@ public enum TAG {
 	END_RESTART("END_RESTART"),					/* 终端重启 */
 	METER_BASENUM_SET("METER_BASENUM_SET"),		/* 设置表底数 */
 	METER_EXCP_CLEAR("METER_EXCP_CLEAR"),		/* 清除表异常 */
+	METER_READ_LOCAL("METER_READ_LOCAL"),		/*  冻结抄表数据*/
 
 
 	/*
@@ -108,6 +109,8 @@ public enum TAG {
 		tags.put("READ_UPLOAD", READ_UPLOAD);
 		tags.put("ARCHIVE_DOWNLOAD", ARCHIVE_DOWNLOAD);
 		tags.put("ARCHIVE_CLOSE", ARCHIVE_CLOSE);
+		tags.put("METER_READ_LOCAL", METER_READ_LOCAL);
+
 	}
 
 	@Override
